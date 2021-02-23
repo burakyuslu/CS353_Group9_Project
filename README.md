@@ -5,4 +5,4 @@
 
 Group 9's project for CS 353 Databases course of Bilkent University.
 
-[Project Specification Document](https://github.com/burakyuslu/CS353_Group9_Project/blob/website/Project_document-Spring2021.pdf)
+[Project Specification Document](https://drive.google.com/file/d/1Bqt-vXldvd92XZTmG9NnLsdR-Ok4jxsF/view?usp=sharing)
