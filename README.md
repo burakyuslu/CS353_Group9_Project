@@ -4,4 +4,4 @@
 #### Authors: Burak Yiğit Uslu, Can Kırımca, Can Kırşallıoba, Emre Açıkgöz
 
 ## Project Reports
-- [Project Proposal](https://drive.google.com/file/d/1jRLtAGIUsN_YK2InsbL2mh0juknytDgJ/view?usp=sharing), Submitted: 24/02/2021
+- [Project Proposal](https://drive.google.com/file/d/1ayjFOAjJumQbzbv-vIl_XUbEjW9cs7Fy/view?usp=sharing), Submitted: 24/02/2021
