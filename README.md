@@ -5,4 +5,4 @@
 
 ## Project Reports
 - [Project Proposal](https://drive.google.com/file/d/1ayjFOAjJumQbzbv-vIl_XUbEjW9cs7Fy/view?usp=sharing), Submitted: 24/02/2021
-- [Project Design Report](https://drive.google.com/drive/folders/1-d7-BpNMIQq15qgA7wprTX5t159eE3w1), Submitted 02/04/2021
+- [Project Design Report](https://drive.google.com/file/d/1SekyMf2DKIB5C39YHIK7eQbuiIt13aAd/view?usp=sharing), Submitted 02/04/2021
