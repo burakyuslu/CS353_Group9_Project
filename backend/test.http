@@ -1,8 +1,0 @@
-GET http://localhost:80/add
-Accept: application/json
-
-{ type: "student", username: "fsfs", password:"psfdaa"
-}
-
-###
-https://fullstackopen.com/en/part3/node_js_and_express#postman

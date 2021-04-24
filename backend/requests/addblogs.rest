@@ -1,0 +1,27 @@
+POST http://localhost:3003/api/blogs
+content-type: application/json
+authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFiYyIsImlkIjoiNjAxMjBiZjY0Y2E0ZDYzZmI4MmE3YTYwIiwiaWF0IjoxNjExNzk1NzM0fQ.JvDb8zmPR2qwQrpv2HicdFMiPmqugCom_Zylh9067SI
+
+{
+    "title": "first blrasdaasdaog tidstle",
+    "author": "eadsadasdmre",
+    "url": "locaasdasadsdlhost",
+    "likes": 12123,
+    "userId": "6011e2aa083e521c209993ce"
+}
+
+
+###
+GET http://localhost:3003/api/blogs
+
+###
+PUT http://localhost:3003/api/blogs/6011cfcc0807e705848fe347
+Content-Type: application/json
+
+{
+    "likes": 35,
+    "title": "Go To Statement Considered Harmful",
+    "author": "Edsger W. Dijkstra",
+    "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+    "id": "6011cfcc0807e705848fe347"
+  }
