@@ -7,6 +7,7 @@ from flask import flash, request
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
+# 127.0.0.1/add
 @app.route('/add', methods=['POST'])
 def add_user():
     conn = None
