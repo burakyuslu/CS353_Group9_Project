@@ -6,11 +6,28 @@ const helper = require('../utils/helper');
 const db = require('../services/db')
 
 usersRouter.get('/', async (request, response) => {
-    const rows = await db.query(
-        `SELECT * FROM useracc LIMIT ?,?`, [0, 10]
-    );
+    const limit = request.params.limit
+    const rows = await db.query(`SELECT * FROM useracc LIMIT ?,?`, [0, 10]);
+
     const data = helper.emptyOrRows(rows);
     response.json(data)
+})
+// URL: localhost:3003/api/users/createuser
+// METHOD: POST
+// HEADER:
+// URL PARAMS: localhost:3003/api/users/:id
+// URL QUERY PARAMS: localhost:3003/api/users?order=asc
+// REQUEST BODY: json
+
+
+usersRouter.post('/', async (request, response) => {
+    const body = request.body
+    console.log(body.username)
+    // response.json({"hello": "world"})
+    // await db.query(
+    //     `INSERT * FROM useracc LIMIT ? ?,?`, [body.username, body.password...]
+    // );
+
 })
 // usersRouter.post('/', async (request, response) => {
 //     const body = request.body

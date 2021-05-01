@@ -3,9 +3,9 @@ content-type: application/json
 
 {
     "username": "abc",
-    "password" : "abc",
+    "password" : "pass",
     "name": "Emre"
 }
 
 ###
-GET http://localhost:3003/api/users
+GET http://localhost:3003/api/users/1
