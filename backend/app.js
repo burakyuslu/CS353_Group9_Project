@@ -13,6 +13,11 @@ const coursesRouter = require('./controllers/courses')
 
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
+const peerGradingRouter = require('./controllers/peerGrading')
+const viewCertificateRouter = require('./controllers/viewCertificate')
+const lectureRouter = require('./controllers/lecture')
+const notesOnLecturesRouter = require('./controllers/notesOnLectures')
+const commentAndRateCourseRouter = require('./controllers/commentAndRateCourse')
 
 
 logger.info('connecting to', config.DB_HOST)
@@ -29,6 +34,12 @@ app.use('/api/users', usersRouter)
 app.use('/api/quizzes', quizRouter)
 app.use('/api/courses', coursesRouter)
 
+
+app.use('/api/peerGrading', peerGradingRouter)
+app.use('/api/viewCertificate', viewCertificateRouter)
+app.use('/api/lecture', lectureRouter)
+app.use('/api/notesOnLectures', notesOnLecturesRouter)
+app.use('/api/commentAndRateCourse', commentAndRateCourseRouter)
 
 // app.use('/api/login', loginRouter)
 
