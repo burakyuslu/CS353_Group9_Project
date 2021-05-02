@@ -46,4 +46,5 @@ lectureRouter.get('/', async (request, response) => {
     response.json(result)
 })
 
+lectureRouter.get('/note')
 module.exports = lectureRouter
