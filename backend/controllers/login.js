@@ -9,14 +9,15 @@ loginRouter.post('/', async (request, response) => {
 
   //const user = await User.findOne({ username: body.username })
   const userType = body.userType
-
+  const userName = body.username
+  const userPassword = body.password
   let user = undefined
 
   if(userType === "student"){
-    user = await db.query('SELECT U.username FROM UserAcc U, Student S WHERE S.student_id = U.user_id AND @username = U.username AND @password = U.password;')
+    user = await db.query('SELECT U.username FROM UserAcc U, Student S WHERE S.student_id = U.user_id AND ? = U.username AND ? = U.password;', userName, userPassword)
   }
   else if(userType === "instructor"){
-    user = await db.query('SELECT * FROM UserAcc U, Instructor I WHERE I.instructor_id = U.user_id AND @username = U.username AND @password = U.password;')
+    user = await db.query('SELECT * FROM UserAcc U, Instructor I WHERE I.instructor_id = U.user_id AND ? = U.username AND ? = U.password;', userName, userPassword)
   }
   else{
     return response.status(401).json({
