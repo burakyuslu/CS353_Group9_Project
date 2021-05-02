@@ -35,14 +35,16 @@ coursesRouter.get('/', async (request, response) => {
     let rows
     if (isEmpty(category) && isEmpty(rating)) {
         rows = await db.query(`SELECT *
-                               FROM Course ${orderBy} LIMIT ?, ?`, [getOffset(page, config.listPerPage), config.listPerPage])
+                               FROM Course ${orderBy}
+                               LIMIT ?, ?`, [getOffset(page, config.listPerPage), config.listPerPage])
 
     } else if (isEmpty(category)) { // filtered with rating
         rows = await db.query(`SELECT *
                                FROM Course C
                                WHERE ? <= (SELECT avg(rating)
                                            FROM Rates R
-                                           WHERE R.course_id = C.course_id) ${orderBy} LIMIT ?, ?`,
+                                           WHERE R.course_id = C.course_id) ${orderBy}
+                               LIMIT ?, ?`,
             [Number(rating), getOffset(page, config.listPerPage), config.listPerPage])
 
 
@@ -51,7 +53,8 @@ coursesRouter.get('/', async (request, response) => {
                                FROM Course C,
                                     CourseKeyword K
                                WHERE C.course_id = K.course_id
-                                 AND K.keyword = ? ${orderBy} LIMIT ?,?`,
+                                 AND K.keyword = ? ${orderBy}
+                               LIMIT ?,?`,
             [category, getOffset(page, config.listPerPage), config.listPerPage])
 
     } else {
@@ -63,12 +66,38 @@ coursesRouter.get('/', async (request, response) => {
                                  AND ? <= (SELECT avg(rating)
                                            FROM Rates R
                                            WHERE R.course_id = C.course_id)
-                                   ${orderBy} LIMIT ?,?`,
+                                   ${orderBy}
+                               LIMIT ?,?`,
             [category, Number(rating), getOffset(page, config.listPerPage), config.listPerPage])
     }
     const data = helper.emptyOrRows(rows);
     response.json(data)
     response.status(200)
 })
+
+coursesRouter.get("view/:courseId", async (req, res) => {
+    const courseId = req.params.courseId
+    const rows = await db.query(`SELECT DISTINCT *
+                                 FROM Lecture L,
+                                      Course C,
+                                      UserAcc U,
+                                      Publish P,
+                                      (SELECT avg(rating) as avg_rating
+                                       FROM Course CI,
+                                            Rates Ra
+                                       WHERE CI.course_id = Ra.course_id) R,
+                                      (SELECT *
+                                       FROM Course CJ
+                                                LEFT OUTER JOIN Discount DJ using (course_id)) JT
+                                 WHERE C.course_id = ?
+                                   AND P.course_id = C.course_id
+                                   AND U.user_id = P.instructor_id
+                                   AND L.course_id = C.course_id;`,
+        [courseId])
+    const data = helper.emptyOrRows(rows)
+    response.json(data)
+    response.status(200)
+})
+
 
 module.exports = coursesRouter
