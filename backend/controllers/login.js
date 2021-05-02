@@ -19,6 +19,9 @@ loginRouter.post('/', async (request, response) => {
   else if(userType === "instructor"){
     user = await db.query('SELECT * FROM UserAcc U, Instructor I WHERE I.instructor_id = U.user_id AND ? = U.username AND ? = U.password;', userName, userPassword)
   }
+  else if(userType === "admin"){
+    user = await db.query('SELECT U.username FROM SiteAdmin WHERE ? = admin_username AND ? = admin_password;', userName, userPassword)
+  }
   else{
     return response.status(401).json({
       error: 'invalid type of user',
