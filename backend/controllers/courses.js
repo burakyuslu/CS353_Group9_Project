@@ -77,23 +77,27 @@ coursesRouter.get('/', async (request, response) => {
 
 coursesRouter.get("/view/:courseId", async (request, response) => {
     const courseId = request.params.courseId
-    const rows = await db.query(`SELECT DISTINCT *
-                                 FROM Lecture L,
-                                      Course C,
-                                      UserAcc U,
-                                      Publish P,
-                                      (SELECT avg(rating) as avg_rating
-                                       FROM Course CI,
-                                            Rates Ra
-                                       WHERE CI.course_id = Ra.course_id) R,
-                                      (SELECT *
-                                       FROM Course CJ
-                                                LEFT OUTER JOIN Discount DJ using (course_id)) JT
-                                 WHERE C.course_id = ?
-                                   AND P.course_id = C.course_id
-                                   AND U.user_id = P.instructor_id
-                                   AND L.course_id = C.course_id;`,
-        [courseId])
+    console.log(courseId)
+    // todo if discount ended don't include
+    const rows = await db.query(`
+        SELECT DISTINCT *,
+                        (SELECT percentage
+                         FROM Course CJ
+                                  LEFT OUTER JOIN Discount DJ using (course_id)
+                         WHERE SYSDATE() < DJ.end_date
+                         LIMIT 1) as discount_percentage
+        FROM Course C,
+             UserAcc U,
+             Publish P,
+             (SELECT avg(rating) as avg_rating
+              FROM Course CI,
+                   Rates Ra
+              WHERE CI.course_id = Ra.course_id) R
+        WHERE C.course_id = ?
+          AND P.course_id = C.course_id
+          AND U.user_id = P.instructor_id `, [Number(courseId)]
+    )
+
     const data = helper.emptyOrRows(rows)
     response.json(data)
     response.status(200)
