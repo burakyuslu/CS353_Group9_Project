@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 
 const helper = require('../utils/helper');
 const db = require('../services/db');
+const { isEmpty } = require('lodash');
 
 commentAndRateCourseRouter.post('/', async (request, response) => {
     const body = request.body
@@ -11,11 +12,15 @@ commentAndRateCourseRouter.post('/', async (request, response) => {
     const comment = body.comment
     const rating = body.rating
 
-    const rows = await db.query(`INSERT INTO Rates(course_id, student_id, comment, rating) VALUES (?, ?, ?, ?);
+    if (isEmpty(course_id) || isEmpty(student_id) || isEmpty(comment) || isEmpty(rating))
+    response.status(400).json({error: "You must supply course_id, student_id, comment and rating"})
+
+
+    const commentAndRate = await db.query(`INSERT INTO Rates(course_id, student_id, comment, rating) VALUES (?, ?, ?, ?);
     `, course_id, student_id, comment, rating);
 
-    const data = helper.emptyOrRows(rows);
-    response.json(data)
+    const result = helper.emptyOrRows(commentAndRate);
+    response.json(result)
 })
 
 module.exports = commentAndRateCourseRouter
