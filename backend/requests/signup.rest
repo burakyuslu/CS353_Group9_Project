@@ -1,0 +1,11 @@
+POST http://localhost:3003/api/signup
+Content-Type: application/json
+
+{
+  "username": "canusername",
+  "name": "can",
+  "surname": "bey",
+  "password": "can123",
+  "userType": "student",
+  "email": "can@mail.com"
+}

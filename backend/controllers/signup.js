@@ -9,41 +9,28 @@ signupRouter.post('/', async (request, response) => {
 
     //const user = await User.findOne({ username: body.username })
     const userType = body.userType
+    const name = body.name
+    const surname = body.surname
+    const userName = body.username
+    const userPassword = body.password
+    const emailAddress = body.email
 
 
-    let user = undefined
+    let signup = undefined //needs to be fixed
 
     if(userType === "student"){
-        const signup = await db.query('INSERT INTO UserAcc VALUES(@name, @surname, @username, @password, @email_address, 0, SYSDATE()); ' +
-            'INSERT INTO Student(student_id) SELECT U.user_id FROM UserAcc U WHERE @username = U.username AND @password = U.password;')
+        const signup = await db.query('INSERT INTO UserAcc VALUES(?, ?, ?, ?, ?, 0, SYSDATE()); ' +
+            'INSERT INTO Student(student_id) SELECT U.user_id FROM UserAcc U WHERE ? = U.username AND ? = U.password;', name, surname, userName, userPassword, emailAddress, userName, password)
     }
     else if(userType === "instructor"){
-        const signup = await db.query('INSERT INTO UserAcc VALUES(@name, @surname, @username, @password, @email_address, 0, SYSDATE()); ' +
-            'INSERT INTO Instructor(student_id) SELECT U.user_id FROM UserAcc U WHERE @username = U.username AND @password = U.password;')
+        const signup = await db.query('INSERT INTO UserAcc VALUES(?, ?, ?, ?, ?, 0, SYSDATE()); ' +
+            'INSERT INTO Instructor(student_id) SELECT U.user_id FROM UserAcc U WHERE ? = U.username AND ? = U.password;', name, surname, userName, userPassword, emailAddress, userName, password)
     }
     else{
         return response.status(401).json({
             error: 'invalid type of user',
         })
     }
-
-    const passwordCorrect =
-        user === undefined
-            ? false
-            : await bcrypt.compare(body.password, user.password)
-    if (!(user && passwordCorrect)) {
-        return response.status(401).json({
-            error: 'invalid username or password',
-        })
-    }
-
-    const userForToken = {
-        username: user.username,
-        user_id: user.user_id,
-    }
-
-    // eslint-disable-next-line no-undef
-    //const token = jwt.sign(userForToken, process.env.SECRET)
 
     response.status(200).send({ token, username: user.username, user_id: user.user_id })
 

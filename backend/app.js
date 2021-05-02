@@ -9,7 +9,8 @@ const cors = require('cors')
 const usersRouter = require('./controllers/users')
 const quizRouter = require('./controllers/quiz')
 const coursesRouter = require('./controllers/courses')
-// const loginRouter = require('./controllers/login')
+const loginRouter = require('./controllers/login')
+const signupRouter = require('./controllers/signup')
 
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
@@ -40,6 +41,8 @@ app.use('/api/viewCertificate', viewCertificateRouter)
 app.use('/api/lecture', lectureRouter)
 app.use('/api/notesOnLectures', notesOnLecturesRouter)
 app.use('/api/commentAndRateCourse', commentAndRateCourseRouter)
+app.use('/api/login', loginRouter)
+app.use('/api/signup', signupRouter)
 
 // app.use('/api/login', loginRouter)
 
