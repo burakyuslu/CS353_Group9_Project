@@ -75,8 +75,8 @@ coursesRouter.get('/', async (request, response) => {
     response.status(200)
 })
 
-coursesRouter.get("view/:courseId", async (req, res) => {
-    const courseId = req.params.courseId
+coursesRouter.get("view/:courseId", async (request, response) => {
+    const courseId = request.params.courseId
     const rows = await db.query(`SELECT DISTINCT *
                                  FROM Lecture L,
                                       Course C,
@@ -99,5 +99,16 @@ coursesRouter.get("view/:courseId", async (req, res) => {
     response.status(200)
 })
 
+coursesRouter.post("add", async (request, response) => {
+    const body = request.body
+    const studentId = body.student_id
+    const courseId = body.course_id
+    if (isEmpty(studentId) || isEmpty(courseId)) {
+        response.status(400).json({error: `You must supply student_id and course_id`})
+    }
+    const rows = await db.query(`INSERT INTO AddToWishlist(student_id, course_id)
+                                 VALUES (?, ?)`, [studentId, courseId]);
+    
+})
 
 module.exports = coursesRouter
