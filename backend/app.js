@@ -34,7 +34,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/quizzes', quizRouter)
 app.use('/api/courses', coursesRouter)
 
-// can kirsallioba's shitty code
+
 app.use('/api/peerGrading', peerGradingRouter)
 app.use('/api/viewCertificate', viewCertificateRouter)
 app.use('/api/lecture', lectureRouter)
