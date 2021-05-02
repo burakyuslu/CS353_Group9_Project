@@ -75,7 +75,7 @@ coursesRouter.get('/', async (request, response) => {
     response.status(200)
 })
 
-coursesRouter.get("view/:courseId", async (request, response) => {
+coursesRouter.get("/view/:courseId", async (request, response) => {
     const courseId = request.params.courseId
     const rows = await db.query(`SELECT DISTINCT *
                                  FROM Lecture L,
@@ -99,7 +99,7 @@ coursesRouter.get("view/:courseId", async (request, response) => {
     response.status(200)
 })
 
-coursesRouter.post("add", async (request, response) => {
+coursesRouter.post("/add", async (request, response) => {
     const body = request.body
     const studentId = body.student_id
     const courseId = body.course_id
@@ -108,7 +108,7 @@ coursesRouter.post("add", async (request, response) => {
     }
     const rows = await db.query(`INSERT INTO AddToWishlist(student_id, course_id)
                                  VALUES (?, ?)`, [studentId, courseId]);
-    
+
 })
 
 module.exports = coursesRouter
