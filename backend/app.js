@@ -18,9 +18,7 @@ const signupRouter = require('./controllers/signup')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const peerGradingRouter = require('./controllers/peerGrading')
-const viewCertificateRouter = require('./controllers/certificates')
 const lectureRouter = require('./controllers/lecture')
-const commentAndRateCourseRouter = require('./controllers/commentAndRateCourse')
 
 
 logger.info('connecting to', config.DB_HOST)
@@ -42,9 +40,7 @@ app.use('/api/courses', coursesRouter)
 
 
 app.use('/api/peerGrading', peerGradingRouter)
-app.use('/api/viewCertificate', viewCertificateRouter)
 app.use('/api/lecture', lectureRouter)
-app.use('/api/commentAndRateCourse', commentAndRateCourseRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/signup', signupRouter)
 

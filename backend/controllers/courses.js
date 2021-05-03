@@ -131,4 +131,35 @@ coursesRouter.post("/add", async (request, response) => {
 })
 
 
+coursesRouter.post('/commentAndRate', async (request, response) => {
+    const body = request.body
+    const course_id = body.course_id
+    const student_id = body.student_id
+    const comment = body.comment
+    const rating = body.rating
+
+    if (isEmpty(course_id) || isEmpty(student_id) || isEmpty(comment) || isEmpty(rating))
+        response.status(400).json({error: "You must supply course_id, student_id, comment and rating"})
+
+
+    const commentAndRate = await db.query(`INSERT INTO Rates(course_id, student_id, comment, rating)
+                                           VALUES (?, ?, ?, ?);
+    `, [course_id, student_id, comment, rating]);
+
+    const result = helper.emptyOrRows(commentAndRate);
+    response.json(result)
+})
+
+coursesRouter.get('/certificates', async (request, response) => {
+    const body = request.body
+    const student_id = body.student_id
+    const rows = await db.query(`SELECT *
+                                 FROM Earns E
+                                 WHERE E.student_id = ?;
+    `, [student_id]);
+
+    const data = helper.emptyOrRows(rows);
+    response.json(data)
+})
+
 module.exports = coursesRouter

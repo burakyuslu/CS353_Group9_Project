@@ -17,7 +17,7 @@ commentAndRateCourseRouter.post('/', async (request, response) => {
 
 
     const commentAndRate = await db.query(`INSERT INTO Rates(course_id, student_id, comment, rating) VALUES (?, ?, ?, ?);
-    `, course_id, student_id, comment, rating);
+    `, [course_id, student_id, comment, rating]);
 
     const result = helper.emptyOrRows(commentAndRate);
     response.json(result)
