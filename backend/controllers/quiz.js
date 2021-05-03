@@ -19,8 +19,8 @@ quizRouter.post('/', async(request, response) => {
     const quiz_name = body.quiz_name;
 
     // create assignment material and create quiz
-    const quiz = await db.query('INSERT INTO AssignmentMaterial (course_id, weight) VALUES ( ?, ?); INSERT INTO Quiz (quiz_id, quiz_name) VALUES (?, ?);',
-        course_id, weight, assignment_id, quiz_name);
+    const quiz = await db.query(`INSERT INTO AssignmentMaterial (course_id, weight) VALUES ( ?, ?); INSERT INTO Quiz (quiz_id, quiz_name) VALUES (?, ?);`,
+        [course_id, weight, assignment_id, quiz_name]);
 
     const result = helper.emptyOrRows(quiz);
     response.json(result)

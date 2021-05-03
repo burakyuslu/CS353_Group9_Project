@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/projects/add
+Content-Type: application/json
+
+{
+  "course_id": 1,
+  "weight": 20,
+  "project_title": "ali",
+  "project_prompt": "just do it"
+}

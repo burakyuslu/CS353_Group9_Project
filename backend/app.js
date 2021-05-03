@@ -35,7 +35,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/users', quizRouter)
 // app.use('/api/quizzes', createQuizRouter)
 // app.use('/api/quizzes', solveAndViewQuizRouter)
-app.use('/api/quizzes', projectRouter)
+app.use('/api/projects', projectRouter)
 app.use('/api/courses', coursesRouter)
 
 
