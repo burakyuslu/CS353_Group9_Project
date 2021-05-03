@@ -49,9 +49,36 @@ quizRouter.post('/', async(request, response) => {
 })
 
 // solve quiz for student user
+quizRouter.post('/', async(request, response) => {
+    const body = request.body
 
+    const student_id = body.student_id;
+    const question_id = body.question_id;
+    const score = body.score;
+    const answer = body.answer;
+
+    // create a question and create the options for it
+    const quizSolution = await db.query('INSERT INTO Answers(student_id, question_id, score, answer) VALUES ( ?, ?, ?, ?);',
+        student_id, question_id, score, answer);
+
+    const result = helper.emptyOrRows(quizSolution);
+    response.json(result)
+})
 
 // view quiz for student user
+quizRouter.get('/', async(request, response) => {
+    const body = request.body
 
+    // const question_id = body.question_id;
+    const assignment_id = body.assignment_id;
+
+    // create a question and create the options for it
+    // there might be something wrong with the sql here
+    const quizResultView = await db.query('    SELECT sum(score) FROM Answers A, QuizQuestion Q WHERE A.question_id = Q.question_id AND Q.assignment_id = ?;',
+        assignment_id); //todo assignment_id, is this correct?
+
+    const result = helper.emptyOrRows(quizResultView);
+    response.json(result)
+})
 
 module.exports = quizRouter
