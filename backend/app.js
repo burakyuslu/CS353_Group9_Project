@@ -7,7 +7,10 @@ const cors = require('cors')
 
 // const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
+// const createQuizRouter = require('./controllers/createQuiz')
+// const solveAndViewQuizRouter = require('./controllers/solveAndViewQuiz')
 const quizRouter = require('./controllers/quiz')
+const projectRouter = require('./controllers/project')
 const coursesRouter = require('./controllers/courses')
 const loginRouter = require('./controllers/login')
 const signupRouter = require('./controllers/signup')
@@ -31,7 +34,10 @@ app.use(middleware.tokenExtractor)
 
 // app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
-app.use('/api/quizzes', quizRouter)
+app.use('/api/users', quizRouter)
+// app.use('/api/quizzes', createQuizRouter)
+// app.use('/api/quizzes', solveAndViewQuizRouter)
+app.use('/api/quizzes', projectRouter)
 app.use('/api/courses', coursesRouter)
 
 
