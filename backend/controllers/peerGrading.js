@@ -13,11 +13,10 @@ peerGradingRouter.post('/', async (request, response) => {
 
     const peerGrade = await db.query(`SELECT *
                                       FROM Submits
-                                               LEFT OUTER JOIN PeerGrades
+                                               LEFT OUTER JOIN PeerGrades P using (assignment_id)
                                       GROUP BY submission_id
-                                      HAVING count(review_id) < 3;
-    LIMIT
-    10;
+                                      HAVING count(review_id) < 3
+    LIMIT 10;
     INSERT INTO PeerGrades(student_id, assignment_id, score, review_date)
     VALUES (?, ?, ?, SYSDATE());`, [student_id, assignment_id, score]);
 

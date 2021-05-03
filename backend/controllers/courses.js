@@ -141,13 +141,17 @@ coursesRouter.post('/commentAndRate', async (request, response) => {
     if (isEmpty(course_id) || isEmpty(student_id) || isEmpty(comment) || isEmpty(rating))
         response.status(400).json({error: "You must supply course_id, student_id, comment and rating"})
 
-
-    const commentAndRate = await db.query(`INSERT INTO Rates(course_id, student_id, comment, rating)
+    try {
+        const commentAndRate = await db.query(`INSERT INTO Rates(course_id, student_id, comment, rating)
                                            VALUES (?, ?, ?, ?);
     `, [course_id, student_id, comment, rating]);
 
-    const result = helper.emptyOrRows(commentAndRate);
-    response.json(result)
+        const result = helper.emptyOrRows(commentAndRate);
+        response.json(result)
+    } catch (err) {
+        response.status(400).json({"error": err.message})
+    }
+
 })
 
 coursesRouter.get('/certificates', async (request, response) => {

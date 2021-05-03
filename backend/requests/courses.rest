@@ -9,8 +9,8 @@ POST http://localhost:3003/api/courses/commentAndRate
 Content-Type: application/json
 
 {
-  "course_id": "111",
-  "student_id": "222",
+  "course_id": "1",
+  "student_id": "2",
   "comment": "comment_1",
   "rating": "4"
 }
