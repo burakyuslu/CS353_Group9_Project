@@ -3,3 +3,18 @@ GET http://localhost:3003/api/courses/?category=helo&rating=3&page=1
 ###
 GET http://localhost:3003/api/courses/view/1
 
+###
+
+POST http://localhost:3003/api/courses/commentAndRate
+Content-Type: application/json
+
+{
+  "course_id": "111",
+  "student_id": "222",
+  "comment": "comment_1",
+  "rating": "4"
+}
+
+###
+
+GET http://localhost:3003/api/courses/certificates

@@ -1,0 +1,12 @@
+GET http://localhost:3003/api/lecture
+
+###
+
+POST http://localhost:3003/api/lecture/note
+Content-Type: application/json
+
+{
+  "course_id": "111",
+  "student_id": "222",
+  "lecture_id": "333"
+}

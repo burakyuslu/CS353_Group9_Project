@@ -1,0 +1,8 @@
+POST http://localhost:3003/api/peerGrading
+Content-Type: application/json
+
+{
+  "student_id": "111",
+  "assignment_id": "123",
+  "score": "100"
+}
