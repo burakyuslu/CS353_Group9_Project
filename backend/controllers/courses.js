@@ -100,8 +100,23 @@ coursesRouter.get("/view/:courseId", async (request, response) => {
 
     const data = helper.emptyOrRows(rows)
     response.json(data)
-    response.status(200)
 })
+
+coursesRouter.get('/rating/:courseId', async (request, response) => {
+    const courseId = request.params.courseId
+    if (isEmpty(course_id))
+        response.status(400).json({error: "You must supply course_id, student_id, and lecture_id"})
+
+    const ratings = await db.query(
+        `
+            SELECT *
+            FROM Rates R
+            WHERE R.course_id = ?
+        `, [cour])
+    const data = helper.emptyOrRows(rows)
+    response.json(data)
+})
+
 
 coursesRouter.post("/add", async (request, response) => {
     const body = request.body
@@ -114,5 +129,6 @@ coursesRouter.post("/add", async (request, response) => {
                                  VALUES (?, ?)`, [studentId, courseId]);
 
 })
+
 
 module.exports = coursesRouter

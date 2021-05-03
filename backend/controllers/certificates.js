@@ -1,10 +1,10 @@
-const viewCertificateRouter = require('express').Router()
+const certificates = require('express').Router()
 const bcrypt = require('bcrypt')
 
 const helper = require('../utils/helper');
 const db = require('../services/db')
 
-viewCertificateRouter.get('/', async (request, response) => {
+certificates.get('/', async (request, response) => {
     const body = request.body
     const student_id = body.student_id
     const rows = await db.query(`SELECT *
@@ -16,4 +16,4 @@ viewCertificateRouter.get('/', async (request, response) => {
     response.json(data)
 })
 
-module.exports = viewCertificateRouter
+module.exports = certificates

@@ -11,7 +11,7 @@ lectureRouter.get('/', async (request, response) => {
     const course_id = body.course_id
     const student_id = body.student_id
     const lecture_id = body.lecture_id
-    if (isEmpty(course_id) || isEmpty(student_id) || isEmpty(lecture_id)) 
+    if (isEmpty(course_id) || isEmpty(student_id) || isEmpty(lecture_id))
         response.status(400).json({error: "You must supply course_id, student_id, and lecture_id"})
 
     const lectureVideos = await db.query(` SELECT L.lecture_name
@@ -55,8 +55,11 @@ lectureRouter.post('/note', async (request, response) => {
     if (isEmpty(student_id) || isEmpty(lecture_id) || isEmpty(note_text))
         response.status(400).json({error: "You must supply student_id, lecture_id and note text"})
 
-    const notes = await db.query(`INSERT INTO CreatesNote(student_id, lecture_id, note_text, cdate)
-    VALUES (?, ?, ?, SYSDATE());`, student_id, lecture_id, note_text);
+    const notes = await db.query(`
+        INSERT
+        INTO CreatesNote(student_id, lecture_id, note_text, cdate)
+        VALUES (?, ?, ?, SYSDATE());
+    `, student_id, lecture_id, note_text);
 
     const result = helper.emptyOrRows(notes);
     response.json(result)

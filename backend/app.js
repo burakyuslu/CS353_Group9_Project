@@ -18,7 +18,7 @@ const signupRouter = require('./controllers/signup')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const peerGradingRouter = require('./controllers/peerGrading')
-const viewCertificateRouter = require('./controllers/viewCertificate')
+const viewCertificateRouter = require('./controllers/certificates')
 const lectureRouter = require('./controllers/lecture')
 const commentAndRateCourseRouter = require('./controllers/commentAndRateCourse')
 
