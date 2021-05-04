@@ -7,7 +7,6 @@ const db = require('../services/db');
 // this part contains most likely various errors, logic may be wrong for creating questions especially
 // maybe convert adding questions to adding questions to an array of questions, then sending that...
 
-// todo check later: testing with rest
 // create a quiz by instructor user
 quizRouter.post('/add', async (request, response) => {
     const body = request.body
@@ -28,7 +27,6 @@ quizRouter.post('/add', async (request, response) => {
     response.json(result)
 })
 
-// todo check later: basic testing with rest done, do extended testing
 // create a question for a quiz by instructor user
 quizRouter.post('/question/add', async (request, response) => {
     const body = request.body
@@ -59,15 +57,14 @@ quizRouter.post('/question/add', async (request, response) => {
     response.json(result)
 })
 
-// todo check later: testing with rest
 // solve quiz for student user
 quizRouter.post('/solve', async (request, response) => {
     const body = request.body
 
     const student_id = body.student_id;
     const question_id = body.question_id;
-    const score = body.score;
     const answer = body.answer;
+    const score = body.score; // todo score is going to be calculated using triggers
 
     // insert solution for a particular question into Answers
     const quizSolution = await db.query(`INSERT INTO Answers(student_id, question_id, score, answer)
@@ -77,13 +74,12 @@ quizRouter.post('/solve', async (request, response) => {
     response.json(result)
 })
 
-// todo check later: testing with rest
 // view quiz for student user
-quizRouter.get('/view', async (request, response) => {
-    const body = request.body
+quizRouter.get('/view/:quizId', async (request, response) => {
+    const params = request.params
 
     // const question_id = body.question_id;
-    const assignment_id = body.assignment_id;
+    const assignment_id = params.quizId;
 
     // there might be something wrong with the sql here
     const quizResultView = await db.query(`SELECT sum(score)

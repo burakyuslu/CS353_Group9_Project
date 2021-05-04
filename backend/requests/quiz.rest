@@ -1,3 +1,14 @@
+POST http://localhost:3003/api/quizzes/add
+Content-Type: application/json
+
+{
+  "course_id": 1,
+  "weight": 16,
+  "quiz_name": "real_quiz_is_the_friends_we_made_along_way"
+}
+
+###
+
 POST http://localhost:3003/api/quizzes/question/add
 Content-Type: application/json
 
@@ -10,3 +21,21 @@ Content-Type: application/json
   "option_3_text": "C",
   "option_4_text": "D"
 }
+
+###
+
+POST http://localhost:3003/api/quizzes/solve
+Content-Type: application/json
+
+{
+  "student_id": 1,
+  "question_id": 1,
+  "answer": "student_answer_trial123",
+  "score": 25
+}
+
+
+###
+
+GET http://localhost:3003/api/quizzes/view/1
+Content-Type: application/json
