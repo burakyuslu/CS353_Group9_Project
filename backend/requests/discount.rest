@@ -1,1 +1,1 @@
-GET http://localhost:3003/api/discount/cancelDiscount/
+GET http://localhost:3003/api/discount/cancelDiscount/?discount_id=1

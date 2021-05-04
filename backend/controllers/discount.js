@@ -48,3 +48,5 @@ discountRouter.get('/cancelDiscount', async (request, response) => {
     const result = helper.emptyOrRows(cancelDiscount);
     response.json(result)
 })
+
+module.exports = discountRouter
