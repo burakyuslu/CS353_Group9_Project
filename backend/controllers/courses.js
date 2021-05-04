@@ -131,7 +131,7 @@ coursesRouter.post("/add", async (request, response) => {
 })
 
 
-coursesRouter.post('/commentAndRate', async (request, response) => {
+coursesRouter.post('/rate', async (request, response) => {
     const body = request.body
     const course_id = body.course_id
     const student_id = body.student_id
@@ -142,11 +142,11 @@ coursesRouter.post('/commentAndRate', async (request, response) => {
         response.status(400).json({error: "You must supply course_id, student_id, comment and rating"})
 
     try {
-        const commentAndRate = await db.query(`INSERT INTO Rates(course_id, student_id, comment, rating)
+        const rate = await db.query(`INSERT INTO Rates(course_id, student_id, comment, rating)
                                            VALUES (?, ?, ?, ?);
     `, [course_id, student_id, comment, rating]);
 
-        const result = helper.emptyOrRows(commentAndRate);
+        const result = helper.emptyOrRows(rate);
         response.json(result)
     } catch (err) {
         response.status(400).json({"error": err.message})
