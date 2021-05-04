@@ -39,3 +39,8 @@ Content-Type: application/json
 
 GET http://localhost:3003/api/quizzes/view/1
 Content-Type: application/json
+
+###
+
+GET http://localhost:3003/api/quizzes/view/2
+Content-Type: application/json

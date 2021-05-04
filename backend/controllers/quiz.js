@@ -4,9 +4,6 @@ const bcrypt = require('bcrypt')
 const helper = require('../utils/helper');
 const db = require('../services/db');
 
-// this part contains most likely various errors, logic may be wrong for creating questions especially
-// maybe convert adding questions to adding questions to an array of questions, then sending that...
-
 // create a quiz by instructor user
 quizRouter.post('/add', async (request, response) => {
     const body = request.body
