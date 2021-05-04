@@ -15,7 +15,7 @@ requestRouter.get('/listRefundRequests', async (request, response) => {
     const listRefundsRequests = await db.query(`
         SELECT *
         FROM RequestRefund
-                 NATURAL JOIN SiteAdmin 
+                 NATURAL JOIN SiteAdmin
         WHERE admin_id = ?;`, [admin_id]);
 
     const result = helper.emptyOrRows(listRefundsRequests);
@@ -25,9 +25,12 @@ requestRouter.get('/listRefundRequests', async (request, response) => {
 requestRouter.delete('/resolveRequest', async (request, response) => {
     const verdict = request.query.verdict //accept or reject
     const request_id = request.query.request_id
+    const student_id = request.query.student_id
+    const course_id = request.query.course_id
+    console.log(typeof(verdict));
 
-    if (isEmpty(request_id)) {
-        response.status(400).json({error: "You must supply request_id"})
+    if (isEmpty(request_id) || isEmpty(verdict)) {
+        response.status(400).json({error: "You must supply request_id and verdict."})
     }
 
     if (verdict === "accept") {
