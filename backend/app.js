@@ -19,6 +19,7 @@ const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const peerGradingRouter = require('./controllers/peerGrading')
 const lectureRouter = require('./controllers/lecture')
+const refundCourseRouter = require('./controllers/refundCourse')
 
 
 logger.info('connecting to', config.DB_HOST)
@@ -37,7 +38,7 @@ app.use('/api/users', quizRouter)
 // app.use('/api/quizzes', solveAndViewQuizRouter)
 app.use('/api/projects', projectRouter)
 app.use('/api/courses', coursesRouter)
-
+app.use('/api/refundCourse', refundCourseRouter)
 
 app.use('/api/peerGrading', peerGradingRouter)
 app.use('/api/lecture', lectureRouter)

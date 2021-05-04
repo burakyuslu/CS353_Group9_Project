@@ -1,0 +1,17 @@
+GET http://localhost:3003/api/refundCourse/listCourses/?student_id=1
+
+###
+
+GET http://localhost:3003/api/refundCourse/selectCourseToReturn/?request_id=1&student_id=1&admin_id=1&course_id=1
+
+###
+
+#POST http://localhost:3003/api/refundCourse/specifyRequest
+#Content-Type: application/json
+
+#{
+#  "course_id": "1",
+#  "student_id": "2",
+#  "comment": "comment_1",
+#  "rating": "4"
+#}
