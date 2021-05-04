@@ -6,19 +6,36 @@ const db = require('../services/db');
 const {isEmpty} = require('lodash');
 
 requestRouter.get('/listRefundRequests', async (request, response) => {
-    const student_id = request.query.student_id
+    const admin_id = request.query.admin_id
 
-    if (isEmpty(student_id)) {
-        response.status(400).json({error: "You must supply student_id"})
+    if (isEmpty(admin_id)) {
+        response.status(400).json({error: "You must supply admin_id"})
     }
 
     const listRefundsRequests = await db.query(`
         SELECT *
         FROM RequestRefund
-                 NATURAL JOIN Student 
-        WHERE student_id = ?;`, [student_id]);
+                 NATURAL JOIN SiteAdmin 
+        WHERE admin_id = ?;`, [admin_id]);
 
     const result = helper.emptyOrRows(listRefundsRequests);
+    response.json(result)
+})
+
+requestRouter.get( '/selectRefundRequest', async (request, response) => {
+
+    const request_id = request.query.request_id
+    if (isEmpty(request_id)) {
+        response.status(400).json({error: "You must supply request_id"})
+    }
+
+    //after getting the request id from the request's respective button
+    const selectRefundRequest = await db.query(
+        `SELECT *
+             FROM RequestRefund
+             WHERE request_id = ?;`, [request_id]);
+
+    const result = helper.emptyOrRows(selectRefundRequest);
     response.json(result)
 })
 

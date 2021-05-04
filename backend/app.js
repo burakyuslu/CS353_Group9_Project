@@ -21,6 +21,7 @@ const peerGradingRouter = require('./controllers/peerGrading')
 const lectureRouter = require('./controllers/lecture')
 const refundCourseRouter = require('./controllers/refundCourse')
 const requestRouter = require('./controllers/request')
+const discountRouter = require('./controllers/discount')
 
 
 logger.info('connecting to', config.DB_HOST)
@@ -46,6 +47,7 @@ app.use('/api/peerGrading', peerGradingRouter)
 app.use('/api/lecture', lectureRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/signup', signupRouter)
+app.use('/api/discount', discountRouter)
 
 // app.use('/api/login', loginRouter)
 
