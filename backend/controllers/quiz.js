@@ -28,35 +28,38 @@ quizRouter.post('/add', async (request, response) => {
     response.json(result)
 })
 
+// todo check later: basic testing with rest done, do extended testing
 // create a question for a quiz by instructor user
 quizRouter.post('/question/add', async (request, response) => {
     const body = request.body
 
-    const question_id = body.question_id;
     const assignment_id = body.assignment_id;
-    const text = body.text;
-    const radio_button_text = body.radio_button_text;
+    const text = body.question_text;
+    const radio_button_text = body.question_answer;
 
     const option_1_text = body.option_1_text;
     const option_2_text = body.option_2_text;
     const option_3_text = body.option_3_text;
     const option_4_text = body.option_4_text;
 
-    // create a question and create the options for it
+    // create a question
     const question = await db.query(`INSERT INTO QuizQuestion(assignment_id, question_text, question_answer)
                                      VALUES (?, ?, ?);`, [assignment_id, text, radio_button_text]);
 
-    console.log(question);
-
+    // create & insert the options for it
     const questionOption = await db.query(`INSERT INTO QuizOption(question_id, question_option)
-                                           VALUES (?, ?), (?, ?), (?, ?), (?, ?);`,
-                                    [question.question_id, option_1_text], [question.question_id, option_2_text],
-                                            [question.question_id, option_3_text], [question.question_id, option_4_text]);
+                                           VALUES (?, ?),
+                                                  (?, ?),
+                                                  (?, ?),
+                                                  (?, ?);`,
+        [question.insertId, option_1_text, question.insertId, option_2_text,
+            question.insertId, option_3_text, question.insertId, option_4_text]);
 
     const result = helper.emptyOrRows(question); // todo check later: are we going to give question as  an argument here or the options?
     response.json(result)
 })
 
+// todo check later: testing with rest
 // solve quiz for student user
 quizRouter.post('/solve', async (request, response) => {
     const body = request.body
@@ -66,14 +69,15 @@ quizRouter.post('/solve', async (request, response) => {
     const score = body.score;
     const answer = body.answer;
 
-    // create a question and create the options for it
-    const quizSolution = await db.query('INSERT INTO Answers(student_id, question_id, score, answer) VALUES ( ?, ?, ?, ?);',
-        student_id, question_id, score, answer);
+    // insert solution for a particular question into Answers
+    const quizSolution = await db.query(`INSERT INTO Answers(student_id, question_id, score, answer)
+                                         VALUES (?, ?, ?, ?);`, [student_id, question_id, score, answer]);
 
     const result = helper.emptyOrRows(quizSolution);
     response.json(result)
 })
 
+// todo check later: testing with rest
 // view quiz for student user
 quizRouter.get('/view', async (request, response) => {
     const body = request.body
@@ -81,10 +85,12 @@ quizRouter.get('/view', async (request, response) => {
     // const question_id = body.question_id;
     const assignment_id = body.assignment_id;
 
-    // create a question and create the options for it
     // there might be something wrong with the sql here
-    const quizResultView = await db.query('    SELECT sum(score) FROM Answers A, QuizQuestion Q WHERE A.question_id = Q.question_id AND Q.assignment_id = ?;',
-        assignment_id); //todo assignment_id, is this correct?
+    const quizResultView = await db.query(`SELECT sum(score)
+                                           FROM Answers A,
+                                                QuizQuestion Q
+                                           WHERE A.question_id = Q.question_id
+                                             AND Q.assignment_id = ?;`, [assignment_id]);
 
     const result = helper.emptyOrRows(quizResultView);
     response.json(result)
