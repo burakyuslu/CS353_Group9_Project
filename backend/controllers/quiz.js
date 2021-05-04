@@ -43,8 +43,19 @@ quizRouter.post('/', async (request, response) => {
     const option_4_text = body.option_4_text;
 
     // create a question and create the options for it
-    const question = await db.query('INSERT INTO QuizQuestion(question_id, assignment_id, question_text, question_answer) VALUES (?, ?, ?, ?); INSERT INTO QuizOption(question_id, question_option) VALUES ( ?, ?), ( ?, ?), ( ?, ?), ( ?, ?);',
-        question_id, assignment_id, text, radio_button_text, question_id, option_1_text, question_id, option_2_text, question_id, option_3_text, question_id, option_4_text);
+    const question = await db.query(`INSERT INTO QuizQuestion(question_id, assignment_id, question_text, question_answer)
+                                     VALUES (?, ?, ?, ?);`, [question_id, assignment_id, text, radio_button_text]);
+
+    const questionOption = await db.query();
+
+    INSERT
+    INTO
+    QuizOption(question_id, question_option)
+    VALUES(?, ?), (?, ?), (?, ?), (?, ?);
+    ',
+    question_id, option_1_text, question_id, option_2_text, question_id, option_3_text, question_id, option_4_text
+)
+    ;
 
     const result = helper.emptyOrRows(question);
     response.json(result)
