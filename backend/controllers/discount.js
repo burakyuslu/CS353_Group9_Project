@@ -27,8 +27,8 @@ discountRouter.post('/applyDiscount', async (request, response) => {
     const percentage = body.percentage
     //const end_date = request.query.end_date
 
-    if (isEmpty(course_id)) {
-        response.status(400).json({error: "You must supply course_id"})
+    if (isEmpty(course_id) || isEmpty(admin_id) || isEmpty(percentage)) {
+        response.status(400).json({error: "You must supply course_id, discount_id, admin_id, and percentage"})
     }
 
 
@@ -37,7 +37,7 @@ discountRouter.post('/applyDiscount', async (request, response) => {
             VALUES(?, ?, ?, SYSDATE());`, [admin_id, course_id, percentage]);
 
     const result = helper.emptyOrRows(applyDiscount);
-    response.json(result)*/
+    response.json(result)
 })
 
 discountRouter.delete('/cancelDiscount', async (request, response) => {

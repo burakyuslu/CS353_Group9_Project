@@ -1,1 +1,12 @@
-GET http://localhost:3003/api/discount/cancelDiscount/?discount_id=1
+POST http://localhost:3003/api/discount/applyDiscount
+Content-Type: application/json
+
+{
+  "course_id": "3",
+  "admin_id": "1",
+  "percentage": "1"
+}
+
+###
+
+DELETE http://localhost:3003/api/discount/cancelDiscount/?discount_id=1
