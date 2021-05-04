@@ -48,14 +48,18 @@ quizRouter.post('/question/add', async (request, response) => {
 
     // create & insert the options for it
     const questionOption = await db.query(`INSERT INTO QuizOption(question_id, question_option)
-                                           VALUES (?, ?), (?, ?), (?, ?), (?, ?);`,
-                                    [question.insertId, option_1_text, question.insertId, option_2_text,
-                                            question.insertId, option_3_text, question.insertId, option_4_text]);
+                                           VALUES (?, ?),
+                                                  (?, ?),
+                                                  (?, ?),
+                                                  (?, ?);`,
+        [question.insertId, option_1_text, question.insertId, option_2_text,
+            question.insertId, option_3_text, question.insertId, option_4_text]);
 
     const result = helper.emptyOrRows(question); // todo check later: are we going to give question as  an argument here or the options?
     response.json(result)
 })
 
+// todo check later: testing with rest
 // solve quiz for student user
 quizRouter.post('/solve', async (request, response) => {
     const body = request.body
@@ -65,9 +69,9 @@ quizRouter.post('/solve', async (request, response) => {
     const score = body.score;
     const answer = body.answer;
 
-    // create a question and create the options for it
-    const quizSolution = await db.query('INSERT INTO Answers(student_id, question_id, score, answer) VALUES ( ?, ?, ?, ?);',
-        student_id, question_id, score, answer);
+    // insert solution for a particular question into Answers
+    const quizSolution = await db.query(`INSERT INTO Answers(student_id, question_id, score, answer)
+                                         VALUES (?, ?, ?, ?);`, [student_id, question_id, score, answer]);
 
     const result = helper.emptyOrRows(quizSolution);
     response.json(result)
@@ -80,7 +84,6 @@ quizRouter.get('/view', async (request, response) => {
     // const question_id = body.question_id;
     const assignment_id = body.assignment_id;
 
-    // create a question and create the options for it
     // there might be something wrong with the sql here
     const quizResultView = await db.query('    SELECT sum(score) FROM Answers A, QuizQuestion Q WHERE A.question_id = Q.question_id AND Q.assignment_id = ?;',
         assignment_id); //todo assignment_id, is this correct?
