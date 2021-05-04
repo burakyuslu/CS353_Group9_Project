@@ -22,19 +22,38 @@ requestRouter.get('/listRefundRequests', async (request, response) => {
     response.json(result)
 })
 
-requestRouter.delete( '/resolveRequest', async (request, response) => {
-    const verdict = request.query.verdict
+requestRouter.delete('/resolveRequest', async (request, response) => {
+    const verdict = request.query.verdict //accept or reject
     const request_id = request.query.request_id
 
     if (isEmpty(request_id)) {
         response.status(400).json({error: "You must supply request_id"})
     }
 
+    if (verdict === "accept") {
+        //blah blah blah give muneh back to student
+        const refundFee = await db.query(
+            `SELECT price
+             FROM Buys
+             WHERE student_id = ?
+               AND course_id = ?;`, [student_id, course_id]);
+
+        const refund = await db.query(`
+            UPDATE UserAcc
+            SET balance = balance + ? 
+            WHERE user_id = ?;`, [refundFee, student_id]);
+        console.log("\nPay the student back.\n")
+
+    } else {
+        //blah blah blah don't give muneh back to the student
+        console.log("\nDo nothing, the refund request is rejected.\n")
+    }
+
     //after getting the request id from the request's respective button
     const selectRefundRequest = await db.query(
-        `SELECT *
-             FROM RequestRefund
-             WHERE request_id = ?;`, [request_id]);
+        `DELETE
+         FROM RequestRefund
+         WHERE request_id = ?;`, [request_id]);
 
     const result = helper.emptyOrRows(selectRefundRequest);
     response.json(result)
