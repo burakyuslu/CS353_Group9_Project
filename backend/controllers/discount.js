@@ -19,23 +19,28 @@ discountRouter.get('/listDiscountableCourses', async (request, response) => {
 
 })
 
-discountRouter.get('/applyDiscount', async (request, response) => {
-    const course_id = request.query.course_id
+discountRouter.post('/applyDiscount', async (request, response) => {
+    const body = request.body
+    const course_id = body.course_id
+    //const discount_id = body.discount_id
+    const admin_id = body.admin_id
+    const percentage = body.percentage
+    //const end_date = request.query.end_date
 
     if (isEmpty(course_id)) {
         response.status(400).json({error: "You must supply course_id"})
     }
 
-    /*
-    const listAvailableCourses = await db.query(`
-        INSERT INTO discount
-            VALUES();
+
+    const applyDiscount = await db.query(`
+        INSERT INTO Discount(admin_id, course_id, percentage, end_date)
+            VALUES(?, ?, ?, SYSDATE());`, [admin_id, course_id, percentage]);
 
     const result = helper.emptyOrRows(applyDiscount);
     response.json(result)*/
 })
 
-discountRouter.get('/cancelDiscount', async (request, response) => {
+discountRouter.delete('/cancelDiscount', async (request, response) => {
     const discount_id = request.query.discount_id
 
     if (isEmpty(discount_id)) {
