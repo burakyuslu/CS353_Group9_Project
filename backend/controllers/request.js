@@ -45,6 +45,11 @@ requestRouter.delete('/resolveRequest', async (request, response) => {
             SET balance = balance + ? 
             WHERE user_id = ?;`, [refundFee[0].price, student_id]);
         console.log("\nPay the student back.\n")
+        const removeCourse = await db.query(
+            `DELETE
+             FROM Buys
+             WHERE student_id = ?
+               AND course_id = ?;`, [student_id, course_id]);
 
     } else {
         //blah blah blah don't give muneh back to the student
