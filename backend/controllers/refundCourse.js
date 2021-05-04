@@ -32,10 +32,12 @@ refundCourseRouter.get('/selectCourseToReturn', async (request, response) => {
         response.status(400).json({error: "You must supply request_id, student_id, admin_id, course_id"})
     }
 
+    //choose the course to be returned and pass its information to the qquery
+
     const selectReturn = await db.query(`
         INSERT INTO RequestRefund(request_id, student_id, admin_id, course_id)
         VALUES (?, ?, ?, ?);
-    ` [request_id, student_id, admin_id, course_id]);
+    `, [request_id, student_id, admin_id, course_id]);
 
     const result = helper.emptyOrRows(selectReturn);
     response.json(result)
