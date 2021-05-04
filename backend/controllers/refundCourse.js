@@ -14,8 +14,8 @@ refundCourseRouter.get('/listCourses', async (request, response) => {
 
     const listCourses = await db.query(`
         SELECT *
-        FROM Buys B
-                 NATURAL JOIN Student S
+        FROM Buys
+                 NATURAL JOIN Student
         WHERE student_id = ?;`, [student_id]);
 
     const result = helper.emptyOrRows(listCourses);
