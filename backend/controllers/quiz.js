@@ -6,28 +6,30 @@ const db = require('../services/db');
 
 // this part contains most likely various errors, logic may be wrong for creating questions especially
 // maybe convert adding questions to adding questions to an array of questions, then sending that...
-// todo fix
 
+// todo check later: testing with rest
 // create a quiz by instructor user
-quizRouter.post('/', async(request, response) => {
+quizRouter.post('/createQuiz', async (request, response) => {
     const body = request.body
 
     const weight = body.weight;
     const course_id = body.course_id;
-
-    const assignment_id = body.assignment_id; // todo check assignment id is indeed taken like this
     const quiz_name = body.quiz_name;
 
-    // create assignment material and create quiz
-    const quiz = await db.query(`INSERT INTO AssignmentMaterial (course_id, weight) VALUES ( ?, ?); INSERT INTO Quiz (quiz_id, quiz_name) VALUES (?, ?);`,
-        [course_id, weight, assignment_id, quiz_name]);
+    // create assignment material
+    const assignment = await db.query(`INSERT INTO AssignmentMaterial (course_id, weight)
+                                       VALUES (?, ?);`, [course_id, weight])
+
+    // create assignment material from the quiz
+    const quiz = await db.query(`INSERT INTO Quiz (quiz_id, quiz_name)
+                                 VALUES (?, ?);`, [assignment.insertId, quiz_name]);
 
     const result = helper.emptyOrRows(quiz);
     response.json(result)
 })
 
 // create a question for a quiz by instructor user
-quizRouter.post('/', async(request, response) => {
+quizRouter.post('/', async (request, response) => {
     const body = request.body
 
     const question_id = body.question_id;
@@ -49,7 +51,7 @@ quizRouter.post('/', async(request, response) => {
 })
 
 // solve quiz for student user
-quizRouter.post('/', async(request, response) => {
+quizRouter.post('/', async (request, response) => {
     const body = request.body
 
     const student_id = body.student_id;
@@ -66,7 +68,7 @@ quizRouter.post('/', async(request, response) => {
 })
 
 // view quiz for student user
-quizRouter.get('/', async(request, response) => {
+quizRouter.get('/', async (request, response) => {
     const body = request.body
 
     // const question_id = body.question_id;
