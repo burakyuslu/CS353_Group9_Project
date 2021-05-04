@@ -77,6 +77,7 @@ quizRouter.post('/solve', async (request, response) => {
     response.json(result)
 })
 
+// todo check later: testing with rest
 // view quiz for student user
 quizRouter.get('/view', async (request, response) => {
     const body = request.body
@@ -85,8 +86,11 @@ quizRouter.get('/view', async (request, response) => {
     const assignment_id = body.assignment_id;
 
     // there might be something wrong with the sql here
-    const quizResultView = await db.query('    SELECT sum(score) FROM Answers A, QuizQuestion Q WHERE A.question_id = Q.question_id AND Q.assignment_id = ?;',
-        assignment_id); //todo assignment_id, is this correct?
+    const quizResultView = await db.query(`SELECT sum(score)
+                                           FROM Answers A,
+                                                QuizQuestion Q
+                                           WHERE A.question_id = Q.question_id
+                                             AND Q.assignment_id = ?;`, [assignment_id]);
 
     const result = helper.emptyOrRows(quizResultView);
     response.json(result)
