@@ -1,5 +1,4 @@
 #- User(user_id, name, surname, username, password, email_adress, balance, reg_date)
-# TODO FINAL FORM: User(user_id, name, surname, username, password, email_adress, balance, reg_date)
 
 drop table if exists publish;
 drop table if exists containsContent;
@@ -387,23 +386,6 @@ VALUES (11, 'text_content_1'),
        (3, 'text_content_3');
 
 
-# TODO change to Note
-# # CreatesNote(student_id, lecture_id, date, note_text)
-# CREATE TABLE CreatesNote
-# (
-#     student_id INT,
-#     lecture_id INT,
-#     cdate      DATETIME,
-#     note_text  VARCHAR(1024) NOT NULL,
-#     PRIMARY KEY (student_id, lecture_id, cdate),
-#     FOREIGN KEY (student_id) REFERENCES Student (student_id),
-#     FOREIGN KEY (lecture_id) REFERENCES Lecture (lecture_id)
-# ) ENGINE = InnoDB;
-#
-# INSERT INTO CreatesNote(student_id, lecture_id, note_text, cdate)
-# VALUES (1, 1, 'text 1', '2020-01-01 11:11:11'),
-#        (2, 2, 'text 2', '2020-01-01 22:22:22'),
-#        (3, 3, 'text 3', '2020-01-01 23:23:23');
 
 
 # DONE

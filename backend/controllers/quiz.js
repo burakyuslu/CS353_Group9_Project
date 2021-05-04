@@ -28,14 +28,14 @@ quizRouter.post('/add', async (request, response) => {
     response.json(result)
 })
 
-// todo check later: testing with rest
 // create a question for a quiz by instructor user
 quizRouter.post('/question/add', async (request, response) => {
     const body = request.body
 
+    const question_id = body.question_id;
     const assignment_id = body.assignment_id;
-    const text = body.question_text;
-    const radio_button_text = body.question_answer;
+    const text = body.text;
+    const radio_button_text = body.radio_button_text;
 
     const option_1_text = body.option_1_text;
     const option_2_text = body.option_2_text;

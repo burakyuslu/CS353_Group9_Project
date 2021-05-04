@@ -7,17 +7,13 @@ const db = require('../services/db')
 
 usersRouter.get('/', async (request, response) => {
     const limit = request.params.limit
-    const rows = await db.query(`SELECT * FROM useracc LIMIT ?,?`, [0, 10]);
+    const rows = await db.query(`SELECT *
+                                 FROM useracc
+                                 LIMIT ?,?`, [0, 10]);
 
     const data = helper.emptyOrRows(rows);
     response.json(data)
 })
-// URL: localhost:3003/api/users/createuser
-// METHOD: POST
-// HEADER:
-// URL PARAMS: localhost:3003/api/users/:id
-// URL QUERY PARAMS: localhost:3003/api/users?order=asc
-// REQUEST BODY: json
 
 
 usersRouter.post('/', async (request, response) => {
