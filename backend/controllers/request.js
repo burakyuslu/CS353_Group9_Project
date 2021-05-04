@@ -22,9 +22,10 @@ requestRouter.get('/listRefundRequests', async (request, response) => {
     response.json(result)
 })
 
-requestRouter.get( '/selectRefundRequest', async (request, response) => {
-
+requestRouter.delete( '/resolveRequest', async (request, response) => {
+    const verdict = request.query.verdict
     const request_id = request.query.request_id
+
     if (isEmpty(request_id)) {
         response.status(400).json({error: "You must supply request_id"})
     }
