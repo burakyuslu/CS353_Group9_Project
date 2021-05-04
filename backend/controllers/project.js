@@ -28,6 +28,8 @@ projectRouter.post('/add', async (request, response) => {
 })
 
 // submit a project file by a student user
+// todo, here a file needs to submitted
+// todo testing of this method is left for later, as file submissions are not handled yet
 projectRouter.post('/submit', async (request, response) => {
     const body = request.body
     const student_id = body.student_id
@@ -36,18 +38,17 @@ projectRouter.post('/submit', async (request, response) => {
     let avg_score = null; // todo calculation for avg_score + do we insert null or  variable initialized to null
 
     // get the details about a project and submit file
-    const submission = await db.query(`SELECT *
+    const assignment = await db.query(`SELECT *
                                        FROM Project P,
                                             AssignmentMaterial A
                                        WHERE P.assignment_id = ?
-                                         AND P.assignment_id = A.assignment_id;
-            INSERT INTO Submits(assignment_id, student_id, submission, avg_score)
-            VALUES (?, ?, ?, NULL);`,
-        [assignment_id, assignment_id, student_id, submission_text]);
+                                         AND P.assignment_id = A.assignment_id;`, [assignment_id]);
 
+    const submission = await db.query(`INSERT INTO Submits(assignment_id, student_id, submission, avg_score)
+                                       VALUES (?, ?, ?, NULL);`, [assignment_id, student_id, submission_text]);
 
-    const result = helper.emptyOrRows(submission);
-    response.json(result)
+const result = helper.emptyOrRows(submission);
+response.json(result)
 })
 
 module.exports = projectRouter
