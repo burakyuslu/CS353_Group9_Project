@@ -35,7 +35,7 @@ app.use(middleware.tokenExtractor)
 
 // app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
-app.use('/api/users', quizRouter)
+app.use('/api/quizzes', quizRouter)
 // app.use('/api/quizzes', createQuizRouter)
 // app.use('/api/quizzes', solveAndViewQuizRouter)
 app.use('/api/projects', projectRouter)

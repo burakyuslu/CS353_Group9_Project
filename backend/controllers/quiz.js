@@ -9,7 +9,7 @@ const db = require('../services/db');
 
 // todo check later: testing with rest
 // create a quiz by instructor user
-quizRouter.post('/createQuiz', async (request, response) => {
+quizRouter.post('/add', async (request, response) => {
     const body = request.body
 
     const weight = body.weight;
@@ -28,14 +28,14 @@ quizRouter.post('/createQuiz', async (request, response) => {
     response.json(result)
 })
 
+// todo check later: testing with rest
 // create a question for a quiz by instructor user
-quizRouter.post('/', async (request, response) => {
+quizRouter.post('/question/add', async (request, response) => {
     const body = request.body
 
-    const question_id = body.question_id;
     const assignment_id = body.assignment_id;
-    const text = body.text;
-    const radio_button_text = body.radio_button_text;
+    const text = body.question_text;
+    const radio_button_text = body.question_answer;
 
     const option_1_text = body.option_1_text;
     const option_2_text = body.option_2_text;
@@ -43,26 +43,22 @@ quizRouter.post('/', async (request, response) => {
     const option_4_text = body.option_4_text;
 
     // create a question and create the options for it
-    const question = await db.query(`INSERT INTO QuizQuestion(question_id, assignment_id, question_text, question_answer)
-                                     VALUES (?, ?, ?, ?);`, [question_id, assignment_id, text, radio_button_text]);
+    const question = await db.query(`INSERT INTO QuizQuestion(assignment_id, question_text, question_answer)
+                                     VALUES (?, ?, ?);`, [assignment_id, text, radio_button_text]);
 
-    const questionOption = await db.query();
+    console.log(question);
 
-    INSERT
-    INTO
-    QuizOption(question_id, question_option)
-    VALUES(?, ?), (?, ?), (?, ?), (?, ?);
-    ',
-    question_id, option_1_text, question_id, option_2_text, question_id, option_3_text, question_id, option_4_text
-)
-    ;
+    const questionOption = await db.query(`INSERT INTO QuizOption(question_id, question_option)
+                                           VALUES (?, ?), (?, ?), (?, ?), (?, ?);`,
+                                    [question.question_id, option_1_text], [question.question_id, option_2_text],
+                                            [question.question_id, option_3_text], [question.question_id, option_4_text]);
 
-    const result = helper.emptyOrRows(question);
+    const result = helper.emptyOrRows(question); // todo check later: are we going to give question as  an argument here or the options?
     response.json(result)
 })
 
 // solve quiz for student user
-quizRouter.post('/', async (request, response) => {
+quizRouter.post('/solve', async (request, response) => {
     const body = request.body
 
     const student_id = body.student_id;
@@ -79,7 +75,7 @@ quizRouter.post('/', async (request, response) => {
 })
 
 // view quiz for student user
-quizRouter.get('/', async (request, response) => {
+quizRouter.get('/view', async (request, response) => {
     const body = request.body
 
     // const question_id = body.question_id;

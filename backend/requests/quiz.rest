@@ -1,0 +1,12 @@
+POST http://localhost:3003/api/quizzes/question/add
+Content-Type: application/json
+
+{
+  "assignment_id": 1,
+  "question_text": "question trial abc",
+  "question_answer": "A",
+  "option_1_text": "A",
+  "option_2_text": "B",
+  "option_3_text": "C",
+  "option_4_text": "D"
+}
