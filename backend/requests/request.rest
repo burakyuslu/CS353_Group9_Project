@@ -2,4 +2,4 @@
 
 ###
 
-GET http://localhost:3003/api/request/selectRefundRequest/?request_id=1
+GET http://localhost:3003/api/request/resolveRequest/?request_id=1
