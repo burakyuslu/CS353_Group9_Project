@@ -40,11 +40,10 @@ requestRouter.delete('/resolveRequest', async (request, response) => {
              FROM Buys
              WHERE student_id = ?
                AND course_id = ?;`, [student_id, course_id]);
-
         const refund = await db.query(`
             UPDATE UserAcc
             SET balance = balance + ? 
-            WHERE user_id = ?;`, [refundFee, student_id]);
+            WHERE user_id = ?;`, [refundFee[0].price, student_id]);
         console.log("\nPay the student back.\n")
 
     } else {

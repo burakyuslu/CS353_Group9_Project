@@ -65,4 +65,13 @@ lectureRouter.post('/note', async (request, response) => {
     response.json(result)
 })
 
+lectureRouter.post("/add", async (request, response) => {
+    const body = request.body
+    const {courseId, lectureType, lectureTitle, lectureContent} = body
+    const lecture = await db.query(`INSERT INTO lecture(lecture_name, course_id)
+                                    VALUES (?, ?)`, [lectureTitle, courseId])
+    const content = await db.query(`INSERT INTO content(content_title)
+                                    VALUES (?)`, [lectureContent])
+})
+
 module.exports = lectureRouter
