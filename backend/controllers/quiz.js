@@ -28,7 +28,7 @@ quizRouter.post('/add', async (request, response) => {
     response.json(result)
 })
 
-// todo check later: testing with rest
+// todo check later: basic testing with rest done, do extended testing
 // create a question for a quiz by instructor user
 quizRouter.post('/question/add', async (request, response) => {
     const body = request.body
@@ -46,12 +46,10 @@ quizRouter.post('/question/add', async (request, response) => {
     const question = await db.query(`INSERT INTO QuizQuestion(assignment_id, question_text, question_answer)
                                      VALUES (?, ?, ?);`, [assignment_id, text, radio_button_text]);
 
-    console.log(question);
-
     const questionOption = await db.query(`INSERT INTO QuizOption(question_id, question_option)
                                            VALUES (?, ?), (?, ?), (?, ?), (?, ?);`,
-                                    [question.question_id, option_1_text], [question.question_id, option_2_text],
-                                            [question.question_id, option_3_text], [question.question_id, option_4_text]);
+                                    [question.insertId, option_1_text, question.insertId, option_2_text,
+                                            question.insertId, option_3_text, question.insertId, option_4_text]);
 
     const result = helper.emptyOrRows(question); // todo check later: are we going to give question as  an argument here or the options?
     response.json(result)
