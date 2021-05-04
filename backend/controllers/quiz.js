@@ -42,10 +42,11 @@ quizRouter.post('/question/add', async (request, response) => {
     const option_3_text = body.option_3_text;
     const option_4_text = body.option_4_text;
 
-    // create a question and create the options for it
+    // create a question
     const question = await db.query(`INSERT INTO QuizQuestion(assignment_id, question_text, question_answer)
                                      VALUES (?, ?, ?);`, [assignment_id, text, radio_button_text]);
 
+    // create & insert the options for it
     const questionOption = await db.query(`INSERT INTO QuizOption(question_id, question_option)
                                            VALUES (?, ?), (?, ?), (?, ?), (?, ?);`,
                                     [question.insertId, option_1_text, question.insertId, option_2_text,
