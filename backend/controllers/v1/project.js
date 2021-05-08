@@ -1,8 +1,8 @@
 const projectRouter = require('express').Router()
 const bcrypt = require('bcrypt')
 
-const helper = require('../utils/helper');
-const db = require('../services/db');
+const helper = require('../../utils/helper');
+const db = require('../../services/db');
 
 // create a project by instructor user
 projectRouter.post('/add', async (request, response) => {

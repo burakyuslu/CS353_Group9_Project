@@ -1,8 +1,8 @@
 const lectureRouter = require('express').Router()
 const bcrypt = require('bcrypt')
 
-const helper = require('../utils/helper');
-const db = require('../services/db');
+const helper = require('../../utils/helper');
+const db = require('../../services/db');
 
 const isEmpty = (elem) => elem === undefined || elem === null || elem.trim() === ""
 

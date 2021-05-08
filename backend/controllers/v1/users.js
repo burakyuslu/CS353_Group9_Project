@@ -1,9 +1,9 @@
 const usersRouter = require('express').Router()
 const bcrypt = require('bcrypt')
 
-const helper = require('../utils/helper');
+const helper = require('../../utils/helper');
 // const config = require('../utils/config');
-const db = require('../services/db')
+const db = require('../../services/db')
 
 usersRouter.get('/', async (request, response) => {
     const limit = request.params.limit

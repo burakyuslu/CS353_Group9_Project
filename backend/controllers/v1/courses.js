@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt')
 const coursesRouter = require('express').Router()
 
-const helper = require('../utils/helper');
-const db = require('../services/db')
-const config = require('../utils/config');
-const {getOffset} = require('../utils/helper')
+const helper = require('../../utils/helper');
+const db = require('../../services/db')
+const config = require('../../utils/config');
+const {getOffset} = require('../../utils/helper')
 const isEmpty = (elem) => elem === undefined || elem === null || elem.trim() === ""
 
 // todo wrap queries with try-catch clause.
@@ -104,7 +104,7 @@ coursesRouter.get("/view/:courseId", async (request, response) => {
               WHERE CI.course_id = Ra.course_id) R
         WHERE C.course_id = ?
           AND P.course_id = C.course_id
-          AND U.user_id = P.instructor_id `, [Number(courseId)]
+          AND U.user_id = P.instructor_id`, [Number(courseId)]
     )
 
     const data = helper.emptyOrRows(rows)

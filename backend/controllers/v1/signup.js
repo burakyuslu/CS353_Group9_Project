@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const signupRouter = require('express').Router()
-const db = require('../services/db')
+const db = require('../../services/db')
 
 signupRouter.post('/', async (request, response) => {
     const body = request.body
