@@ -1,13 +1,29 @@
-const mysql = require('mysql2/promise');
+const mariadb = require('mariadb');
 const config = require('../utils/config');
+const {emptyOrRows} = require("../utils/helper")
 
 let connection
 
-async function query(sql, params) {
-    connection = await mysql.createConnection(config.db);
-    const [results,] = await connection.execute(sql, params);
+const pool = mariadb.createPool({
+    host: config.DB_HOST,
+    user: config.DB_USER,
+    password: config.DB_PASSWORD,
+    port: config.DB_PORT,
+    connectionLimit: config.DB_CONNECTION_LIMIT,
+    database: config.DB_NAME
+});
 
-    return results;
+async function query(sql, params) {
+    let conn, results;
+    try {
+        conn = await pool.getConnection();
+        results = await conn.query(sql, params)
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) await conn.end();
+    }
+    return emptyOrRows(results)
 }
 
 module.exports = {

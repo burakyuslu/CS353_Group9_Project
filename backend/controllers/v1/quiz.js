@@ -1,8 +1,8 @@
 const quizRouter = require('express').Router()
 const bcrypt = require('bcrypt')
 
-const helper = require('../utils/helper');
-const db = require('../services/db');
+const helper = require('../../utils/helper');
+const db = require('../../services/db');
 
 // create a quiz by instructor user
 quizRouter.post('/add', async (request, response) => {
