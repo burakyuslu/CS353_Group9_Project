@@ -1,0 +1,71 @@
+<template>
+  <v-container class="grey lighten-5">
+    <v-row v-resize="onResize">
+      <v-col cols="8">
+        <v-row>
+          <v-card>
+            <v-card-title>
+              VIDEO
+            </v-card-title>
+            <youtube
+              :player-width="playerWidth"
+              :player-height="playerHeight"
+              :video-id="videoId"
+            ></youtube>
+          </v-card>
+        </v-row>
+        <v-row>
+          <v-card class="pa-5">
+            <v-card-text>
+              FORUM, ANNOUNCEMENTS, ETC.
+            </v-card-text>
+          </v-card>
+        </v-row>
+      </v-col>
+      <v-col cols="4">
+        <v-card>
+          <v-card-text>
+            LECTURE VIDEOS AND ASSIGNMENTS
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+export default {
+  name: 'Lecture',
+  data() {
+    return {
+      windowSize: {
+        x: 0,
+        y: 0,
+      },
+      url: 'https://www.youtube.com/watch?v=qZXt1Aom3Cs',
+    }
+  },
+  mounted() {
+    this.onResize()
+  },
+
+  methods: {
+    onResize() {
+      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
+    },
+  },
+  computed: {
+    videoId() {
+      return this.$youtube.getIdFromURL(this.url)
+    },
+    playerHeight() {
+      return (this.windowSize.y * 500) / 937
+    },
+    playerWidth() {
+      return (this.windowSize.x / 1920) * 900
+    }
+  },
+}
+</script>
+
+<style scoped></style>
