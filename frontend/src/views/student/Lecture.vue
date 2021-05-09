@@ -52,9 +52,9 @@
       </v-col>
       <v-col cols="4">
         <v-card>
-          <v-card-text>
-            LECTURE VIDEOS AND ASSIGNMENTS
-          </v-card-text>
+          <v-card-title>
+            Videos
+          </v-card-title>
         </v-card>
       </v-col>
     </v-row>
