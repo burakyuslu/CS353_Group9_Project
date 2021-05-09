@@ -3,45 +3,51 @@
     <v-row v-resize="onResize">
       <v-col cols="8">
         <v-row>
-          <v-card>
-            <v-card-title>
-              VIDEO
-            </v-card-title>
-            <youtube
-              :player-width="playerWidth"
-              :player-height="playerHeight"
-              :video-id="videoId"
-            ></youtube>
-          </v-card>
+          <v-col>
+            <v-card class="d-flex" outlined tile>
+              <v-card-title>
+                VIDEO
+              </v-card-title>
+              <div>
+                <youtube
+                  :player-width="playerWidth"
+                  :player-height="playerHeight"
+                  :video-id="videoId"
+                ></youtube>
+              </div>
+            </v-card>
+          </v-col>
         </v-row>
         <v-row>
-          <v-card class="pa-5">
-            <v-tabs v-model="tab" background-color="indigo">
-              <v-tab>
-                QnA
-              </v-tab>
-              <v-tab> Notes </v-tab>
-              <v-tab> Announcements </v-tab>
-              <v-tab>
-                Assignments
-              </v-tab>
-            </v-tabs>
-            <v-tabs-items v-model="tab">
-              <v-tab-item key="0">
-                <v-container> </v-container>
-              </v-tab-item>
-              <v-tab-item key="1">
-                <v-container>
-                  <notes> </notes>
-                </v-container>
-              </v-tab-item>
-              <v-tab-item key="2">
-                <v-container>
-                  <announcement> </announcement>
-                </v-container>
-              </v-tab-item>
-            </v-tabs-items>
-          </v-card>
+          <v-col>
+            <v-card class="pa-5">
+              <v-tabs v-model="tab" background-color="indigo" grow>
+                <v-tab>
+                  QnA
+                </v-tab>
+                <v-tab> Notes </v-tab>
+                <v-tab> Announcements </v-tab>
+                <v-tab>
+                  Assignments
+                </v-tab>
+              </v-tabs>
+              <v-tabs-items v-model="tab">
+                <v-tab-item key="0">
+                  <v-container> </v-container>
+                </v-tab-item>
+                <v-tab-item key="1">
+                  <v-container>
+                    <notes> </notes>
+                  </v-container>
+                </v-tab-item>
+                <v-tab-item key="2">
+                  <v-container>
+                    <announcement> </announcement>
+                  </v-container>
+                </v-tab-item>
+              </v-tabs-items>
+            </v-card>
+          </v-col>
         </v-row>
       </v-col>
       <v-col cols="4">
