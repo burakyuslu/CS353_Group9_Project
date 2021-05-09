@@ -54,6 +54,9 @@
         <v-card>
           <v-card-text>
             LECTURE VIDEOS AND ASSIGNMENTS
+            <lectureView>
+              
+            </lectureView>
           </v-card-text>
         </v-card>
       </v-col>
@@ -65,6 +68,7 @@
 import Announcement from '../../components/Announcement.vue'
 import Notes from '../../components/Notes.vue'
 import qna from '../../components/QnA.vue'
+import lectureView from '../../components/LectureView.vue'
 export default {
   components: { Announcement, Notes, qna},
   name: 'Lecture',
