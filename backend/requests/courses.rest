@@ -1,7 +1,7 @@
 GET http://localhost:3003/api/courses/?category=helo&rating=3&page=1
 
 ###
-GET http://localhost:3003/api/courses/view/1
+GET http://localhost:3003/api/courses/1/lectures/completed-lectures?studentId=1
 
 ###
 

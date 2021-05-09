@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "v-video-embed": "^1.0.8",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vue-youtube-embed": "^2.2.2",
@@ -34,19 +35,14 @@
   },
   "eslintConfig": {
     "root": true,
-    "env": {
-      "es6": true
-    },
     "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/airbnb"
+      "plugin:vue/essential"
     ],
     "parserOptions": {
       "parser": "babel-eslint"
     },
     "rules": {
-      "semi":"off",
+      "semi": "off",
       "comma-dangle": "off"
     }
   },

@@ -170,20 +170,9 @@ courseRouter.post("/:courseId/lectures", async (req, res, next) => {
         next(exception)
     }
 })
-
-// gets all lecture content by id
-courseRouter.get("/:courseId/lectures/:lectureId", async (req, res, next) => {
-    try {
-        const {lecture_Id} = req.params
-        const result = await db.query(GET_LECTURE_CONTENT, [lecture_Id])
-        res.json(result)
-    } catch (exception) {
-        next(exception)
-    }
-})
-
 courseRouter.get("/:courseId/lectures/completed-lectures", async (req, res, next) => {
     const {studentId} = req
+    console.log(`here ${req.instructorId}, ${req.studentId}`)
     try {
         const result = await db.query(GET_COMPLETED_LECTURES, [studentId])
         res.json(result)
@@ -202,6 +191,18 @@ courseRouter.post("/:courseId/lectures/completed-lectures", async (req, res, nex
         next(exception)
     }
 })
+
+// gets all lecture content by id
+courseRouter.get("/:courseId/lectures/:lectureId", async (req, res, next) => {
+    try {
+        const {lecture_Id} = req.params
+        const result = await db.query(GET_LECTURE_CONTENT, [lecture_Id])
+        res.json(result)
+    } catch (exception) {
+        next(exception)
+    }
+})
+
 
 // get notes for the lecture
 courseRouter.get("/:courseId/lectures/:lectureId/notes", async (req, res, next) => {

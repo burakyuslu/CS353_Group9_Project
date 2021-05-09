@@ -98,7 +98,7 @@ module.exports.GET_LECTURE_CONTENT = `
     where lecture_id = ? `
 
 module.exports.GET_COMPLETED_LECTURES = `
-    SELECT *
+    SELECT lecture_id
     FROM lecture L
     WHERE exists(select * FROM completes WHERE lecture_id = L.lecture_id AND student_id = ?)`
 

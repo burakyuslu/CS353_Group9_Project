@@ -16,9 +16,31 @@
         </v-row>
         <v-row>
           <v-card class="pa-5">
-            <v-card-text>
-              FORUM, ANNOUNCEMENTS, ETC.
-            </v-card-text>
+            <v-tabs v-model="tab" background-color="indigo">
+              <v-tab>
+                QnA
+              </v-tab>
+              <v-tab> Notes </v-tab>
+              <v-tab> Announcements </v-tab>
+              <v-tab>
+                Assignments
+              </v-tab>
+            </v-tabs>
+            <v-tabs-items v-model="tab">
+              <v-tab-item key="0">
+                <v-container> </v-container>
+              </v-tab-item>
+              <v-tab-item key="1">
+                <v-container>
+                  <notes> </notes>
+                </v-container>
+              </v-tab-item>
+              <v-tab-item key="2">
+                <v-container>
+                  <announcement> </announcement>
+                </v-container>
+              </v-tab-item>
+            </v-tabs-items>
           </v-card>
         </v-row>
       </v-col>
@@ -34,10 +56,14 @@
 </template>
 
 <script>
+import Announcement from '../../components/Announcement.vue'
+import Notes from '../../components/Notes.vue'
 export default {
+  components: { Announcement, Notes },
   name: 'Lecture',
   data() {
     return {
+      tab: 0,
       windowSize: {
         x: 0,
         y: 0,
@@ -63,7 +89,7 @@ export default {
     },
     playerWidth() {
       return (this.windowSize.x / 1920) * 900
-    }
+    },
   },
 }
 </script>
