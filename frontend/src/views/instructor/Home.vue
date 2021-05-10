@@ -48,7 +48,7 @@
                 </v-btn>
 
                 <v-btn class="ml-2 mt-5" outlined rounded small>
-                  Create Certificate
+                  Edit Certificate
                 </v-btn>
 
                 <v-btn class="ml-2 mt-5" outlined rounded small>
