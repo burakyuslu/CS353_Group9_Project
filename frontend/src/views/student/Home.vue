@@ -5,7 +5,7 @@
       <v-col cols="8">
         <v-row>
           <v-col>
-            <v-card class="d-flex" outlined tile>
+            <v-card outlined tile>
               <v-container>
                 <v-text-field
                   v-model="searchText"
@@ -22,7 +22,7 @@
         </v-row>
         <v-row v-for="(item, i) in items" :key="i">
           <v-col>
-            <v-card class="d-flex" outlined tile>
+            <v-card  outlined tile>
               <v-card-title class="text-h5" v-text="item.title"></v-card-title>
               <v-card-text align-start>
                 <div class="text--primary">

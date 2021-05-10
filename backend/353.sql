@@ -47,20 +47,19 @@ CREATE TABLE UserAcc
     user_id       INT PRIMARY KEY AUTO_INCREMENT,
     name          VARCHAR(64)  NOT NULL,
     surname       VARCHAR(64)  NOT NULL,
-    username      VARCHAR(64)  NOT NULL UNIQUE,
     password      VARCHAR(64)  NOT NULL,
     email_address VARCHAR(256) NOT NULL UNIQUE,
     balance       INT          NOT NULL,
     reg_date      DATETIME     NOT NULL
 ) ENGINE = InnoDB;
 
-INSERT INTO UserAcc (user_id, name, surname, username, password, email_address, balance, reg_date)
-VALUES (1, 's1_name', 's1_surname', 's1_username', 's1_password', 'mail1', 1, '2020-01-01 10:10:10'),
-       (2, 's2_name', 's2_surname', 's2_username', 's2_password', 'mail2', 2, '2020-02-02 11:11:11'),
-       (3, 's3_name', 's3_surname', 's3_username', 's3_password', 'mail3', 3, '2020-03-03 12:12:12'),
-       (4, 'i1_name', 'i1_surname', 'i1_username', 'i1_password', 'mail4', 4, '2020-04-04 13:13:13'),
-       (5, 'i2_name', 'i2_surname', 'i2_username', 'i2_password', 'mail5', 5, '2020-05-05 14:14:14'),
-       (6, 'i3_name', 'i3_surname', 'i3_username', 'i3_password', 'mail6', 6, '2020-06-06 15:15:15');
+INSERT INTO UserAcc (user_id, name, surname, password, email_address, balance, reg_date)
+VALUES (1, 's1_name', 's1_surname', 's1_password', 'mail1', 1, '2020-01-01 10:10:10'),
+       (2, 's2_name', 's2_surname', 's2_password', 'mail2', 2, '2020-02-02 11:11:11'),
+       (3, 's3_name', 's3_surname', 's3_password', 'mail3', 3, '2020-03-03 12:12:12'),
+       (4, 'i1_name', 'i1_surname', 'i1_password', 'mail4', 4, '2020-04-04 13:13:13'),
+       (5, 'i2_name', 'i2_surname', 'i2_password', 'mail5', 5, '2020-05-05 14:14:14'),
+       (6, 'i3_name', 'i3_surname', 'i3_password', 'mail6', 6, '2020-06-06 15:15:15');
 
 # DONE
 #Student(student_id)
@@ -153,7 +152,7 @@ CREATE TABLE Certificate
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Certificate (certificate_id, certification_text,  course_id)
+INSERT INTO Certificate (certificate_id, certification_text, course_id)
 VALUES (1, 'cert_text_1', 1),
        (2, 'cert_text_2', 2),
        (3, 'cert_text_3', 3);
@@ -387,7 +386,6 @@ VALUES (11, 'text_content_1'),
 
 
 
-
 # DONE
 # Complains(id, admin_id, student_id, course_id, reason, complain_date, resolved)
 # C: id
@@ -573,7 +571,7 @@ CREATE TABLE Announcement
 (
     instructor_id INT,
     course_id     INT,
-    ann_date      DATETIME NOT NULL,
+    ann_date      DATETIME      NOT NULL,
     ann_text      VARCHAR(4096) NOT NULL,
     PRIMARY KEY (instructor_id, course_id, ann_date),
     FOREIGN KEY (instructor_id) REFERENCES Instructor (instructor_id),

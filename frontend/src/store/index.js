@@ -1,23 +1,18 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios, { URL } from '../utils/config'
-import {
-  SET_USER_DETAILS,
-  SIGN_IN,
-  LOG_OUT,
-  SET_TOKEN,
-  SET_USER_TYPE,
-} from './types'
+import { actions, mutations, getters } from './types'
 // axiosInstance.defaults.headers.post['Accepts'] = 'application/json'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: '',
     signedIn: false,
     type: '',
     user: {
+      token: '',
+      userType: '',
       name: '',
       surname: '',
       username: '',
@@ -26,27 +21,25 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    [SET_USER_DETAILS](state, { user }) {
+    [mutations.SET_USER_DETAILS](state, { user }) {
       state.user = user
     },
-    [SET_USER_TYPE](state, { type }) {
+    [mutations.SET_USER_TYPE](state, { type }) {
       state.type = type
     },
-    [SIGN_IN](state) {
+    [mutations.SET_SIGN_IN](state, { token }) {
       // Alter defaults after instance has been created
-      axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       state.signedIn = true
     },
-    [LOG_OUT](state) {
+    [mutations.LOG_OUT](state) {
       state.token = ''
       state.signedIn = false
-    },
-    [SET_TOKEN](state, { token }) {
-      state.token = token
+      axios.defaults.headers.common['Authorization'] = `Bearer 1`
     },
   },
   actions: {
-    async signIn({ commit, state }, { mock, userType, email, password }) {
+    async [actions.SIGN_IN]({ commit, state }, { userType, email, password }) {
       // if (mock?.should) {
       //   mock
       // }
@@ -57,11 +50,18 @@ export default new Vuex.Store({
           password,
         })
         const { data } = response
-        data.
+        commit(mutations.SET_USER_DETAILS, data)
+        commit(mutations.SET_SIGN_IN, { token: data.token })
+        commit(mutations.SET_USER_TYPE, { token: data.userType })
       } catch (error) {
         // todo set error
         // cannot login
       }
+    },
+    async [actions.SIGN_UP]({ commit, state }, {}) {
+      try {
+        const response = await axios.post(URL.SIGNUP, {})
+      } catch (error) {}
     },
   },
   modules: {},

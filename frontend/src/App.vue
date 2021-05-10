@@ -1,15 +1,32 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/admin/home">Admin</router-link> |
-      <router-link to="/student/home">Student</router-link> | 
-      <router-link to="/instructor/home">Instructor</router-link> | 
-      <router-link to="/lecture">Lecture</router-link> |
-      <router-link to="/course">Course Details</router-link>
-    </div>
-    <router-view />
-  </div>
+  <v-app>
+    <v-app-bar app>
+      <nav>
+        <router-link to="/admin/home">Admin</router-link> |
+        <router-link to="/student/home">Student</router-link> |
+        <router-link to="/instructor/home">Instructor</router-link> |
+        <router-link to="/lecture">Lecture</router-link> |
+        <router-link to="/course">Course Details</router-link>
+        <!-- -->
+      </nav>
+    </v-app-bar>
+
+    <!-- Sizes your content based upon application components -->
+    <v-main>
+      <v-container fluid>
+        <!-- If using vue-router -->
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+
+    <v-footer app>
+      <!-- -->
+    </v-footer>
+  </v-app>
 </template>
+<script>
+export default { name: 'App', data: () => ({}) }
+</script>
 
 <style lang="scss">
 #app {

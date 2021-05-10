@@ -1,8 +1,8 @@
-POST http://localhost:3003/api/login
+POST http://localhost:3003/api/auth/login
 Content-Type: application/json
 
 {
-    "username": "can",
-    "password": "can123",
+    "email": "mail1",
+    "password": "s1_password",
     "userType": "student"
 }

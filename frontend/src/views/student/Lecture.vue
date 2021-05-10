@@ -4,16 +4,18 @@
       <v-col cols="8">
         <v-row>
           <v-col>
-            <v-card class="d-flex" outlined tile>
+            <v-card outlined tile>
               <v-card-title>
                 VIDEO
               </v-card-title>
               <div>
-                <youtube
-                  :player-width="playerWidth"
-                  :player-height="playerHeight"
-                  :video-id="videoId"
-                ></youtube>
+                <v-card-text>
+                  <youtube
+                    :player-width="playerWidth"
+                    :player-height="playerHeight"
+                    :video-id="videoId"
+                  ></youtube>
+                </v-card-text>
               </div>
             </v-card>
           </v-col>
@@ -21,9 +23,9 @@
         <v-row>
           <v-col>
             <v-card class="pa-5">
-              <v-tabs v-model="tab" background-color="indigo" grow>
+              <v-tabs v-model="tab" grow>
                 <v-tab>
-                  QnA
+                  Q&A
                 </v-tab>
                 <v-tab> Notes </v-tab>
                 <v-tab> Announcements </v-tab>
@@ -55,6 +57,7 @@
           <v-card-title>
             Videos
           </v-card-title>
+          <lecture-view></lecture-view>
         </v-card>
       </v-col>
     </v-row>
@@ -65,9 +68,9 @@
 import Announcement from '../../components/Announcement.vue'
 import Notes from '../../components/Notes.vue'
 import qna from '../../components/QnA.vue'
-import lectureView from '../../components/LectureView.vue'
+import LectureView from '../../components/LectureView.vue'
 export default {
-  components: { Announcement, Notes, qna},
+  components: { LectureView, Announcement, Notes, qna },
   name: 'Lecture',
   data() {
     return {

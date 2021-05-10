@@ -3,7 +3,7 @@
     <v-row no-gutters>
       <v-col>
         <v-card
-          class="d-flex"
+         
           outlined
           tile
         >
