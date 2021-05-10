@@ -44,6 +44,14 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn class="ml-2 mt-5" outlined rounded small>
+                  Add Assignment
+                </v-btn>
+                
+                <v-btn class="ml-2 mt-5" outlined rounded small>
+                  Add Lecture
+                </v-btn>
+
+                <v-btn class="ml-2 mt-5" outlined rounded small>
                   Go To Course Forum
                 </v-btn>
 
