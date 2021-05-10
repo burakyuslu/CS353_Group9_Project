@@ -20,6 +20,15 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-row>
+          <v-col>
+            <v-card class="d-flex" outlined>
+              <v-btn class="ml-2 mt-5" outlined rounded small>
+                Create Course
+              </v-btn>
+            </v-card>
+          </v-col>
+        </v-row>
         <v-row v-for="(item, i) in items" :key="i">
           <v-col>
             <v-card class="d-flex" outlined tile>
