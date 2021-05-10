@@ -4,6 +4,11 @@ import Lecture from '../views/student/Lecture.vue'
 import CourseDetails from '../views/student/Course.vue'
 import StudentHome from '../views/student/Home.vue'
 import InstructorHome from '../views/instructor/Home.vue'
+import Instructor from '../views/instructor/Instructor.vue'
+import CreateCourse from '../views/instructor/CreateCourse.vue'
+// import InstructorHome from '../views/instructor/Home.vue'
+// import InstructorHome from '../views/instructor/Home.vue'
+// import InstructorHome from '../views/instructor/Home.vue'
 import AdminHome from '../views/admin/Home.vue'
 
 Vue.use(VueRouter)
@@ -12,7 +17,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: {path: '/student/home'}
+    redirect: { path: '/student/home' },
   },
   {
     path: '/student/home',
@@ -23,6 +28,11 @@ const routes = [
     path: '/instructor/home',
     name: 'instructor.home',
     component: InstructorHome,
+  },
+  {
+    path: '/instructor/home/create',
+    name: 'instructor.home.createCourse',
+    component: CreateCourse,
   },
   {
     path: '/admin/home',

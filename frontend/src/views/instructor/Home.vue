@@ -8,9 +8,9 @@
             <v-card outlined tile>
               <v-container>
                 <v-text-field
-                    v-model="searchText"
-                    label="Search"
-                    hide-details="auto"
+                  v-model="searchText"
+                  label="Search"
+                  hide-details="auto"
                 >
                   <v-icon slot="append">
                     mdi-magnify
@@ -22,57 +22,11 @@
         </v-row>
         <v-row>
           <v-col>
-            <v-dialog
-                  v-model="dialog"
-                  fullscreen
-                  hide-overlay
-                  transition="dialog-bottom-transition"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="ml-2 mt-5"
-                      outlined
-                      rounded 
-                      small
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      Create A New Course
-                    </v-btn>
-                  </template>
-                  <v-card>
-                    <v-toolbar
-                      dark
-                      color="primary"
-                    >
-                      <v-btn
-                        icon
-                        dark
-                        @click="dialog = false"
-                      >
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                      <v-toolbar-title>Create A New Course</v-toolbar-title>
-                      <v-spacer></v-spacer>
-                      <v-toolbar-items>
-                        <v-btn
-                          dark
-                          text
-                          @click="dialog = false"
-                        >
-                          Save
-                        </v-btn>
-                      </v-toolbar-items>
-                    </v-toolbar>
-                  
-                    <v-list
-                      three-line
-                      subheader
-                    >
-                      <v-subheader>Add A New Course Here</v-subheader>
-                    </v-list>
-                  </v-card>
-                </v-dialog>
+            <router-link to="/instructor/home/create">
+              <v-btn class="ml-2 mt-5" outlined rounded small>
+                Create A New Course
+              </v-btn>
+            </router-link>
           </v-col>
         </v-row>
         <v-row v-for="(item, i) in items" :key="i">
@@ -103,7 +57,7 @@
                     <v-btn
                       class="ml-2 mt-5"
                       outlined
-                      rounded 
+                      rounded
                       small
                       v-bind="attrs"
                       v-on="on"
@@ -112,39 +66,25 @@
                     </v-btn>
                   </template>
                   <v-card>
-                    <v-toolbar
-                      dark
-                      color="primary"
-                    >
-                      <v-btn
-                        icon
-                        dark
-                        @click="dialog = false"
-                      >
+                    <v-toolbar dark color="primary">
+                      <v-btn icon dark @click="dialog = false">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                       <v-toolbar-title>Add Assignment</v-toolbar-title>
                       <v-spacer></v-spacer>
                       <v-toolbar-items>
-                        <v-btn
-                          dark
-                          text
-                          @click="dialog = false"
-                        >
+                        <v-btn dark text @click="dialog = false">
                           Save
                         </v-btn>
                       </v-toolbar-items>
                     </v-toolbar>
-                  
-                    <v-list
-                      three-line
-                      subheader
-                    >
+
+                    <v-list three-line subheader>
                       <v-subheader>Add Questions Here</v-subheader>
                     </v-list>
                   </v-card>
                 </v-dialog>
-                
+
                 <v-dialog
                   v-model="dialog"
                   fullscreen
@@ -155,7 +95,7 @@
                     <v-btn
                       class="ml-2 mt-5"
                       outlined
-                      rounded 
+                      rounded
                       small
                       v-bind="attrs"
                       v-on="on"
@@ -164,34 +104,20 @@
                     </v-btn>
                   </template>
                   <v-card>
-                    <v-toolbar
-                      dark
-                      color="primary"
-                    >
-                      <v-btn
-                        icon
-                        dark
-                        @click="dialog = false"
-                      >
+                    <v-toolbar dark color="primary">
+                      <v-btn icon dark @click="dialog = false">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                       <v-toolbar-title>Add Lecture</v-toolbar-title>
                       <v-spacer></v-spacer>
                       <v-toolbar-items>
-                        <v-btn
-                          dark
-                          text
-                          @click="dialog = false"
-                        >
+                        <v-btn dark text @click="dialog = false">
                           Save
                         </v-btn>
                       </v-toolbar-items>
                     </v-toolbar>
-                  
-                    <v-list
-                      three-line
-                      subheader
-                    >
+
+                    <v-list three-line subheader>
                       <v-subheader>Add Lectures Here</v-subheader>
                     </v-list>
                   </v-card>
@@ -207,7 +133,7 @@
                     <v-btn
                       class="ml-2 mt-5"
                       outlined
-                      rounded 
+                      rounded
                       small
                       v-bind="attrs"
                       v-on="on"
@@ -216,34 +142,20 @@
                     </v-btn>
                   </template>
                   <v-card>
-                    <v-toolbar
-                      dark
-                      color="primary"
-                    >
-                      <v-btn
-                        icon
-                        dark
-                        @click="dialog = false"
-                      >
+                    <v-toolbar dark color="primary">
+                      <v-btn icon dark @click="dialog = false">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                       <v-toolbar-title>Go To Course Forum </v-toolbar-title>
                       <v-spacer></v-spacer>
                       <v-toolbar-items>
-                        <v-btn
-                          dark
-                          text
-                          @click="dialog = false"
-                        >
+                        <v-btn dark text @click="dialog = false">
                           Save
                         </v-btn>
                       </v-toolbar-items>
                     </v-toolbar>
-                  
-                    <v-list
-                      three-line
-                      subheader
-                    >
+
+                    <v-list three-line subheader>
                       <v-subheader>Forum</v-subheader>
                     </v-list>
                   </v-card>
@@ -259,7 +171,7 @@
                     <v-btn
                       class="ml-2 mt-5"
                       outlined
-                      rounded 
+                      rounded
                       small
                       v-bind="attrs"
                       v-on="on"
@@ -268,34 +180,20 @@
                     </v-btn>
                   </template>
                   <v-card>
-                    <v-toolbar
-                      dark
-                      color="primary"
-                    >
-                      <v-btn
-                        icon
-                        dark
-                        @click="dialog = false"
-                      >
+                    <v-toolbar dark color="primary">
+                      <v-btn icon dark @click="dialog = false">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                       <v-toolbar-title>Edit Certificate</v-toolbar-title>
                       <v-spacer></v-spacer>
                       <v-toolbar-items>
-                        <v-btn
-                          dark
-                          text
-                          @click="dialog = false"
-                        >
+                        <v-btn dark text @click="dialog = false">
                           Save
                         </v-btn>
                       </v-toolbar-items>
                     </v-toolbar>
-                  
-                    <v-list
-                      three-line
-                      subheader
-                    >
+
+                    <v-list three-line subheader>
                       <v-subheader>Edit Certificate Here</v-subheader>
                     </v-list>
                   </v-card>
@@ -308,7 +206,6 @@
             </v-card>
           </v-col>
         </v-row>
-
       </v-col>
       <v-col cols="4">
         <v-row>
@@ -374,4 +271,3 @@ export default {
   components: {},
 }
 </script>
-
