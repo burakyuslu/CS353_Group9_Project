@@ -8,7 +8,7 @@
             <v-card outlined tile>
               <v-container>
                 <v-text-field
-                  v-model="searchText"
+                  v-model="search.searchText"
                   label="Search"
                   hide-details="auto"
                 >
@@ -20,17 +20,24 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-row v-for="(item, i) in items" :key="i">
+        <v-row v-for="item in items" :key="item.course_name">
           <v-col>
-            <v-card  outlined tile>
-              <v-card-title class="text-h5" v-text="item.title"></v-card-title>
+            <v-card outlined tile>
+              <v-card-title
+                class="text-h5"
+                v-text="item.course_name"
+              ></v-card-title>
               <v-card-text align-start>
                 <div class="text--primary">
-                  dasdk
+                  <p>Price: {{ item.price }}</p>
+                  <p>Summary: {{ item.summary }}</p>
+                  <p>Publication date: {{ item.publish_date }}</p>
                 </div>
                 <v-spacer> </v-spacer>
               </v-card-text>
-              <v-card-subtitle v-text="item.artist"></v-card-subtitle>
+              <v-card-subtitle
+                v-text="`Instructor ${item.instructor_id}`"
+              ></v-card-subtitle>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -41,16 +48,67 @@
             </v-card>
           </v-col>
         </v-row>
-    
       </v-col>
       <v-col cols="4">
         <v-row>
           <v-col>
-            <!-- <v-card class="pa-10">
+            <v-card>
               <v-card-title>
-                Price Filters
+                Filter Results
               </v-card-title>
-            </v-card> -->
+              <v-container>
+                <v-text-field
+                  v-model="search.priceGreaterThan"
+                  type="number"
+                  label="Price Greater Than"
+                ></v-text-field>
+
+                <v-text-field
+                  v-model="search.priceLessThan"
+                  type="number"
+                  label="Price Less Than"
+                ></v-text-field>
+
+                <v-select
+                  v-model="search.selectedCategories"
+                  :items="categoryItems"
+                  chips
+                  label="Categories"
+                  multiple
+                  outlined
+                ></v-select>
+                <v-select
+                  v-model="search.selectedCourses"
+                  :items="courseTypes"
+                  chips
+                  label="Courses"
+                  multiple
+                  outlined
+                ></v-select>
+                <v-select
+                  v-model="search.sort"
+                  :items="sortTypes"
+                  item-text="state"
+                  label="Sort"
+                  return-object
+                  single
+                  outlined
+                ></v-select>
+
+                <v-subheader>Ratings</v-subheader>
+
+                <v-range-slider
+                  :tick-labels="[0, 1, 2, 3, 4, 5]"
+                  v-model="search.ratingRange"
+                  min="0"
+                  max="5"
+                  ticks="always"
+                  tick-size="4"
+                >
+                </v-range-slider>
+                <v-btn>Clear Filters</v-btn>
+              </v-container>
+            </v-card>
           </v-col>
         </v-row>
       </v-col>
@@ -59,31 +117,57 @@
 </template>
 
 <script>
+import { getters, actions } from '../../store/types.js'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'StudentHome',
+  methods: {
+    ...mapActions({ fetchCourses: actions.FETCH_COURSE_LIST }),
+    async fetchData() {
+      if (!this.awaitingSearch) {
+        const fun = async () => {
+          await this.fetchCourses()
+          this.awaitingSearch = false
+        }
+
+        setTimeout(fun, 1000) // 1 sec delay
+      }
+      this.awaitingSearch = true
+    },
+  },
+  watch: {
+    search: {
+      deep: true,
+      handler: 'fetchData',
+      immediate: true,
+    },
+  },
+  computed: {
+    ...mapGetters({ courses: getters.GET_COURSES_STUDENT_HOME }),
+    items() {
+      console.log(this.courses)
+      return this.courses
+    },
+  },
   data() {
     return {
-      selectedCategories: ['Vuetify', 'Programming'],
+      awaitingSearch: false,
+      search: {
+        searchText: '',
+        priceLessThan: 20,
+        priceGreaterThan: 10,
+        ratingRange: [4, 5],
+        selectedCategories: [],
+        selectedCourses: [],
+        sort: 'Alphetical A-Z',
+      },
       categoryItems: ['Programming', 'Design', 'Vue', 'Vuetify'],
-      searchText: '',
-      items: [
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-          title: 'Supermodel',
-          artist: 'Foster the People',
-        },
-        {
-          color: '#952175',
-          src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-          title: 'Halcyon Days',
-          artist: 'Ellie Goulding',
-        },
-      ],
+      courseTypes: ['Free', 'Paid', 'Discounted'],
+      sortTypes: ['Price Descending', 'Price Ascending', 'Alphetical A-Z'],
       min: 0,
       max: 90,
       range: [0, 70],
     }
   },
-  components: {},
 }
 </script>

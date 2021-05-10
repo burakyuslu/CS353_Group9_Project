@@ -19,6 +19,14 @@ export default new Vuex.Store({
       email: '',
       balance: '',
     },
+    courseDetails: [],
+    courseList: [],
+  },
+  getters: {
+    [getters.GET_COURSES_STUDENT_HOME]: (state) => {
+      console.log("console ", state)
+      return state.courseList
+    },
   },
   mutations: {
     [mutations.SET_USER_DETAILS](state, { user }) {
@@ -36,6 +44,9 @@ export default new Vuex.Store({
       state.token = ''
       state.signedIn = false
       axios.defaults.headers.common['Authorization'] = `Bearer 1`
+    },
+    [mutations.SET_COURSE_LIST](state, { data }) {
+      state.courseList = data
     },
   },
   actions: {
@@ -62,6 +73,18 @@ export default new Vuex.Store({
       try {
         const response = await axios.post(URL.SIGNUP, {})
       } catch (error) {}
+    },
+    // fetches the 'home page' unowned courses...
+    async [actions.FETCH_COURSE_LIST]({ commit, state }, payload) {
+      try {
+        const response = await axios.get(URL.COURSE_LIST)
+        const { data } = response
+        commit(mutations.SET_COURSE_LIST, {data})
+      } catch (error) {
+        // todo set error
+        // cannot login
+        console.log(error)
+      }
     },
   },
   modules: {},

@@ -17,7 +17,7 @@ async function query(sql, params) {
     let conn, results;
     try {
         conn = await pool.getConnection();
-        [results, ] = await conn.query(sql, params)
+        results  = await conn.query(sql, params)
     } catch (err) {
         throw err;
     } finally {

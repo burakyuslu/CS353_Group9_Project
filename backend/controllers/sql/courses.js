@@ -6,11 +6,15 @@ module.exports.GET_COURSE_LIST = `
          , category
          , I.instructor_id
          , publish_date
+         , U.name as name
+         , U.surname as surname
     FROM course C,
          publish P,
          instructor I
+             join useracc U on I.instructor_id = U.user_id
     where C.course_id = P.course_id
       AND I.instructor_id = P.instructor_id`
+
 
 // transactiona gecir?
 module.exports.POST_COURSE = `
