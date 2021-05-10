@@ -16,6 +16,9 @@ export const actions = {
   SIGN_UP: 'SIGN_UP',
   FETCH_COURSE_DETAILS: 'FETCH_COURSE_DETAILS',
   FETCH_COURSE_LIST: 'FETCH_COURSE_LIST',
+  BUY_COURSE: '',
+  WISHLISH_COURSE: '',
+  UNWISH_COURSE: '',
 }
 
 export default {
