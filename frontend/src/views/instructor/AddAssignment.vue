@@ -149,26 +149,26 @@
 
 export default {
   name: 'App',
-  question: [],
-  answers: [],
+  // question: [],
+  // answers: [],
 
-  computed: {
-        items () {
-          const questionLength = this.question.length
-          const answersLength = this.answers.length
+  // computed: {
+  //       items () {
+  //         const questionLength = this.question.length
+  //         const answersLength = this.answers.length
 
-          return Array.from({ length: 10 }, (k, v) => {
-            const question = this.question[]
-            const asnwer = this.answer[]
+  //         return Array.from({ length: 10 }, (k, v) => {
+  //           const question = this.question[]
+  //           const asnwer = this.answer[]
 
-            return {
-              color: this.colors[this.genRandomIndex(colorsLength)],
-              fullName: `${name} ${surname}`,
-              initials: `${name[0]} ${surname[0]}`,
-            }
-          })
-        },
-      },
+  //           return {
+  //             color: this.colors[this.genRandomIndex(colorsLength)],
+  //             fullName: `${name} ${surname}`,
+  //             initials: `${name[0]} ${surname[0]}`,
+  //           }
+  //         })
+  //       },
+  //     },
   data(){
     return{
       radioGroup: 1,
