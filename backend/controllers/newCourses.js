@@ -8,6 +8,7 @@ const {
     GET_COURSE_QNA_THREAD,
     GET_COURSE_QNA_THREAD_ENTRIES,
     GET_COURSE_RATINGS,
+    GET_AVERAGE_RATING,
     GET_LECTURE_CONTENT,
     GET_LECTURE_NOTES,
     GET_LECTURES,
@@ -138,8 +139,9 @@ courseRouter.get("/:courseId/ratings", async (req, res, next) => {
     const {instructorId, studentId} = req
     try {
         const {courseId} = req.params
-        const result = await db.query(GET_COURSE_RATINGS, [courseId])
-        res.json(result)
+        const ratings = await db.query(GET_COURSE_RATINGS, [courseId])
+        const averageRating = await db.query(GET_AVERAGE_RATING, [courseId])
+        res.json({ratings, averageRating})
     } catch (exception) {
         next(exception)
     }

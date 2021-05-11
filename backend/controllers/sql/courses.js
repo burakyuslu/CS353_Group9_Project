@@ -79,6 +79,12 @@ module.exports.GET_COURSE_RATINGS = `
              join useracc U on R.student_id = U.user_id
     WHERE R.course_id = ?`
 
+module.exports.GET_AVERAGE_RATING = `
+    SELECT avg(rating) 
+     FROM Rates R
+     GROUP BY(course_id) 
+     HAVING course_id = ?`
+
 module.exports.POST_COURSE_RATING = `
     INSERT INTO rates(course_id, student_id, comment, rating)
     VALUES (?, ?, ?, ?)
