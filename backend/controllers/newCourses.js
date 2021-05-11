@@ -6,6 +6,7 @@ const {
     GET_COURSE_CERTIFICATE,
     GET_COURSE_LIST,
     GET_COURSE_QNA_THREAD,
+    GET_COURSE_ASSIGNMENT_DETAILS,
     GET_COURSE_QNA_THREAD_ENTRIES,
     GET_COURSE_RATINGS,
     GET_AVERAGE_RATING,
@@ -17,10 +18,12 @@ const {
     POST_COURSE,
     POST_COURSE_ANNOUNCEMENT,
     POST_COURSE_ASSIGNMENT_QUIZ,
+    POST_COURSE_ASSIGNMENT_SUBMISSION,
     POST_COURSE_QNA_THREAD_ENTRY,
     POST_COURSE_RATING,
     POST_LECTURE,
     POST_LECTURE_NOTE,
+    POST_ASSIGNMENT_QUESTION,
     POST_QNA_THREAD
 } = require("./sql/courses");
 
@@ -323,19 +326,30 @@ courseRouter.post("/:courseId/assignments/quizzes", async (req, res, next) => {
 
 // /:courseId/assignments/:assignmentId GET, POST(submitting)
 courseRouter.get("/:courseId/assignments/:assignmentId", async (req, res, next) => {
+    /*not complete yet
     try {
-
+        const {quizId} = req.params
+        const result = await db.query(GET_COURSE_ASSIGNMENT_DETAILS, [quizId])
+        res.json(result)
     } catch (exception) {
         next(exception)
-    }
+    }*/
 })
 
 courseRouter.post("/:courseId/assignments/:assignmentId", async (req, res, next) => {
+    /* not complete yet
+    const {instructorId, studentId} = req
     try {
+        const {body} = req.body
+        const {quizId} = body_quizId
+        const {questionId} = body.questionId
+        const {answer} = body.answer
 
+        const {submitQuestion} = await db.query(POST_ASSIGNMENT_QUESTION, [studentId, questionId, 0, answer])
+        const {submitAssignment} = await db.query(POST_COURSE_ASSIGNMENT_SUBMISSION, [quizId, studentId, answer, 0])
     } catch (exception) {
         next(exception)
-    }
+    }*/
 })
 
 // /:courseId/grading GET, POST(submitting)
