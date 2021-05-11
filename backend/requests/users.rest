@@ -9,3 +9,6 @@ content-type: application/json
 
 ###
 GET http://localhost:3003/api/users/1
+
+###
+GET http://localhost:3003/api/users/wishes

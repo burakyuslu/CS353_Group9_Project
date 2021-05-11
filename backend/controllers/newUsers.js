@@ -87,6 +87,18 @@ usersRouter.post("/wishes", [async (req, res, next) => {
     }
 }])
 
+usersRouter.delete("/wishes", [async (req, res, next) => {
+    const {studentId} = req
+    const {courseId} = req.body
+    try {
+        const result = await db.query(`DELETE FROM addtowishlist
+                                       WHERE student_id = ? AND course_id = ?`, [studentId, courseId])
+        res.json(result)
+    } catch (exception) {
+        next(exception)
+    }
+}])
+
 usersRouter.delete("/students/wishes", [async (req, res, next) => {
     const {studentId} = req
     const {courseId} = req.body
