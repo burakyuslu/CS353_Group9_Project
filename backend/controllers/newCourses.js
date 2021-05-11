@@ -42,8 +42,18 @@ const authenticate = ({expected, userId, res, req}) => {
 courseRouter.get("/", async (req, res, next) => {
     const {ratingLow, ratingHigh, search} = req.query
 
-    let query = GET_COURSE_LIST
-    const params = []
+    let query = GET_COURSE_LIST;
+    var params;
+
+    if(search == ""){
+        query += " AND rating > ? AND rating < ?";
+        params = [ratingLow, ratingHigh];
+    }
+    else{
+        query += "AND rating > ? AND rating < ? AND course_name LIKE ?";
+        params = [ratingLow, ratingHigh, search];
+    }
+
     try {
         const result = await db.query(query)
         res.json(result)
