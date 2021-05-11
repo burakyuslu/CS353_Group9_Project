@@ -1,7 +1,219 @@
-<template> <div></div></template>
+<template>
+  <div>
+    <h2>
+      Welcome back!
+    </h2>
+
+    <v-card>
+      <v-card-title class="headline mb-1">
+        Manage Requests & Complaints By Users
+      </v-card-title>
+      <v-card-text>
+        Manage the refund requests and complaints by users and discount requests by instructors here.
+        ( (?) Maybe pending refund requests and others' number could be displayed here
+        but I did not add it here as we don't hold such an attribute in backend.)
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+            outlined
+            text
+            v-on:click="seeRefundRequests"
+        >
+          See Refund Requests
+        </v-btn>
+        <v-btn
+            outlined
+            text
+            v-on:click="seeComplaints"
+        >
+          See Complaints
+        </v-btn>
+        <v-btn
+            outlined
+            text
+            v-on:click="seeDiscountRequests"
+        >
+          See Discount Requests
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+
+    <section v-if="shownList === 1">
+      <h2>
+        Pending Refund Requests By Students
+      </h2>
+      <v-card v-for="refundReq in refundReqList" :key="refundReq.refundReqId" outlined>
+        <v-card-title>
+          User: {{ refundReq.requester }}
+        </v-card-title>
+        <v-card-text>
+          {{ refundReq.refundReason}}
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+              outlined
+              text
+              v-on:click="approveRefund"
+          >
+            Approve Refund
+          </v-btn>
+          <v-btn
+              outlined
+              text
+              v-on:click="rejectRefund"
+          >
+            Reject Refund
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </section>
+
+    <section v-if="shownList === 2">
+      <h2>
+        Pending Complaints By Students
+      </h2>
+      <v-card v-for="comp in complaintList" :key="comp.complaintId" outlined>
+        <v-card-title>
+          User: {{ comp.complainer }}
+        </v-card-title>
+        <v-card-text>
+          {{ comp.complaint}}
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+              outlined
+              text
+              v-on:click="replyToComplaint"
+          >
+            Reply To Student
+          </v-btn>
+          <v-btn
+              outlined
+              text
+              v-on:click="dismissComplaint"
+          >
+            Dismiss Complaint
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </section>
+
+    <section v-if="shownList === 3">
+      <h2>
+        Pending Discount Requests By Instructors
+      </h2>
+      <v-card v-for="discReq in DiscountReqList" :key="discReq.discReqId" outlined>
+        <v-card-title>
+          User: {{ discReq.instructor }}
+        </v-card-title>
+        <v-card-text>
+          Course: {{ discReq.course}}
+          Percentage: {{ discReq.percentage}}
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+              outlined
+              text
+              v-on:click="approveDiscount"
+          >
+            Approve Discount
+          </v-btn>
+          <v-btn
+              outlined
+              text
+              v-on:click="rejectDiscount"
+          >
+            Reject Discount
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </section>
+  </div>
+</template>
 
 <script>
-export default {}
+export default {
+  components: {},
+  data() {
+    return {
+      // shownPart=1 -> show refund requests, shownPart=2 -> show complaints, shownPart=3-> show discount requests
+      shownList: 0,
+
+      refundReqList: [
+        {
+          refundReqId: 1,
+          requester: "Example refunder 1",
+          refundReason: "Example reason 1"
+        },
+        {
+          refundReqId: 2,
+          requester: "Example refunder 2",
+          refundReason: "Example reason 2"
+        },
+        {
+          refundReqId: 3,
+          requester: "Example refunder 3",
+          refundReason: "Example reason 3"
+        }
+      ],
+
+      complaintList: [
+        {
+          complaintId: 1,
+          complainer: "Example complainer 1",
+          complaint: "Example complaint 1"
+        },
+        {
+          complaintId: 2,
+          complainer: "Example complainer 2",
+          complaint: "Example complaint 2"
+        },
+        {
+          complaintId: 3,
+          complainer: "Example complainer 3",
+          complaint: "Example complaint 3"
+        }
+      ],
+
+      DiscountReqList: [
+        {
+          discReqId: 1,
+          instructor: "Example instructor 1",
+          course: "Example course 1",
+          percentage: 15
+        },
+        {
+          discReqId: 2,
+          instructor: "Example instructor 2",
+          course: "Example course 2",
+          percentage: 20
+        },
+        {
+          discReqId: 3,
+          instructor: "Example instructor 3",
+          course: "Example course 3",
+          percentage: 50
+        }
+      ],
+
+    };
+  },
+  computed: {
+
+  },
+  methods: {
+    seeRefundRequests: function(){
+      this.shownList = 1;
+    },
+    seeComplaints: function(){
+      this.shownList = 2;
+    },
+    seeDiscountRequests: function(){
+      this.shownList = 3;
+    }
+  }
+
+}
 </script>
 
 <style></style>
