@@ -6,43 +6,54 @@
         <v-row>
           <v-col>
             <v-card outlined tile>
-              <v-container>
-                <v-text-field
-                  v-model="search.searchText"
-                  label="Search"
-                  hide-details="auto"
-                >
-                  <v-icon slot="append">
-                    mdi-magnify
-                  </v-icon>
-                </v-text-field>
+              <v-card-title>
+                Profile
+              </v-card-title>
+              <v-container grid-list-xs>
+                <!-- <v-card-text> -->
+                <p>Full Name:</p>
+                <p>Email:</p>
+
+                <p>Balance:</p>
+                <p>Number of courses:</p>
+                Balance:
+                <!-- </v-card-text> -->
               </v-container>
             </v-card>
           </v-col>
         </v-row>
-        <v-row v-for="item in items" :key="item.course_name">
+
+        <v-card class="mt-12" outlined tile>
+          <v-card-title>
+            My Courses
+          </v-card-title>
+        </v-card>
+        <v-row v-for="item in courses" :key="item.course_name">
           <v-col>
             <v-card outlined tile>
-              <v-card-title
-                class="text-h5"
-                v-text="item.course_name"
-              ></v-card-title>
+              <v-card-title v-text="item.course_name"></v-card-title>
               <v-card-text align-start>
                 <div class="text--primary">
-                  <p>Price: {{ item.price }}</p>
-                  <p>Summary: {{ item.summary }}</p>
-                  <p>Publication date: {{ item.publish_date }}</p>
+                  <p>price: {{ item.price }}</p>
+                  <p>summary: {{ item.summary }}</p>
+                  <p>publication date: {{ item.publish_date }}</p>
                 </div>
                 <v-spacer> </v-spacer>
               </v-card-text>
               <v-card-subtitle
-                v-text="`Instructor ${item.instructor_id}`"
+                v-text="`instructor ${item.instructor_id}`"
               ></v-card-subtitle>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
+                <v-btn v-if="true" class="ml-2 mt-5" outlined rounded small>
+                  request refund
+                </v-btn>
+                <v-btn v-if="true" class="ml-2 mt-5" outlined rounded small>
+                  view certificate
+                </v-btn>
                 <v-btn class="ml-2 mt-5" outlined rounded small>
-                  Go To Course
+                  go to course
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -54,61 +65,35 @@
           <v-col>
             <v-card>
               <v-card-title>
-                Filter Results
+                Wishlist
               </v-card-title>
-              <v-container>
-                <v-text-field
-                  v-model="search.priceGreaterThan"
-                  type="number"
-                  label="Price Greater Than"
-                ></v-text-field>
-
-                <v-text-field
-                  v-model="search.priceLessThan"
-                  type="number"
-                  label="Price Less Than"
-                ></v-text-field>
-
-                <v-select
-                  v-model="search.selectedCategories"
-                  :items="categoryItems"
-                  chips
-                  label="Categories"
-                  multiple
-                  outlined
-                ></v-select>
-                <v-select
-                  v-model="search.selectedCourses"
-                  :items="courseTypes"
-                  chips
-                  label="Courses"
-                  multiple
-                  outlined
-                ></v-select>
-                <v-select
-                  v-model="search.sort"
-                  :items="sortTypes"
-                  item-text="state"
-                  label="Sort"
-                  return-object
-                  single
-                  outlined
-                ></v-select>
-
-                <v-subheader>Ratings</v-subheader>
-
-                <v-range-slider
-                  :tick-labels="[0, 1, 2, 3, 4, 5]"
-                  v-model="search.ratingRange"
-                  min="0"
-                  max="5"
-                  ticks="always"
-                  tick-size="4"
-                >
-                </v-range-slider>
-                <v-btn>Clear Filters</v-btn>
-              </v-container>
             </v-card>
+            <v-row v-for="item in courses" :key="item.course_name">
+              <v-col>
+                <v-card outlined tile>
+                  <v-card-title v-text="item.course_name"></v-card-title>
+                  <v-card-text>
+                    <p>price: {{ item.price }}</p>
+                    <p>summary: {{ item.summary }}</p>
+                    <p>publication date: {{ item.publish_date }}</p>
+                    <v-spacer> </v-spacer>
+                  </v-card-text>
+                  <v-card-subtitle
+                    v-text="`instructor ${item.instructor_id}`"
+                  ></v-card-subtitle>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn class="ml-2 mt-5" outlined rounded small @click="unwish({courseId: item.course_id})">
+                      Remove
+                    </v-btn>
+                    <v-btn class="ml-2 mt-5" outlined rounded small>
+                      go to course
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
       </v-col>
@@ -117,7 +102,42 @@
 </template>
 
 <script>
-export default {}
+import { mapActions, mapGetters } from 'vuex'
+import { getters, actions } from '../../store/types.js'
+export default {
+  data() {
+    return {
+      myCourses: [],
+    }
+  },
+  methods: {
+    ...mapActions({
+      fetchUserProfile: actions.FETCH_USER_PROFILE_DATA,
+      unwish: actions.UNWISH_COURSE,
+    }),
+  },
+  computed: {
+    ...mapGetters({
+      notifications: getters.GET_STUDENT_NOTIFICATIONS,
+      userProfileData: getters.GET_STUDENT_PROFILE_DATA,
+    }),
+    courses() {
+      // profile data includes : courses, refundRequests, wishlist, certificates
+      return this.userProfileData.courses
+    },
+    wishlist() {
+      // profile data includes : courses, refundRequests, wishlist, certificates
+      return this.userProfileData.wishlist
+    },
+  },
+  watch: {
+    notifications: {
+      deep: true,
+      handler: 'fetchUserProfile',
+      immediate: true,
+    },
+  },
+}
 </script>
 
 <style></style>

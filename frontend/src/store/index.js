@@ -12,6 +12,7 @@ export default new Vuex.Store({
     type: '',
     user: {
       token: '',
+      userId: '',
       userType: '',
       name: '',
       surname: '',
@@ -21,16 +22,23 @@ export default new Vuex.Store({
     },
     courseDetails: [],
     courseList: [],
+    studentProfileData: {},
+    studentNotifications: [],
   },
   getters: {
-    [getters.GET_COURSES_STUDENT_HOME]: (state) => {
-      console.log("console ", state)
+    [getters.GET_COURSES_STUDENT_HOME]: state => {
       return state.courseList
+    },
+    [getters.GET_STUDENT_PROFILE_DATA]: state => {
+      return state.studentProfileData
+    },
+    [getters.GET_STUDENT_NOTIFICATIONS]: state => {
+      return state.studentNotifications
     },
   },
   mutations: {
-    [mutations.SET_USER_DETAILS](state, { user }) {
-      state.user = user
+    [mutations.SET_USER_DETAILS](state, { data }) {
+      state.user = data
     },
     [mutations.SET_USER_TYPE](state, { type }) {
       state.type = type
@@ -47,6 +55,9 @@ export default new Vuex.Store({
     },
     [mutations.SET_COURSE_LIST](state, { data }) {
       state.courseList = data
+    },
+    [mutations.SET_STUDENT_PROFILE_DATA](state, { data }) {
+      state.studentProfileData = data
     },
   },
   actions: {
@@ -79,7 +90,36 @@ export default new Vuex.Store({
       try {
         const response = await axios.get(URL.COURSE_LIST)
         const { data } = response
-        commit(mutations.SET_COURSE_LIST, {data})
+        commit(mutations.SET_COURSE_LIST, { data })
+      } catch (error) {
+        // todo set error
+        // cannot login
+        console.log(error)
+      }
+    },
+
+    async [actions.FETCH_USER_PROFILE_DATA]({ commit, state }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.get(URL.USER_STUDENT_PROFILE_DATA, {
+          params: { studentId: state.user.userId },
+        })
+        commit(mutations.SET_STUDENT_PROFILE_DATA, { data })
+      } catch (error) {
+        // todo set error
+        // cannot login
+        console.log(error)
+      }
+    },
+
+    async [actions.UNWISH_COURSE]({ commit, state }, {courseId}) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.delete(URL.USER_STUDENT_WISH_COURSE, {
+          data: {courseId},
+          params: { studentId: state.user.userId },
+        })
+        commit(mutations.SET_STUDENT_PROFILE_DATA, { data })
       } catch (error) {
         // todo set error
         // cannot login

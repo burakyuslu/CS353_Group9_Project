@@ -10,7 +10,12 @@ axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
 export const URL = {
   LOGIN: 'users/login',
   SIGNUP: 'users/signup',
-  COURSE_LIST: 'courses'
+  COURSE_LIST: 'courses',
+  USER_COURSES: 'users/courses',
+  USER_WISHLIST: 'users/wishes',
+  USER_CERTIFICATES: 'users/certificates',
+  USER_STUDENT_PROFILE_DATA: 'users/students/profile',
+  USER_STUDENT_WISH_COURSE: 'users/students/wishes'
   
 }
 export default axiosInstance

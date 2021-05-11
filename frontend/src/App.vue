@@ -3,8 +3,8 @@
     <v-app-bar app>
       <nav>
         <router-link to="/admin/home">Admin</router-link> |
-        <router-link to="/student/discover">Student</router-link> |
-        <router-link to="/student/profile">Student</router-link> |
+        <router-link to="/student/discover">Student Discover</router-link> |
+        <router-link to="/student/profile">Student Profile</router-link> |
         <router-link to="/instructor/home">Instructor</router-link> |
         <router-link to="/lecture">Lecture</router-link> |
         <router-link to="/course">Course Details</router-link>
