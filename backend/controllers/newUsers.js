@@ -16,7 +16,7 @@ usersRouter.get("/students/profile", [async (req, res, next) => {
     const {studentId} = req
 
     try {
-        const profile = await db.query('SELECT user_id, name, surname, email_address, balance, reg_date FROM useracc u where user_id = ?', [studentId])
+        const profileData = await db.query('SELECT user_id, name, surname, email_address, balance, reg_date FROM useracc u where user_id = ?', [studentId])
         const courses = await db.query(`SELECT s.student_id,
                                                c.course_id,
                                                b.price,
@@ -42,7 +42,7 @@ usersRouter.get("/students/profile", [async (req, res, next) => {
                                              FROM certificate
                                                       NATURAL JOIN earns
                                              WHERE student_id = ?`, [studentId])
-        res.json({profile, courses, wishlist, certificates})
+        res.json({profile:profileData[0], courses, wishlist, certificates})
     } catch (exception) {
         next(exception)
     }
@@ -104,13 +104,13 @@ usersRouter.delete("/students/wishes", [async (req, res, next) => {
     const {courseId} = req.body
     console.log(`hello, ${courseId}`)
     res.status(200)
-    // try {
-    //     const result = await db.query(`INSERT INTO addtowishlist
-    //                                    VALUES (?, ?)`, [studentId, courseId])
-    //     res.json(result)
-    // } catch (exception) {
-    //     next(exception)
-    // }
+    try {
+        const result = await db.query(`INSERT INTO addtowishlist
+                                       VALUES (?, ?)`, [studentId, courseId])
+        res.json(result[0])
+    } catch (exception) {
+        next(exception)
+    }
 }])
 
 // /:userId/certificates

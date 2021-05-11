@@ -23,6 +23,7 @@ export const actions = {
   BUY_COURSE: '',
   WISHLISH_COURSE: '',
   UNWISH_COURSE: 'UNWISH_COURSE',
+  REQUEST_REFUND: 'REQUEST_REFUND'
 }
 
 export default {

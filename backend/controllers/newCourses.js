@@ -40,8 +40,12 @@ const authenticate = ({expected, userId, res, req}) => {
 
 // get course lists
 courseRouter.get("/", async (req, res, next) => {
+    const {ratingLow, ratingHigh, search} = req.query
+
+    let query = GET_COURSE_LIST
+    const params = []
     try {
-        const result = await db.query(GET_COURSE_LIST)
+        const result = await db.query()
         res.json(result)
     } catch (exception) {
         next(exception)

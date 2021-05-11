@@ -11,12 +11,12 @@
               </v-card-title>
               <v-container grid-list-xs>
                 <!-- <v-card-text> -->
-                <p>Full Name:</p>
-                <p>Email:</p>
+                <p>Full Name: {{ `${user.name || ''} ${user.surname}` }}</p>
+                <p>Email: {{ user.email_address }}</p>
 
-                <p>Balance:</p>
-                <p>Number of courses:</p>
-                Balance:
+                <p>Balance: {{ user.balance }}</p>
+                <p>Number of courses: {{ courses.length }}</p>
+                <p>Registration Date: {{ user.reg_date }}</p>
                 <!-- </v-card-text> -->
               </v-container>
             </v-card>
@@ -84,7 +84,13 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn class="ml-2 mt-5" outlined rounded small @click="unwish({courseId: item.course_id})">
+                    <v-btn
+                      class="ml-2 mt-5"
+                      outlined
+                      rounded
+                      small
+                      @click="unwish({ courseId: item.course_id })"
+                    >
                       Remove
                     </v-btn>
                     <v-btn class="ml-2 mt-5" outlined rounded small>
@@ -114,6 +120,7 @@ export default {
     ...mapActions({
       fetchUserProfile: actions.FETCH_USER_PROFILE_DATA,
       unwish: actions.UNWISH_COURSE,
+      requestRefund: actions.REQUEST_REFUND,
     }),
   },
   computed: {
@@ -123,11 +130,24 @@ export default {
     }),
     courses() {
       // profile data includes : courses, refundRequests, wishlist, certificates
-      return this.userProfileData.courses
+      return this.userProfileData.courses || []
     },
     wishlist() {
       // profile data includes : courses, refundRequests, wishlist, certificates
       return this.userProfileData.wishlist
+    },
+    user() {
+      // profile data includes : courses, refundRequests, wishlist, certificates
+      return (
+        this.userProfileData.profile || {
+          user_id: 1,
+          name: '',
+          surname: '',
+          email_address: '',
+          balance: 0,
+          reg_date: '',
+        }
+      )
     },
   },
   watch: {
