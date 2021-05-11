@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Lecture from '../views/student/Lecture.vue'
 import CourseDetails from '../views/student/Course.vue'
-import StudentHome from '../views/student/Home.vue'
+import StudentDiscover from '../views/student/Discover.vue'
+import StudentProfile from '../views/student/Profile.vue'
 import InstructorHome from '../views/instructor/Home.vue'
 import Instructor from '../views/instructor/Instructor.vue'
 import CreateCourse from '../views/instructor/CreateCourse.vue'
@@ -17,12 +18,17 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: { path: '/student/home' },
+    redirect: { name: 'student.discover' },
   },
   {
-    path: '/student/home',
-    name: 'student.home',
-    component: StudentHome,
+    path: '/student/discover',
+    name: 'student.discover',
+    component: StudentDiscover,
+  },
+  {
+    path: '/student/profile',
+    name: 'student.profile',
+    component: StudentProfile,
   },
   {
     path: '/instructor/home',
