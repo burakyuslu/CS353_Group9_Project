@@ -126,6 +126,20 @@ export default new Vuex.Store({
         console.log(error)
       }
     },
+    async [actions.REQUEST_REFUND]({ commit, state }, {courseId}) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.delete(URL.USER_STUDENT_WISH_COURSE, {
+          data: {courseId},
+          params: { studentId: state.user.userId },
+        })
+        commit(mutations.SET_STUDENT_PROFILE_DATA, { data })
+      } catch (error) {
+        // todo set error
+        // cannot login
+        console.log(error)
+      }
+    },
   },
   modules: {},
 })

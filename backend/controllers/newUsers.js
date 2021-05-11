@@ -24,6 +24,8 @@ usersRouter.get("/students/profile", [async (req, res, next) => {
                                                course_name,
                                                course_summary,
                                                category,
+                                               u.name    as instructor_name,
+                                               u.surname as instructor_surname,
                                                c2.certificate_id
                                         FROM student s
                                                  JOIN buys b ON s.student_id = ? AND s.student_id = b.student_id
@@ -42,7 +44,7 @@ usersRouter.get("/students/profile", [async (req, res, next) => {
                                              FROM certificate
                                                       NATURAL JOIN earns
                                              WHERE student_id = ?`, [studentId])
-        res.json({profile:profileData[0], courses, wishlist, certificates})
+        res.json({profile: profileData[0], courses, wishlist, certificates})
     } catch (exception) {
         next(exception)
     }
@@ -91,8 +93,10 @@ usersRouter.delete("/wishes", [async (req, res, next) => {
     const {studentId} = req
     const {courseId} = req.body
     try {
-        const result = await db.query(`DELETE FROM addtowishlist
-                                       WHERE student_id = ? AND course_id = ?`, [studentId, courseId])
+        const result = await db.query(`DELETE
+                                       FROM addtowishlist
+                                       WHERE student_id = ?
+                                         AND course_id = ?`, [studentId, courseId])
         res.json(result)
     } catch (exception) {
         next(exception)

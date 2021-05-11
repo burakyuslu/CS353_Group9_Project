@@ -45,7 +45,7 @@ courseRouter.get("/", async (req, res, next) => {
     let query = GET_COURSE_LIST
     const params = []
     try {
-        const result = await db.query()
+        const result = await db.query(query)
         res.json(result)
     } catch (exception) {
         next(exception)
