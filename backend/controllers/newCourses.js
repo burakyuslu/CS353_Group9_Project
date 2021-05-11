@@ -46,12 +46,14 @@ courseRouter.get("/", async (req, res, next) => {
     let query = GET_COURSE_LIST;
     var params;
 
+    const AVG_QUERY = "SELECT avg(rating) FROM Rates R GROUP BY(course_id) "
+
     if(search == ""){
-        query += " AND rating > ? AND rating < ?";
+        query += " AND (" + AVG_QUERY +") > ? AND (" + AVG_QUERY + ") < ?";
         params = [ratingLow, ratingHigh];
     }
     else{
-        query += "AND rating > ? AND rating < ? AND course_name LIKE ?";
+        query += " AND (" + AVG_QUERY +") > ? AND (" + AVG_QUERY + ") < ? AND course_name LIKE ?";
         params = [ratingLow, ratingHigh, search];
     }
 
