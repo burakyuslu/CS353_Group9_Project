@@ -128,6 +128,23 @@
         </v-card-actions>
       </v-card>
     </section>
+
+    <section v-if="shownList === 4">
+      <h3>
+        Reply To {{ selectedComplaint.complainer}}
+      </h3>
+      <p>
+        Complaint: {{ selectedComplaint.complaint }}
+      </p>
+      <textarea v-model="adminReplyText" placeholder="Write your reply here..."></textarea>
+      <v-btn
+          outlined
+          text
+          v-on:click="replyToStudentDueToComplaint"
+      >
+        Send Reply
+      </v-btn>
+    </section>
   </div>
 </template>
 
@@ -138,7 +155,12 @@ export default {
     return {
       // shownPart=1 -> show refund requests, shownPart=2 -> show complaints, shownPart=3-> show discount requests
       shownList: 0,
-
+      adminReplyText: "",
+      selectedComplaint: {
+        complaintId: -1,
+        complainer: "selected user",
+        complaint: "selected complaint"
+      },
       refundReqList: [
         {
           refundReqId: 1,
@@ -217,7 +239,6 @@ export default {
       // todo
 
       // remove from list
-      // find from list
       let i;
       let selectedThreadIndex;
       for (i = 0; i < this.refundReqList.length; i++) {
@@ -242,7 +263,11 @@ export default {
 
     replyToComplaint: function( cId){
       // send reply to complaint
-      // todo
+      // todo (db parts)
+      // todo there is also an issue where the item is removed before the answer is sent
+      // todo idk if we should change it such that after replying admin removes manually from the list
+
+      this.shownList = 4;
 
       // remove from list
       let i;
@@ -250,6 +275,10 @@ export default {
       for (i = 0; i < this.complaintList.length; i++) {
         if (this.complaintList[i].complaintId === cId) {
           selectedThreadIndex = i;
+          this.selectedComplaint.complaint = this.complaintList[i].complaint;
+          this.selectedComplaint.complainer = this.complaintList[i].complainer;
+          this.selectedComplaint.complaintId = this.complaintList[i].complaintId;
+
         }
       }
       this.complaintList.splice(selectedThreadIndex, 1);
@@ -294,6 +323,12 @@ export default {
       this.discountReqList.splice(selectedThreadIndex, 1);
     },
 
+    replyToStudentDueToComplaint(){
+      // todo, move this message to student's inbox
+      // the message: adminReplyText
+      this.shownList = 2;
+      // todo: after that, clear adminReplyText from the text-box
+    }
 
   }
 
