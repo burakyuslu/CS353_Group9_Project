@@ -25,6 +25,11 @@
       </v-file-input>
     </v-container>
 
+    <v-container> 
+      <v-file-input accept="image.*" label="You can also upload your certificate as an image">
+      </v-file-input>
+    </v-container>
+
     <v-container>
       <router-link to="/instructor/home/">
         <v-btn class="ml-2 mt-5" outlined rounded small>
