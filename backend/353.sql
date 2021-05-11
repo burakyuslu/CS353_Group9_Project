@@ -98,13 +98,15 @@ CREATE TABLE Course
     course_name    VARCHAR(256)  NOT NULL,
     course_summary VARCHAR(4096) NOT NULL,
     price          INT           NOT NULL,
-    category       VARCHAR(64)   NOT NULL
+    category       VARCHAR(64)   NOT NULL,
+    discountable   BOOL          NOT NULL,
+    percentage  TINYINT  NOT NULL
 ) ENGINE = InnoDB;
 
 INSERT INTO Course (course_id, course_name, course_summary, price, category)
-VALUES (1, 'c1_name', 'c1_summary', 10, 'c1_category'),
-       (2, 'c2_name', 'c2_summary', 20, 'c2_category'),
-       (3, 'c3_name', 'c3_summary', 30, 'c3_category');
+VALUES (1, 'c1_name', 'c1_summary', 10, 'c1_category', true, 30),
+       (2, 'c2_name', 'c2_summary', 20, 'c2_category', false, 0),
+       (3, 'c3_name', 'c3_summary', 30, 'c3_category', true, 50);
 
 # DONE
 # CourseKeyword(course_id, keyword)
@@ -277,13 +279,15 @@ CREATE TABLE Lecture
     lecture_id   INT PRIMARY KEY AUTO_INCREMENT,
     lecture_name VARCHAR(512) NOT NULL,
     course_id    INT          NOT NULL,
+    content      TEXT         NOT NULL,
+    type         VARCHAR(128) NOT NULL,
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
 INSERT INTO Lecture(lecture_id, lecture_name, course_id)
-VALUES (1, 'lecture_name_1', 1),
-       (2, 'lecture_name_2', 2),
-       (3, 'lecture_name_3', 3);
+VALUES (1, 'lecture_name_1', 1, 'content1', 'type1'),
+       (2, 'lecture_name_2', 2, 'content2', 'type2'),
+       (3, 'lecture_name_3', 3, 'content3', 'type3');
 
 # DONE
 # QnA(qna_id, course_id, lecture_id)
@@ -338,71 +342,6 @@ VALUES (1, 'entry_text_1', 1, 1),
        (2, 'entry_text_2', 2, 2),
        (3, 'entry_text_3', 3, 3);
 
-# DONE
-# Content(content_id, content_title)
-# C: content_id
-CREATE TABLE Content
-(
-    content_id    INT AUTO_INCREMENT PRIMARY KEY,
-    content_title VARCHAR(512) NOT NULL
-) ENGINE = InnoDB;
-
-INSERT INTO Content(content_id, content_title)
-VALUES (11, 'content_title_1'),
-       (2, 'content_title_2'),
-       (3, 'content_title_3');
-
-# DONE
-# Multimedia(content_id, multimedia_content)
-# C: content_id
-CREATE TABLE Multimedia
-(
-    content_id         INT PRIMARY KEY,
-    multimedia_content VARCHAR(2048) NOT NULL,
-    FOREIGN KEY (content_id) REFERENCES Content (content_id)
-) ENGINE = InnoDB;
-# we plan to store video URLs in our database
-
-INSERT INTO Multimedia(content_id, multimedia_content)
-VALUES (11, 'multimedia_url_1'),
-       (2, 'multimedia_url_2'),
-       (3, 'multimedia_url_3');
-
-
-# DONE
-# Text(content_id,  text_content)
-# C: content_id
-CREATE TABLE TextMaterial
-(
-    content_id   INT PRIMARY KEY,
-    text_content VARCHAR(4096) NOT NULL,
-    FOREIGN KEY (content_id) REFERENCES Content (content_id)
-) ENGINE = InnoDB;
-
-INSERT INTO TextMaterial(content_id, text_content)
-VALUES (11, 'text_content_1'),
-       (2, 'text_content_2'),
-       (3, 'text_content_3');
-
-
-
-# DONE
-# Complains(id, admin_id, student_id, course_id, reason, complain_date, resolved)
-# C: id
-CREATE TABLE Complains
-(
-    id            INT PRIMARY KEY AUTO_INCREMENT,
-    admin_id      INT          NOT NULL,
-    student_id    INT          NOT NULL,
-    course_id     INT          NOT NULL,
-    reason        VARCHAR(512) NOT NULL,
-    complain_date DATETIME     NOT NULL,
-    resolved      BOOL         NOT NULL,
-    FOREIGN KEY (student_id) REFERENCES Student (student_id),
-    FOREIGN KEY (admin_id) REFERENCES SiteAdmin (admin_id),
-    FOREIGN KEY (course_id) REFERENCES Course (course_id)
-) ENGINE = InnoDB;
-
 INSERT INTO Complains (id, admin_id, student_id, course_id, reason, complain_date, resolved)
 VALUES (1, 1, 1, 1, 'hi', '2020-01-01 1:1:1', false),
        (2, 2, 2, 2, 'hi', '2020-02-02 22:22:22', true),
@@ -437,6 +376,10 @@ CREATE TABLE RequestRefund
     student_id INT NOT NULL,
     admin_id   INT NOT NULL,
     course_id  INT NOT NULL,
+    reason        VARCHAR(512) NOT NULL,
+    complain_date DATETIME     NOT NULL,
+    resolved      BOOL         NOT NULL,
+    read          BOOL         NOT NULL,
     FOREIGN KEY (student_id) REFERENCES Student (student_id),
     FOREIGN KEY (admin_id) REFERENCES SiteAdmin (admin_id),
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
@@ -447,25 +390,6 @@ VALUES (1, 1, 1, 1),
        (2, 2, 2, 2),
        (3, 3, 3, 3);
 
-
-# DONE
-# Discount(discount_id, admin_id, course_id, percentage, end_date)
-# C: discount_id
-CREATE TABLE Discount
-(
-    discount_id INT PRIMARY KEY AUTO_INCREMENT,
-    admin_id    INT      NOT NULL,
-    course_id   INT      NOT NULL,
-    percentage  TINYINT  NOT NULL,
-    end_date    DATETIME NOT NULL,
-    FOREIGN KEY (admin_id) REFERENCES SiteAdmin (admin_id),
-    FOREIGN KEY (course_id) REFERENCES Course (course_id)
-) ENGINE = InnoDB;
-
-INSERT INTO Discount(discount_id, admin_id, course_id, percentage, end_date)
-VALUES (1, 1, 1, 11, '2020-01-01 1:1:1'),
-       (2, 2, 2, 22, '2020-01-01 1:1:1'),
-       (3, 1, 1, 33, '2020-01-01 1:1:1');
 
 # DONE
 # (student_id, lecture_id)
@@ -503,25 +427,25 @@ VALUES (1, 1),
        (3, 3);
 
 
-# DONE
-# AskDiscount(instructor_id, admin_id, percentage, date)
-# C: discount_id
-CREATE TABLE AskDiscount
-(
-    discount_id   INT PRIMARY KEY AUTO_INCREMENT,
-    admin_id      INT     NOT NULL,
-    course_id     INT     NOT NULL,
-    instructor_id INT     NOT NULL,
-    percentage    TINYINT NOT NULL,
-    FOREIGN KEY (admin_id) REFERENCES SiteAdmin (admin_id),
-    FOREIGN KEY (course_id) REFERENCES Course (course_id),
-    FOREIGN KEY (instructor_id) REFERENCES Instructor (instructor_id)
-) ENGINE = InnoDB;
+-- # DONE
+-- # AskDiscount(instructor_id, admin_id, percentage, date)
+-- # C: discount_id
+-- CREATE TABLE AskDiscount
+-- (
+--     discount_id   INT PRIMARY KEY AUTO_INCREMENT,
+--     admin_id      INT     NOT NULL,
+--     course_id     INT     NOT NULL,
+--     instructor_id INT     NOT NULL,
+--     percentage    TINYINT NOT NULL,
+--     FOREIGN KEY (admin_id) REFERENCES SiteAdmin (admin_id),
+--     FOREIGN KEY (course_id) REFERENCES Course (course_id),
+--     FOREIGN KEY (instructor_id) REFERENCES Instructor (instructor_id)
+-- ) ENGINE = InnoDB;
 
-INSERT INTO AskDiscount (discount_id, admin_id, course_id, instructor_id, percentage)
-VALUES (1, 1, 1, 4, 11),
-       (2, 2, 2, 5, 22),
-       (3, 3, 3, 6, 33);
+-- INSERT INTO AskDiscount (discount_id, admin_id, course_id, instructor_id, percentage)
+-- VALUES (1, 1, 1, 4, 11),
+--        (2, 2, 2, 5, 22),
+--        (3, 3, 3, 6, 33);
 
 
 # DONE
@@ -640,19 +564,3 @@ VALUES (1, 1, 1, 'text 1', '2020-01-01 11:11:11'),
        (2, 2, 2, 'text 2', '2020-01-01 22:22:22'),
        (3, 3, 3, 'text 3', '2020-01-01 23:23:23');
 
-
-# Contains(lecture_id, content_id)
-# No candidate key but rather compound key (lecture_id, content_id)
-CREATE TABLE ContainsContent
-(
-    lecture_id INT,
-    content_id INT,
-    PRIMARY KEY (lecture_id, content_id),
-    FOREIGN KEY (lecture_id) REFERENCES Lecture (lecture_id),
-    FOREIGN KEY (content_id) REFERENCES Content (content_id)
-) ENGINE = InnoDB;
-
-INSERT INTO ContainsContent(lecture_id, content_id)
-VALUES (1, 2),
-       (2, 3),
-       (3, 11);
