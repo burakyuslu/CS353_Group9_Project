@@ -47,7 +47,8 @@
                         <v-text-field
                             label="Question"
                             required
-                        ></v-text-field>
+                        >
+                        </v-text-field>
                       </v-card>
                     </v-col>
                     <v-col cols="12">
@@ -129,6 +130,18 @@
       </v-card>
     </v-container>
 
+    <v-container>
+      <router-link to="/instructor/home/">
+        <v-btn class="ml-2 mt-5" outlined rounded small>
+          Save Assingment
+        </v-btn>
+      </router-link>
+      <router-link to="/instructor/home/">
+        <v-btn class="ml-2 mt-5" outlined rounded small>
+          Cancel
+        </v-btn>
+      </router-link>
+    </v-container>
   </v-app>
 </template>
 

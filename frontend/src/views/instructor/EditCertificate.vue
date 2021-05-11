@@ -36,6 +36,11 @@
             Save Your Certificate
         </v-btn>
       </router-link>
+      <router-link to="/instructor/home/">
+        <v-btn class="ml-2 mt-5" outlined rounded small>
+            Cancel
+        </v-btn>
+      </router-link>
     </v-container>
 
   </v-form>
