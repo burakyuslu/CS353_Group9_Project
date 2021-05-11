@@ -72,9 +72,11 @@
                   </v-btn>
                 </router-link>
 
-                <v-btn class="ml-2 mt-5" outlined rounded small>
-                  Go To Course
-                </v-btn>
+                <router-link to="/course">
+                  <v-btn class="ml-2 mt-5" outlined rounded small>
+                   Go To Course
+                  </v-btn>
+                </router-link>
               </v-card-actions>
             </v-card>
           </v-col>
