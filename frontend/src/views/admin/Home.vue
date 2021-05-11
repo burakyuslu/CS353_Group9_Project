@@ -53,14 +53,14 @@
           <v-btn
               outlined
               text
-              v-on:click="approveRefund"
+              v-on:click="approveRefund (refundReq.refundReqId)"
           >
             Approve Refund
           </v-btn>
           <v-btn
               outlined
               text
-              v-on:click="rejectRefund"
+              v-on:click="rejectRefund (refundReq.refundReqId)"
           >
             Reject Refund
           </v-btn>
@@ -83,14 +83,14 @@
           <v-btn
               outlined
               text
-              v-on:click="replyToComplaint"
+              v-on:click="replyToComplaint (comp.complaintId)"
           >
             Reply To Student
           </v-btn>
           <v-btn
               outlined
               text
-              v-on:click="dismissComplaint"
+              v-on:click="dismissComplaint (comp.complaintId)"
           >
             Dismiss Complaint
           </v-btn>
@@ -102,7 +102,7 @@
       <h2>
         Pending Discount Requests By Instructors
       </h2>
-      <v-card v-for="discReq in DiscountReqList" :key="discReq.discReqId" outlined>
+      <v-card v-for="discReq in discountReqList" :key="discReq.discReqId" outlined>
         <v-card-title>
           User: {{ discReq.instructor }}
         </v-card-title>
@@ -114,14 +114,14 @@
           <v-btn
               outlined
               text
-              v-on:click="approveDiscount"
+              v-on:click="approveDiscount (discReq.discReqId)"
           >
             Approve Discount
           </v-btn>
           <v-btn
               outlined
               text
-              v-on:click="rejectDiscount"
+              v-on:click="rejectDiscount (discReq.discReqId)"
           >
             Reject Discount
           </v-btn>
@@ -175,7 +175,7 @@ export default {
         }
       ],
 
-      DiscountReqList: [
+      discountReqList: [
         {
           discReqId: 1,
           instructor: "Example instructor 1",
@@ -210,7 +210,91 @@ export default {
     },
     seeDiscountRequests: function(){
       this.shownList = 3;
-    }
+    },
+
+    approveRefund: function( refId){
+      // process refund
+      // todo
+
+      // remove from list
+      // find from list
+      let i;
+      let selectedThreadIndex;
+      for (i = 0; i < this.refundReqList.length; i++) {
+        if (this.refundReqList[i].refundReqId === refId) {
+          selectedThreadIndex = i;
+        }
+      }
+      this.refundReqList.splice(selectedThreadIndex, 1);
+    },
+
+    rejectRefund: function( refId){
+      // remove from list
+      let i;
+      let selectedThreadIndex;
+      for (i = 0; i < this.refundReqList.length; i++) {
+        if (this.refundReqList[i].refundReqId === refId) {
+          selectedThreadIndex = i;
+        }
+      }
+      this.refundReqList.splice(selectedThreadIndex, 1);
+    },
+
+    replyToComplaint: function( cId){
+      // send reply to complaint
+      // todo
+
+      // remove from list
+      let i;
+      let selectedThreadIndex;
+      for (i = 0; i < this.complaintList.length; i++) {
+        if (this.complaintList[i].complaintId === cId) {
+          selectedThreadIndex = i;
+        }
+      }
+      this.complaintList.splice(selectedThreadIndex, 1);
+    },
+
+    dismissComplaint: function( cId){
+      // remove from list
+      let i;
+      let selectedThreadIndex;
+      for (i = 0; i < this.complaintList.length; i++) {
+        if (this.complaintList[i].complaintId === cId) {
+          selectedThreadIndex = i;
+        }
+      }
+      this.complaintList.splice(selectedThreadIndex, 1);
+    },
+
+    approveDiscount: function( dId){
+      // process the changes to the price
+      // todo
+
+      // remove from list
+      let i;
+      let selectedThreadIndex;
+      for (i = 0; i < this.discountReqList.length; i++) {
+        if (this.discountReqList[i].discReqId === dId) {
+          selectedThreadIndex = i;
+        }
+      }
+      this.discountReqList.splice(selectedThreadIndex, 1);
+    },
+
+    rejectDiscount: function( dId){
+      // remove from list
+      let i;
+      let selectedThreadIndex;
+      for (i = 0; i < this.discountReqList.length; i++) {
+        if (this.discountReqList[i].discReqId === dId) {
+          selectedThreadIndex = i;
+        }
+      }
+      this.discountReqList.splice(selectedThreadIndex, 1);
+    },
+
+
   }
 
 }
