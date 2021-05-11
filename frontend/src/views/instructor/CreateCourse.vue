@@ -17,6 +17,23 @@
     </v-container>
 
     <v-container>
+      <v-text-field>
+        <template v-slot:label>
+          Enter Course Category
+        </template>
+      </v-text-field>
+    </v-container>
+
+    <v-container>
+      <v-text-field>
+        <template v-slot:label>
+          Enter The Initial Price For The Course
+        </template>
+      </v-text-field>
+    </v-container>
+
+
+    <v-container>
       <router-link to="/instructor/home/">
         <v-btn class="ml-2 mt-5" outlined rounded small>
             Save Your Course
