@@ -169,6 +169,18 @@ export default {
   //         })
   //       },
   //     },
+
+// for testing add v-bind:key="question.text" to the question text
+
+//add Answers and correct answer?
+  // methods: {
+  //   addAssignmentQuestion: function() {
+  //     this.assignment.push({
+  //       text: this.question.text
+  //     })
+  //   }
+  // },
+
   data(){
     return{
       radioGroup: 1,
@@ -177,6 +189,9 @@ export default {
       dialog: false,
       questions: ['Question 1', 'Question 2', 'Question 3' ,"Question 4"]
     }
+    assignment : [
+      
+    ]
   },
 };
 </script>
