@@ -96,6 +96,8 @@
 </template>
 
 <script>
+import axios from '../../utils/config.js';
+
 export default {
   components: {},
   data() {
@@ -148,6 +150,9 @@ export default {
   },
   methods: {
     seeRefundRequests: function(){
+
+      axios.get( );
+
       this.shownList = 1;
     },
     seeDiscountsPanel: function(){

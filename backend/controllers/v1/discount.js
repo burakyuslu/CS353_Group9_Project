@@ -15,8 +15,6 @@ discountRouter.get('/listDiscountableCourses', async (request, response) => {
     const listDiscountableCourses = await db.query(`SELECT * FROM Course;`)
     const result = helper.emptyOrRows(listDiscountableCourses);
     response.json(result)
-
-
 })
 
 discountRouter.post('/applyDiscount', async (request, response) => {
@@ -39,6 +37,8 @@ discountRouter.post('/applyDiscount', async (request, response) => {
     response.json(result)
 })
 
+// todo: i think remove previous method
+// just call prev method with percentage zero
 discountRouter.delete('/cancelDiscount', async (request, response) => {
     const discount_id = request.query.discount_id
     const course_id = body.course_id
