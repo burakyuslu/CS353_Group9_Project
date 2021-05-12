@@ -117,6 +117,12 @@
       </v-card>
     </v-container>
 
+    <vcontainer>
+      <li v-for="item in assignment" :key="item.question">
+          {{item}}
+      </li>
+    </vcontainer>
+
     <v-container>
       <router-link to="/instructor/home/">
         <v-btn class="ml-2 mt-5" outlined rounded small>
@@ -171,7 +177,6 @@ export default {
       dialog: false,
       questions: ['Question 1', 'Question 2', 'Question 3', 'Question 4'],
     }
-    assignment: []
   },
 }
 </script>
