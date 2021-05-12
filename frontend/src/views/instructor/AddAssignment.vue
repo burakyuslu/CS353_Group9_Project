@@ -139,6 +139,8 @@
 </template>
 
 <script>
+
+import axios from '../../utils/config.js'
 export default {
   name: 'App',
 
@@ -156,7 +158,7 @@ export default {
     },
 
     submit() {
-      axios.post('courses/courseId/assingments', { data: this.assignment })
+      axios.post('courses/courseId/assignments', {assignment: this.assignment})
       this.$router.go(-1)
     },
   },

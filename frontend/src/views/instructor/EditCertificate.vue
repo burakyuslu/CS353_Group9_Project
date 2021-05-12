@@ -38,10 +38,12 @@
 </template>
 
 <script>
+
+import axios from '../../utils/config.js'
 export default {
   methods: {
     submit() {
-      axios.post('', {data:this.certificate}) // fill the link
+      axios.post('', {certificate:this.certificate}) // fill the link
       this.$router.go(-1)
     }
   },
