@@ -38,55 +38,64 @@
             </v-card-title>
             <v-card-text>
               <v-container>
-                <v-radio-group v-model="radioGroup">
+                <v-radio-group v-model="answer">
                   <v-row>
                     <v-col>
                       <v-card>
-                        <v-text-field v-model="question" label="Question" required> </v-text-field>
+                        <v-text-field
+                          v-model="question"
+                          label="Question"
+                          required
+                        >
+                        </v-text-field>
                       </v-card>
                     </v-col>
                     <v-col cols="12">
                       <v-card>
                         <v-radio
                           label="Correct Choice"
-                          value="Correct1"
+                          :value="answer1"
                           color="green"
                         >
                         </v-radio>
-                        <v-text-field v-model="answer1" label="Choice 1"> </v-text-field>
+                        <v-text-field v-model="answer1" label="Choice 1">
+                        </v-text-field>
                       </v-card>
                     </v-col>
                     <v-col cols="12">
                       <v-card>
                         <v-radio
                           label="Correct Choice"
-                          value="Correct2"
+                          :value="answer2"
                           color="green"
                         >
                         </v-radio>
-                        <v-text-field v-model="answer2" label="Choice 2"> </v-text-field>
+                        <v-text-field v-model="answer2" label="Choice 2">
+                        </v-text-field>
                       </v-card>
                     </v-col>
                     <v-col cols="12">
                       <v-card>
                         <v-radio
                           label="Correct Choice"
-                          value="Correct3"
+                          :value="answer3"
                           color="green"
                         >
                         </v-radio>
-                        <v-text-field v-model="answer3" label="Choice 3"> </v-text-field>
+                        <v-text-field v-model="answer3" label="Choice 3">
+                        </v-text-field>
                       </v-card>
                     </v-col>
                     <v-col cols="12">
                       <v-card>
                         <v-radio
                           label="Correct Choice"
-                          value="Correct4"
+                          :value="answer4"
                           color="green"
                         >
                         </v-radio>
-                        <v-text-field v-model="answer4" label="Choice 4"> </v-text-field>
+                        <v-text-field v-model="answer4" label="Choice 4">
+                        </v-text-field>
                       </v-card>
                     </v-col>
                   </v-row>
@@ -99,7 +108,7 @@
               <v-btn color="green" text @click="dialog = false">
                 Cancel
               </v-btn>
-              <v-btn color="green" text @click="dialog = false">
+              <v-btn color="green" text @click="addAssignmentQuestion">
                 Add
               </v-btn>
             </v-card-actions>
@@ -129,32 +138,34 @@ export default {
 
   methods: {
     addAssignmentQuestion: function() {
-      this.answers.push({
-        answers: [this.answer1, this.answer2, this.answer3, this.answer4]
-      })
-
       this.assignment.push({
-        answer: answers,
-        question: this.question
+        answer: this.answer,
+        answers: [this.answer1, this.answer2, this.answer3, this.answer4],
+        question: this.question,
       })
+      console.log(this.assignment)
+      this.question = ''
+
+      this.dialog = false
     },
 
     submit() {
-      axios.post('courses/courseId/assingments', {data: this.assignment})
+      axios.post('courses/courseId/assingments', { data: this.assignment })
       this.$router.go(-1)
     },
-},
+  },
 
   data() {
     return {
       question: '',
-      answer1:'',
-      answer2:'',
-      answer3:'',
-      answer4:'',
+      answer1: '',
+      answer2: '',
+      answer3: '',
+      answer4: '',
       answers: [],
       assignment: [],
       radioGroup: 1,
+      answer: '',
       enteredNote: '',
       courseName: 'Learn Programming with Python',
       dialog: false,
@@ -164,7 +175,6 @@ export default {
   },
 }
 </script>
-
 
 <style scoped>
 .header {
