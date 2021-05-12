@@ -6,12 +6,11 @@
 
     <v-card>
       <v-card-title class="headline mb-1">
-        Manage Requests & Complaints By Users
+        Manage Refund Requests & Discounts
       </v-card-title>
       <v-card-text>
-        Manage the refund requests and complaints by users and discount requests by instructors here.
-        ( (?) Maybe pending refund requests and others' number could be displayed here
-        but I did not add it here as we don't hold such an attribute in backend.)
+        Manage the refund requests by users here.
+        Adjust which courses are discounted.
       </v-card-text>
       <v-card-actions>
         <v-btn
@@ -24,16 +23,9 @@
         <v-btn
             outlined
             text
-            v-on:click="seeComplaints"
+            v-on:click="seeDiscountsPanel"
         >
-          See Complaints
-        </v-btn>
-        <v-btn
-            outlined
-            text
-            v-on:click="seeDiscountRequests"
-        >
-          See Discount Requests
+          Open Discounts Panel
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -47,7 +39,7 @@
           User: {{ refundReq.requester }}
         </v-card-title>
         <v-card-text>
-          {{ refundReq.refundReason}}
+          {{ refundReq.refundReason }}
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -70,81 +62,29 @@
 
     <section v-if="shownList === 2">
       <h2>
-        Pending Complaints By Students
+        Adjust the Discount Rate For Different Courses
       </h2>
-      <v-card v-for="comp in complaintList" :key="comp.complaintId" outlined>
+      <v-card v-for="disc in discountableList" :key="disc.courseId" outlined>
         <v-card-title>
-          User: {{ comp.complainer }}
+          Course: {{ disc.course}}
         </v-card-title>
         <v-card-text>
-          {{ comp.complaint}}
+          Instructor: {{ disc.instructor }}
+          Current Discount Percentage: {{ disc.percentage}}
         </v-card-text>
         <v-card-actions>
+          <input v-model="disc.discPercentageNew" placeholder="new discount percentage">
           <v-btn
               outlined
               text
-              v-on:click="replyToComplaint (comp.complaintId)"
+              v-on:click="setDiscount (disc)"
           >
-            Reply To Student
-          </v-btn>
-          <v-btn
-              outlined
-              text
-              v-on:click="dismissComplaint (comp.complaintId)"
-          >
-            Dismiss Complaint
+            Set Discount As Entered
           </v-btn>
         </v-card-actions>
       </v-card>
     </section>
 
-    <section v-if="shownList === 3">
-      <h2>
-        Pending Discount Requests By Instructors
-      </h2>
-      <v-card v-for="discReq in discountReqList" :key="discReq.discReqId" outlined>
-        <v-card-title>
-          User: {{ discReq.instructor }}
-        </v-card-title>
-        <v-card-text>
-          Course: {{ discReq.course}}
-          Percentage: {{ discReq.percentage}}
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-              outlined
-              text
-              v-on:click="approveDiscount (discReq.discReqId)"
-          >
-            Approve Discount
-          </v-btn>
-          <v-btn
-              outlined
-              text
-              v-on:click="rejectDiscount (discReq.discReqId)"
-          >
-            Reject Discount
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </section>
-
-    <section v-if="shownList === 4">
-      <h3>
-        Reply To {{ selectedComplaint.complainer}}
-      </h3>
-      <p>
-        Complaint: {{ selectedComplaint.complaint }}
-      </p>
-      <textarea v-model="adminReplyText" placeholder="Write your reply here..."></textarea>
-      <v-btn
-          outlined
-          text
-          v-on:click="replyToStudentDueToComplaint"
-      >
-        Send Reply
-      </v-btn>
-    </section>
   </div>
 </template>
 
@@ -153,14 +93,9 @@ export default {
   components: {},
   data() {
     return {
-      // shownPart=1 -> show refund requests, shownPart=2 -> show complaints, shownPart=3-> show discount requests
+      // shownPart=1 -> show refund requests, shownPart=2 -> show discount panel
       shownList: 0,
       adminReplyText: "",
-      selectedComplaint: {
-        complaintId: -1,
-        complainer: "selected user",
-        complaint: "selected complaint"
-      },
       refundReqList: [
         {
           refundReqId: 1,
@@ -178,43 +113,24 @@ export default {
           refundReason: "Example reason 3"
         }
       ],
-
-      complaintList: [
+      discountableList: [
         {
-          complaintId: 1,
-          complainer: "Example complainer 1",
-          complaint: "Example complaint 1"
-        },
-        {
-          complaintId: 2,
-          complainer: "Example complainer 2",
-          complaint: "Example complaint 2"
-        },
-        {
-          complaintId: 3,
-          complainer: "Example complainer 3",
-          complaint: "Example complaint 3"
-        }
-      ],
-
-      discountReqList: [
-        {
-          discReqId: 1,
+          courseId: 1,
           instructor: "Example instructor 1",
           course: "Example course 1",
+          percentage: 0
+        },
+        {
+          courseId: 2,
+          instructor: "Example instructor 2",
+          course: "Example course 2",
           percentage: 15
         },
         {
-          discReqId: 2,
-          instructor: "Example instructor 2",
-          course: "Example course 2",
-          percentage: 20
-        },
-        {
-          discReqId: 3,
+          courseId: 3,
           instructor: "Example instructor 3",
           course: "Example course 3",
-          percentage: 50
+          percentage: 0
         }
       ],
 
@@ -227,11 +143,8 @@ export default {
     seeRefundRequests: function(){
       this.shownList = 1;
     },
-    seeComplaints: function(){
+    seeDiscountsPanel: function(){
       this.shownList = 2;
-    },
-    seeDiscountRequests: function(){
-      this.shownList = 3;
     },
 
     approveRefund: function( refId){
@@ -261,77 +174,18 @@ export default {
       this.refundReqList.splice(selectedThreadIndex, 1);
     },
 
-    replyToComplaint: function( cId){
-      // send reply to complaint
-      // todo (db parts)
-      // todo there is also an issue where the item is removed before the answer is sent
-      // todo idk if we should change it such that after replying admin removes manually from the list
+    setDiscount: function( disc) {
 
-      this.shownList = 4;
-
-      // remove from list
-      let i;
-      let selectedThreadIndex;
-      for (i = 0; i < this.complaintList.length; i++) {
-        if (this.complaintList[i].complaintId === cId) {
-          selectedThreadIndex = i;
-          this.selectedComplaint.complaint = this.complaintList[i].complaint;
-          this.selectedComplaint.complainer = this.complaintList[i].complainer;
-          this.selectedComplaint.complaintId = this.complaintList[i].complaintId;
-
-        }
-      }
-      this.complaintList.splice(selectedThreadIndex, 1);
+    disc.percentage = disc.discPercentageNew;
+//      let i;
+//      for( i = 0; i < this.discountableList.length; i++){
+//        if( this.discountableList[i] === coId){
+//          this.discountableList[i].percentage = this.discountableList[i].discPercentageNew;
+//        }
+//
+//      }
     },
-
-    dismissComplaint: function( cId){
-      // remove from list
-      let i;
-      let selectedThreadIndex;
-      for (i = 0; i < this.complaintList.length; i++) {
-        if (this.complaintList[i].complaintId === cId) {
-          selectedThreadIndex = i;
-        }
-      }
-      this.complaintList.splice(selectedThreadIndex, 1);
-    },
-
-    approveDiscount: function( dId){
-      // process the changes to the price
-      // todo
-
-      // remove from list
-      let i;
-      let selectedThreadIndex;
-      for (i = 0; i < this.discountReqList.length; i++) {
-        if (this.discountReqList[i].discReqId === dId) {
-          selectedThreadIndex = i;
-        }
-      }
-      this.discountReqList.splice(selectedThreadIndex, 1);
-    },
-
-    rejectDiscount: function( dId){
-      // remove from list
-      let i;
-      let selectedThreadIndex;
-      for (i = 0; i < this.discountReqList.length; i++) {
-        if (this.discountReqList[i].discReqId === dId) {
-          selectedThreadIndex = i;
-        }
-      }
-      this.discountReqList.splice(selectedThreadIndex, 1);
-    },
-
-    replyToStudentDueToComplaint(){
-      // todo, move this message to student's inbox
-      // the message: adminReplyText
-      this.shownList = 2;
-      // todo: after that, clear adminReplyText from the text-box
-    }
-
   }
-
 }
 </script>
 
