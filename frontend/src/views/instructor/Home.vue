@@ -17,6 +17,11 @@
                   </v-icon>
                 </v-text-field>
               </v-container>
+              <v-container>
+                <v-btn class="ml-2 mt-5" outlined rounded small @click="search">
+                  Search
+                </v-btn>
+              </v-container>
             </v-card>
           </v-col>
         </v-row>
@@ -98,8 +103,16 @@
 </template>
 
 <script>
+
+import axios from '../../utils/config.js'
 export default {
   name: 'InstructorHome',
+  methods: {
+    search() {
+      axios.post('courses/courseId/assignments', { searchText: this.searchText })
+      this.$router.go(-1)
+    },
+  },
   data() {
     return {
       selectedCategories: ['Vuetify', 'Programming'],

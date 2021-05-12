@@ -81,6 +81,13 @@
           >
             Set Discount As Entered
           </v-btn>
+          <v-btn
+              outlined
+              text
+              v-on:click="cancelDiscount (disc)"
+          >
+            Cancel Discounts
+          </v-btn>
         </v-card-actions>
       </v-card>
     </section>
@@ -89,6 +96,8 @@
 </template>
 
 <script>
+import axios from '../../utils/config.js';
+
 export default {
   components: {},
   data() {
@@ -140,7 +149,14 @@ export default {
 
   },
   methods: {
-    seeRefundRequests: function(){
+    seeRefundRequests: async function(){
+
+      // TODO CHECk i have literally 0 idea if this is correct, at all
+      let refundRequestsArr = await axios.get( '/v1/request/listRefundRequests');
+      console.log(refundRequestArr);
+      // this.refundReqList = refundRequestArr; // do we initialize its properties inside a for loop
+      // or do we just do it plainly like this
+
       this.shownList = 1;
     },
     seeDiscountsPanel: function(){
@@ -175,16 +191,12 @@ export default {
     },
 
     setDiscount: function( disc) {
-
-    disc.percentage = disc.discPercentageNew;
-//      let i;
-//      for( i = 0; i < this.discountableList.length; i++){
-//        if( this.discountableList[i] === coId){
-//          this.discountableList[i].percentage = this.discountableList[i].discPercentageNew;
-//        }
-//
-//      }
+      disc.percentage = disc.discPercentageNew;
     },
+
+    cancelDiscount: function(disc){
+      disc.percentage = 0;
+    }
   }
 }
 </script>

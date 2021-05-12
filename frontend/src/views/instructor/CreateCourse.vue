@@ -45,11 +45,12 @@
 </template>
 
 <script>
+
 import axios from '../../utils/config.js'
 export default {
   methods: {
     submit() {
-      axios.post('', {data:this.courseName, data:this.category}) // fill the link
+      axios.post('', {courseName:this.courseName, category:this.category}) // fill the link
       this.$router.go(-1)
     }
   },
