@@ -125,7 +125,7 @@
 
     <v-container>
       <router-link to="/instructor/home/">
-        <v-btn class="ml-2 mt-5" outlined rounded small>
+        <v-btn class="ml-2 mt-5" outlined rounded small @click="submit">
           Save Assingment
         </v-btn>
       </router-link>
