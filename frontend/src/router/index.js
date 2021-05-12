@@ -1,25 +1,59 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Lecture from '../views/student/Lecture.vue'
-import CourseDetails from '../views/student/Course.vue'
-import StudentDiscover from '../views/student/Discover.vue'
-import StudentProfile from '../views/student/Profile.vue'
-import InstructorHome from '../views/instructor/Home.vue'
-import Instructor from '../views/instructor/Instructor.vue'
+import AdminHome from '../views/admin/Home.vue'
+//v2
+import Login from '../views/auth/Login.vue'
+import AddAssignment from '../views/instructor/AddAssignment.vue'
+import AddLecture from '../views/instructor/AddLecture.vue'
 import CreateCourse from '../views/instructor/CreateCourse.vue'
 import EditCertificate from '../views/instructor/EditCertificate.vue'
-import AddLecture from '../views/instructor/AddLecture.vue'
 import GoToCourseForum from '../views/instructor/Forum.vue'
-import AddAssignment from '../views/instructor/AddAssignment.vue'
-import AdminHome from '../views/admin/Home.vue'
+import InstructorHome from '../views/instructor/Home.vue'
+import Student from '../views/Student.vue'
+import CourseDetails from '../views/student/Course.vue'
+import StudentDiscover from '../views/student/Discover.vue'
+import Lecture from '../views/student/Lecture.vue'
+import StudentProfile from '../views/student/Profile.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  { path: '/', redirect: { name: 'auth.login' } },
+  { path: '/auth', redirect: { name: 'auth.login' } },
+  { path: '/auth/login', name: 'auth.login', component: Login },
   {
-    path: '/',
-    name: 'home',
-    redirect: { name: 'student.discover' },
+    path: '/student',
+    name: 'student',
+    component: Student,
+    redirect: { name: 'student.home' },
+    children: [
+      {
+        path: 'home',
+        name: 'student.home',
+        component: StudentDiscover,
+      },
+      {
+        path: 'profile',
+        name: 'student.profile',
+        component: StudentProfile,
+      },
+      {
+        path: 'courses',
+        redirect: { name: 'student.home' },
+      },
+      {
+        path: 'courses/:courseId',
+        name: 'student.course',
+        component: CourseDetails,
+        props: true,
+      },
+      {
+        path: 'courses/:courseId/:lectureId',
+        name: 'student.lecture',
+        component: Lecture,
+        props: true,
+      },
+    ],
   },
   {
     path: '/student/discover',

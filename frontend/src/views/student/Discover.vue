@@ -30,18 +30,28 @@
               <v-card-text align-start>
                 <div class="text--primary">
                   <p>Price: {{ item.price }}</p>
-                  <p>Summary: {{ item.summary }}</p>
-                  <p>Publication date: {{ item.publish_date }}</p>
+                  <p>
+                    Summary: {{ item.course_summary.substring(0, 100) }} ...
+                  </p>
                 </div>
                 <v-spacer> </v-spacer>
               </v-card-text>
               <v-card-subtitle
-                v-text="`Instructor ${item.instructor_id}`"
+                v-text="`by ${item.name} ${item.surname}`"
               ></v-card-subtitle>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="ml-2 mt-5" outlined rounded small>
+                <v-btn
+                  :to="{
+                    name: 'student.course',
+                    params: { courseId: item.course_id },
+                  }"
+                  class="ml-2 mt-5"
+                  outlined
+                  rounded
+                  small
+                >
                   Go To Course
                 </v-btn>
               </v-card-actions>
@@ -57,7 +67,7 @@
                 Filter Results
               </v-card-title>
               <v-container>
-                <v-text-field
+                <!-- <v-text-field
                   v-model="search.priceGreaterThan"
                   type="number"
                   label="Price Greater Than"
@@ -93,7 +103,7 @@
                   return-object
                   single
                   outlined
-                ></v-select>
+                ></v-select> -->
 
                 <v-subheader>Ratings</v-subheader>
 
@@ -106,7 +116,7 @@
                   tick-size="4"
                 >
                 </v-range-slider>
-                <v-btn>Clear Filters</v-btn>
+                <!-- <v-btn>Clear Filters</v-btn> -->
               </v-container>
             </v-card>
           </v-col>
@@ -126,11 +136,22 @@ export default {
     async fetchData() {
       if (!this.awaitingSearch) {
         const fun = async () => {
-          await this.fetchCourses()
+          if (this.search.searchText === '') {
+            await this.fetchCourses({
+              ratingLow: this.search.ratingRange[0],
+              ratingHigh: this.search.ratingRange[1],
+            })
+          } else {
+            await this.fetchCourses({
+              search: this.search.searchText,
+              ratingLow: this.search.ratingRange[0],
+              ratingHigh: this.search.ratingRange[1],
+            })
+          }
           this.awaitingSearch = false
         }
 
-        setTimeout(fun, 1000) // 1 sec delay
+        setTimeout(fun, 500) // 0.5 sec delay
       }
       this.awaitingSearch = true
     },
@@ -145,7 +166,6 @@ export default {
   computed: {
     ...mapGetters({ courses: getters.GET_COURSES_STUDENT_HOME }),
     items() {
-      console.log(this.courses)
       return this.courses
     },
   },
@@ -156,7 +176,7 @@ export default {
         searchText: '',
         priceLessThan: 20,
         priceGreaterThan: 10,
-        ratingRange: [4, 5],
+        ratingRange: [0, 5],
         selectedCategories: [],
         selectedCourses: [],
         sort: 'Alphetical A-Z',

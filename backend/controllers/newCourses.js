@@ -48,25 +48,33 @@ courseRouter.get("/", async (req, res, next) => {
 
     let query = GET_COURSE_LIST;
     var params;
+    console.log(`hey: ${ratingLow}, ${ratingHigh}, ${search}`)
 
-    const AVG_QUERY = "SELECT avg(rating) FROM Rates R GROUP BY(course_id) "
+    const AVG_QUERY = `(SELECT avg(rating)
+                       FROM Rates R
+                       WHERE R.course_id = P.course_id)`
 
-    if(search == ""){
-        query += " AND (" + AVG_QUERY +") > ? AND (" + AVG_QUERY + ") < ?";
+    if (search === undefined || search === "") {
+        // query += ` AND ( ${AVG_QUERY} ) >= ? AND ( ${AVG_QUERY} ) =< ?`
+        query += `\nAND ${AVG_QUERY} BETWEEN ? AND ?`
+        params = [ratingLow, ratingHigh];
+    } else {
+        // query += ` AND ( ${AVG_QUERY} ) >= ? AND ( ${AVG_QUERY} ) =< ? AND course_name LIKE ?`
+        // query += `\nAND (('%'C.course_name + '%' LIKE '${search}') OR  )`
+        query += `\nAND ${AVG_QUERY} BETWEEN ? AND ?`
+        // params = [search, ratingLow, ratingHigh];
         params = [ratingLow, ratingHigh];
     }
-    else{
-        query += " AND (" + AVG_QUERY +") > ? AND (" + AVG_QUERY + ") < ? AND course_name LIKE ?";
-        params = [ratingLow, ratingHigh, search];
-    }
 
+    console.log(query)
     try {
-        const result = await db.query(query)
+        const result = await db.query(query, params)
         res.json(result)
     } catch (exception) {
         next(exception)
     }
 })
+
 // post and publish a course without any lectures
 courseRouter.post("/", [async (req, res, next) => {
     const {instructorId} = req
@@ -82,10 +90,30 @@ courseRouter.post("/", [async (req, res, next) => {
 
 // get course details
 courseRouter.get("/:courseId", [async (req, res, next) => {
+    const {studentId} = req
     try {
         const {courseId} = req.params
-        const result = await db.query(GET_COURSE, [courseId])
-        res.json(result)
+        const [course,] = await db.query(GET_COURSE, [courseId])
+        const ratings = await db.query(GET_COURSE_RATINGS, [courseId])
+        const [{avgRating, ratingCount},] = await db.query(GET_AVERAGE_RATING, [courseId])
+        const lectures = await db.query(GET_LECTURES, [courseId])
+        const [studentCount, ] = await db.query(`SELECT count(c.course_id) as count
+                                             FROM course c
+                                                      JOIN buys b ON c.course_id = ? AND c.course_id = b.course_id
+        `, [courseId])
+        let completedLectures
+        if (studentId) {
+            completedLectures = await db.query(GET_COMPLETED_LECTURES, [courseId, studentId])
+        }
+        res.json({
+            course,
+            ratings,
+            avgRating,
+            ratingCount,
+            lectures,
+            completedLectures: completedLectures?.map(l => l.lecture_id),
+            studentCount: studentCount.count
+        })
     } catch (exception) {
         next(exception)
     }
