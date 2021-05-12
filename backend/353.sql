@@ -21,7 +21,6 @@ drop table if exists multimedia;
 drop table if exists Content;
 drop table if exists qna;
 drop table if exists createsnote;
-drop table if exists lecture;
 drop table if exists QuizAnswer;
 drop table if exists QuizOption;
 drop table if exists quizquestion;
@@ -33,6 +32,8 @@ drop table if exists Rates;
 drop table if exists CourseKeyword;
 drop table if exists Certificate;
 drop table if exists assignmentmaterial;
+drop table if exists CreatesNote;
+drop table if exists lecture;
 drop table if exists Course;
 drop table if exists Instructor;
 drop table if exists Student;
@@ -100,10 +101,10 @@ CREATE TABLE Course
     price          INT           NOT NULL,
     category       VARCHAR(64)   NOT NULL,
     discountable   BOOL          NOT NULL,
-    percentage  TINYINT  NOT NULL
+    percentage     TINYINT       NOT NULL
 ) ENGINE = InnoDB;
 
-INSERT INTO Course (course_id, course_name, course_summary, price, category)
+INSERT INTO Course (course_id, course_name, course_summary, price, category, discountable, percentage)
 VALUES (1, 'c1_name', 'c1_summary', 10, 'c1_category', true, 30),
        (2, 'c2_name', 'c2_summary', 20, 'c2_category', false, 0),
        (3, 'c3_name', 'c3_summary', 30, 'c3_category', true, 50);
@@ -284,7 +285,7 @@ CREATE TABLE Lecture
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Lecture(lecture_id, lecture_name, course_id)
+INSERT INTO Lecture(lecture_id, lecture_name, course_id, content, type)
 VALUES (1, 'lecture_name_1', 1, 'content1', 'type1'),
        (2, 'lecture_name_2', 2, 'content2', 'type2'),
        (3, 'lecture_name_3', 3, 'content3', 'type3');
@@ -342,10 +343,10 @@ VALUES (1, 'entry_text_1', 1, 1),
        (2, 'entry_text_2', 2, 2),
        (3, 'entry_text_3', 3, 3);
 
-INSERT INTO Complains (id, admin_id, student_id, course_id, reason, complain_date, resolved)
-VALUES (1, 1, 1, 1, 'hi', '2020-01-01 1:1:1', false),
-       (2, 2, 2, 2, 'hi', '2020-02-02 22:22:22', true),
-       (3, 3, 3, 3, 'hi', '2020-03-03 23:23:23', false);
+# INSERT INTO Complains (id, admin_id, student_id, course_id, reason, complain_date, resolved)
+# VALUES (1, 1, 1, 1, 'hi', '2020-01-01 1:1:1', false),
+#        (2, 2, 2, 2, 'hi', '2020-02-02 22:22:22', true),
+#        (3, 3, 3, 3, 'hi', '2020-03-03 23:23:23', false);
 
 
 # DONE
@@ -372,23 +373,23 @@ VALUES (1, 1, 1, '2020-01-01 1:1:1'),
 # C: request_id
 CREATE TABLE RequestRefund
 (
-    request_id INT PRIMARY KEY AUTO_INCREMENT,
-    student_id INT NOT NULL,
-    admin_id   INT NOT NULL,
-    course_id  INT NOT NULL,
+    request_id    INT PRIMARY KEY AUTO_INCREMENT,
+    student_id    INT          NOT NULL,
+    admin_id      INT          NOT NULL,
+    course_id     INT          NOT NULL,
     reason        VARCHAR(512) NOT NULL,
     complain_date DATETIME     NOT NULL,
     resolved      BOOL         NOT NULL,
-    read          BOOL         NOT NULL,
+    is_read       BOOL         NOT NULL,
     FOREIGN KEY (student_id) REFERENCES Student (student_id),
     FOREIGN KEY (admin_id) REFERENCES SiteAdmin (admin_id),
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO RequestRefund(request_id, student_id, admin_id, course_id)
-VALUES (1, 1, 1, 1),
-       (2, 2, 2, 2),
-       (3, 3, 3, 3);
+# INSERT INTO RequestRefund(request_id, student_id, admin_id, course_id, reason, complain_date, resolved, is_read)
+# VALUES (1, 1, 1, 1),
+#        (2, 2, 2, 2),
+#        (3, 3, 3, 3);
 
 
 # DONE

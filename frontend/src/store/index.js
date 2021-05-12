@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios, { URL } from '../utils/config'
-import { actions, mutations, getters } from './types'
+import { actions, getters, mutations } from './types'
 // axiosInstance.defaults.headers.post['Accepts'] = 'application/json'
 
 Vue.use(Vuex)
@@ -20,10 +20,11 @@ export default new Vuex.Store({
       email: '',
       balance: '',
     },
-    courseDetails: [],
+    studentsCourseDetails: [],
     courseList: [],
     studentProfileData: {},
     studentNotifications: [],
+    courseRating: {},
   },
   getters: {
     [getters.GET_COURSES_STUDENT_HOME]: state => {
@@ -34,6 +35,9 @@ export default new Vuex.Store({
     },
     [getters.GET_STUDENT_NOTIFICATIONS]: state => {
       return state.studentNotifications
+    },
+    [getters.GET_STUDENT_COURSE_DETAILS]: state => {
+      return state.studentsCourseDetails
     },
   },
   mutations: {
@@ -59,6 +63,9 @@ export default new Vuex.Store({
     [mutations.SET_STUDENT_PROFILE_DATA](state, { data }) {
       state.studentProfileData = data
     },
+    [mutations.SET_STUDENT_COURSE_DETAILS](state, { data }) {
+      state.studentsCourseDetails = data
+    },
   },
   actions: {
     async [actions.SIGN_IN]({ commit, state }, { userType, email, password }) {
@@ -74,7 +81,7 @@ export default new Vuex.Store({
         const { data } = response
         commit(mutations.SET_USER_DETAILS, data)
         commit(mutations.SET_SIGN_IN, { token: data.token })
-        commit(mutations.SET_USER_TYPE, { token: data.userType })
+        commit(mutations.SET_USER_TYPE, { type: data.userType })
       } catch (error) {
         // todo set error
         // cannot login
@@ -88,7 +95,9 @@ export default new Vuex.Store({
     // fetches the 'home page' unowned courses...
     async [actions.FETCH_COURSE_LIST]({ commit, state }, payload) {
       try {
-        const response = await axios.get(URL.COURSE_LIST)
+        const response = await axios.get(URL.COURSE_LIST, {
+          params: { ...payload },
+        })
         const { data } = response
         commit(mutations.SET_COURSE_LIST, { data })
       } catch (error) {
@@ -112,14 +121,43 @@ export default new Vuex.Store({
       }
     },
 
-    async [actions.UNWISH_COURSE]({ commit, state }, {courseId}) {
+    async [actions.UNWISH_COURSE]({ commit, state }, { courseId }) {
       commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
       try {
         const { data } = await axios.delete(URL.USER_STUDENT_WISH_COURSE, {
-          data: {courseId},
+          data: { courseId },
           params: { studentId: state.user.userId },
         })
         commit(mutations.SET_STUDENT_PROFILE_DATA, { data })
+      } catch (error) {
+        // todo set error
+        // cannot login
+        console.log(error)
+      }
+    },
+    async [actions.REQUEST_REFUND]({ commit, state }, { courseId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.delete(URL.USER_STUDENT_WISH_COURSE, {
+          data: { courseId },
+          params: { studentId: state.user.userId },
+        })
+        commit(mutations.SET_STUDENT_PROFILE_DATA, { data })
+      } catch (error) {
+        // todo set error
+        // cannot login
+        console.log(error)
+      }
+    },
+    async [actions.FETCH_COURSE_DETAILS]({ commit, state }, { courseId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.get(`${URL.COURSE_LIST}/${courseId}`, {
+          params: { studentId: state.user.userId },
+        })
+        commit(mutations.SET_STUDENT_COURSE_DETAILS, {
+          data,
+        })
       } catch (error) {
         // todo set error
         // cannot login

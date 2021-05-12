@@ -1,13 +1,13 @@
 module.exports.GET_COURSE_LIST = `
-    SELECT C.course_id
-         , course_name
-         , course_summary
-         , price
-         , category
-         , I.instructor_id
-         , publish_date
-         , U.name as name
-         , U.surname as surname
+    SELECT C.course_id,
+           course_name,
+           course_summary,
+           price,
+           category,
+           discountable,
+           percentage,
+           name,
+           surname
     FROM course C,
          publish P,
          instructor I
@@ -37,22 +37,16 @@ module.exports.GET_COURSE = `
            course_summary,
            price,
            category,
-           instructor_id,
+           discountable,
+           percentage,
            publish_date,
            user_id,
            name,
-           surname,
-           email_address,
-           balance,
-           reg_date,
-           discount_id,
-           percentage,
-           end_date
+           surname
     FROM course C
              join publish p
                   on C.course_id = ? AND C.course_id = p.course_id
              join useracc u on u.user_id = p.instructor_id
-             left join discount d on SYSDATE() < d.end_date AND C.course_id = d.course_id
 `
 
 module.exports.GET_COURSE_CERTIFICATE = `
@@ -80,10 +74,10 @@ module.exports.GET_COURSE_RATINGS = `
     WHERE R.course_id = ?`
 
 module.exports.GET_AVERAGE_RATING = `
-    SELECT avg(rating) 
-     FROM Rates R
-     GROUP BY(course_id) 
-     HAVING course_id = ?`
+    SELECT avg(rating) as avgRating, COUNT(rating) as ratingCount
+    FROM Rates R
+    GROUP BY(course_id)
+    HAVING course_id = ?`
 
 module.exports.POST_COURSE_RATING = `
     INSERT INTO rates(course_id, student_id, comment, rating)
@@ -94,6 +88,7 @@ module.exports.POST_COURSE_RATING = `
 module.exports.GET_LECTURES = `
     SELECT lecture_id, lecture_name, course_id
     FROM Lecture
+    WHERE course_id = ?
 `
 
 module.exports.POST_LECTURE = `
@@ -108,10 +103,18 @@ module.exports.GET_LECTURE_CONTENT = `
     where lecture_id = ? `
 
 module.exports.GET_COMPLETED_LECTURES = `
-    SELECT lecture_id
-    FROM lecture L
-    WHERE exists(select * FROM completes WHERE lecture_id = L.lecture_id AND student_id = ?)`
-
+    SELECT l.lecture_id,
+           l.lecture_name
+    FROM lecture l
+             JOIN completes c on l.lecture_id = c.lecture_id AND course_id = ? AND student_id = ?
+    ORDER BY l.lecture_id
+    #     FROM course
+#              JOIN lecture l on course.course_id = ? AND course.course_id = l.course_id
+#              JOIN completes c on l.lecture_id = c.lecture_id AND c.student_id = ?
+`
+// SELECT lecture_id
+// FROM lecture L
+// WHERE exists(select * FROM completes c WHERE L.course_id = ? AND c.lecture_id = L.lecture_id AND student_id = ?)\`
 module.exports.POST_COMPLETED_LECTURE = `INSERT INTO completes
                                          VALUES (?, ?)`
 
@@ -186,9 +189,13 @@ module.exports.POST_COURSE_ASSIGNMENT_PROJECT = `
     VALUES (?, ?);
 `
 
-module.exports.GET_COURSE_ASSIGNMENT_DETAILS = ``
+//TODO update quizquestion table (?)
+/*module.exports.GET_COURSE_ASSIGNMENT_DETAILS = `SELECT * FROM quizquestion where quiz_id = ?`*/
 
-module.exports.POST_COURSE_ASSIGNMENT_SUBMISSION = ``
+module.exports.POST_COURSE_ASSIGNMENT_SUBMISSION = `
+    INSERT INTO submits(assignment_id, student_id, submission, avg_score) VALUES(?, ?, ?, ?);`
+
+module.exports.POST_ASSIGNMENT_QUESTION = `INSERT INTO answers VALUES(?, ?, ?, ?);`
 
 module.exports.GET_GRADING_PEER_SUBMISSION = ``
 

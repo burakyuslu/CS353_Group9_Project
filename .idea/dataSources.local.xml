@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal">
+  <component name="dataSourceStorageLocal" created-in="WS-211.7142.46">
     <data-source name="MariaDB - cs353test@localhost" uuid="c55e366e-9710-4277-a2fc-cdcbe24ef366">
       <database-info product="MariaDB" version="10.4.18-MariaDB" jdbc-version="4.2" driver-name="MariaDB Connector/J" driver-version="2.6.0" dbms="MARIADB" exact-version="10.4.18" exact-driver-version="2.6">
         <extra-name-characters>#@</extra-name-characters>

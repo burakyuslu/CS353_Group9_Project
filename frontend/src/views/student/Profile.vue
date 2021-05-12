@@ -28,6 +28,29 @@
             My Courses
           </v-card-title>
         </v-card>
+
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <v-card>
+            <v-card-title>
+              <span class="headline">User Profile</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row> </v-row>
+              </v-container>
+              <small>*indicates required field</small>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog = false">
+                Close
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="dialog = false">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-row v-for="item in courses" :key="item.course_name">
           <v-col>
             <v-card outlined tile>
@@ -35,18 +58,27 @@
               <v-card-text align-start>
                 <div class="text--primary">
                   <p>price: {{ item.price }}</p>
-                  <p>summary: {{ item.summary }}</p>
-                  <p>publication date: {{ item.publish_date }}</p>
+                  <p>summary: {{ item.course_summary }}</p>
+                  <p>publication date: {{ item.buy_date }}</p>
                 </div>
                 <v-spacer> </v-spacer>
               </v-card-text>
               <v-card-subtitle
-                v-text="`instructor ${item.instructor_id}`"
+                v-text="
+                  `instructor ${item.instructor_name} ${item.instructor_surname}`
+                "
               ></v-card-subtitle>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn v-if="true" class="ml-2 mt-5" outlined rounded small>
+                <v-btn
+                  v-if="true"
+                  @click="openDialog(item)"
+                  class="ml-2 mt-5"
+                  outlined
+                  rounded
+                  small
+                >
                   request refund
                 </v-btn>
                 <v-btn v-if="true" class="ml-2 mt-5" outlined rounded small>
@@ -114,6 +146,9 @@ export default {
   data() {
     return {
       myCourses: [],
+      dialog: false,
+      dialogItem: {},
+      reason: '',
     }
   },
   methods: {
@@ -122,6 +157,10 @@ export default {
       unwish: actions.UNWISH_COURSE,
       requestRefund: actions.REQUEST_REFUND,
     }),
+    openDialog(item) {
+      this.dialogItem = item
+      this.dialog = true
+    },
   },
   computed: {
     ...mapGetters({
