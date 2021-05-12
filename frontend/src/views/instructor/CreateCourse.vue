@@ -9,18 +9,12 @@
     </v-container>
 
     <v-container>
-      <v-text-field>
-        <template v-slot:label>
-          Enter The Name Of Your Course 
-        </template>
+      <v-text-field v-model="courseName" label="Enter The Name Of Your Course">
       </v-text-field>
     </v-container>
 
     <v-container>
-      <v-text-field>
-        <template v-slot:label>
-          Enter Course Category
-        </template>
+      <v-text-field v-model="category" label="Enter Course Category">
       </v-text-field>
     </v-container>
 
@@ -35,7 +29,7 @@
 
     <v-container>
       <router-link to="/instructor/home/">
-        <v-btn class="ml-2 mt-5" outlined rounded small>
+        <v-btn class="ml-2 mt-5" outlined rounded small @click="submit">
             Save Your Course
         </v-btn>
       </router-link>
@@ -51,7 +45,21 @@
 </template>
 
 <script>
-export default {}
+import axios from '../../utils/config.js'
+export default {
+  methods: {
+    submit() {
+      axios.post('', {data:this.courseName, data:this.category}) // fill the link
+      this.$router.go(-1)
+    }
+  },
+  data() {
+    return {
+      courseName: '',
+      category: '',
+    }
+  }
+}
 </script>
 
 <style></style>

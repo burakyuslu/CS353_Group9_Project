@@ -20,7 +20,7 @@
 
     <v-container>
       <router-link to="/instructor/home/">
-        <v-btn class="ml-2 mt-5" outlined rounded small>
+        <v-btn class="ml-2 mt-5" outlined rounded small @click="submit">
             Add Lecture
         </v-btn>
       </router-link>
@@ -39,13 +39,15 @@ import axios from '../../utils/config.js'
 export default {
   methods: {
     submit() {
-      axios.post('', {data:lectureName, data:url}) // fill the link
+      axios.post('', {data:this.lectureName, data:this.url}) // fill the link
       this.$router.go(-1)
     }
   },
   data() {
-    lectureName: ''
-    url: ''
+    return {
+      lectureName: '',
+      url: '',
+    }
   }
 
 }
