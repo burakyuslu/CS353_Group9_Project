@@ -189,8 +189,8 @@ module.exports.POST_COURSE_ASSIGNMENT_PROJECT = `
     VALUES (?, ?);
 `
 
-//TODO update quizquestion table (?)
-/*module.exports.GET_COURSE_ASSIGNMENT_DETAILS = `SELECT * FROM quizquestion where quiz_id = ?`*/
+
+module.exports.GET_COURSE_ASSIGNMENT_DETAILS = `SELECT * FROM quizquestion where assignment_id = ?`
 
 module.exports.POST_COURSE_ASSIGNMENT_SUBMISSION = `
     INSERT INTO submits(assignment_id, student_id, submission, avg_score) VALUES(?, ?, ?, ?);`

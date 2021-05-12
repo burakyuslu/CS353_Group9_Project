@@ -354,18 +354,18 @@ courseRouter.post("/:courseId/assignments/quizzes", async (req, res, next) => {
 
 // /:courseId/assignments/:assignmentId GET, POST(submitting)
 courseRouter.get("/:courseId/assignments/:assignmentId", async (req, res, next) => {
-    /*not complete yet
+
     try {
         const {quizId} = req.params
         const result = await db.query(GET_COURSE_ASSIGNMENT_DETAILS, [quizId])
         res.json(result)
     } catch (exception) {
         next(exception)
-    }*/
+    }
 })
 
 courseRouter.post("/:courseId/assignments/:assignmentId", async (req, res, next) => {
-    /* not complete yet
+    /*
     const {instructorId, studentId} = req
     try {
         const {body} = req.body
@@ -374,10 +374,10 @@ courseRouter.post("/:courseId/assignments/:assignmentId", async (req, res, next)
         const {answer} = body.answer
 
         const {submitQuestion} = await db.query(POST_ASSIGNMENT_QUESTION, [studentId, questionId, 0, answer])
-        const {submitAssignment} = await db.query(POST_COURSE_ASSIGNMENT_SUBMISSION, [quizId, studentId, answer, 0])
+        //const {submitAssignment} = await db.query(POST_COURSE_ASSIGNMENT_SUBMISSION, [quizId, studentId, answer, 0])
     } catch (exception) {
-        next(exception)
-    }*/
+        next(exception)*/
+
 })
 
 // /:courseId/grading GET, POST(submitting)
