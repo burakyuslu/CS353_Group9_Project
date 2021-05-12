@@ -44,8 +44,10 @@ export default {
     }
   },
   data() {
-    lectureName: ''
-    url: ''
+    return {
+      lectureName: '',
+      url: '',
+    }
   }
 
 }
