@@ -29,7 +29,7 @@
 
     <v-container>
       <router-link to="/instructor/home/">
-        <v-btn class="ml-2 mt-5" outlined rounded small>
+        <v-btn class="ml-2 mt-5" outlined rounded small @click="submit">
             Save Your Course
         </v-btn>
       </router-link>
@@ -49,7 +49,7 @@ import axios from '../../utils/config.js'
 export default {
   methods: {
     submit() {
-      axios.post('', {data:courseName, data:category}) // fill the link
+      axios.post('', {data:this.courseName, data:this.category}) // fill the link
       this.$router.go(-1)
     }
   },

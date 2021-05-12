@@ -11,6 +11,7 @@
     <v-container> 
       <v-textarea
         color="teal"
+        v-model="certificate"
       >
         <template v-slot:label>
           <div>
@@ -20,19 +21,9 @@
       </v-textarea>
     </v-container>
 
-    <v-container> 
-      <v-file-input accept=".doc, .txt" label="You can also upload your certificate as text file">
-      </v-file-input>
-    </v-container>
-
-    <v-container> 
-      <v-file-input accept="image.*" label="You can also upload your certificate as an image">
-      </v-file-input>
-    </v-container>
-
     <v-container>
       <router-link to="/instructor/home/">
-        <v-btn class="ml-2 mt-5" outlined rounded small>
+        <v-btn class="ml-2 mt-5" outlined rounded small @click="submit">
             Save Your Certificate
         </v-btn>
       </router-link>
@@ -47,7 +38,19 @@
 </template>
 
 <script>
-export default {}
+export default {
+  methods: {
+    submit() {
+      axios.post('', {data:this.certificate}) // fill the link
+      this.$router.go(-1)
+    }
+  },
+  data(){
+    return {
+      certificate: ''
+    }
+  }
+}
 </script>
 
 <style></style>
