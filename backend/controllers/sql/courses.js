@@ -181,8 +181,15 @@ module.exports.POST_COURSE_ASSIGNMENT_QUIZ = `
     VALUES (?, ?);
     SELECT @assignmentId = LAST_INSERT_ID();
     INSERT INTO quiz(quiz_id, quiz_name)
-    VALUES (@assignmentId, ?);
-`
+    VALUES (@assignmentId, ?);`
+
+//TODO:check later
+module.exports.POST_COURSE_ASSIGNMENT_QUIZ_QUESTION = `
+    SELECT @quizId = LAST_INSERT_ID() FROM quiz;
+    INSERT INTO quizquestion(assignment_id, question_text, question_answer) VALUES(@assignmentId, ?, ?);
+    SELECT @questionId = LAST_INSERT_ID();
+    INSERT INTO quizoption VALUES (@questionId,?), (@questionId,?), (@questionId,?), (@questionId,?);
+    `
 
 module.exports.POST_COURSE_ASSIGNMENT_PROJECT = `
     INSERT INTO assignmentmaterial(course_id, weight)
