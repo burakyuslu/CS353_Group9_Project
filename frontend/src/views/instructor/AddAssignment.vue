@@ -1,38 +1,36 @@
 <template>
   <v-app>
-    <v-container >
+    <v-container>
       <v-card outlined tile>
         <v-card-title class="header">
-          Create Quiz for Course: {{courseName}}
+          Create Quiz for Course: {{ courseName }}
         </v-card-title>
       </v-card>
       <v-card outlined tile>
         <v-card-title>
           Quiz Name:
         </v-card-title>
-        <v-text-field label="Enter name here">
-        </v-text-field>
+        <v-text-field label="Enter name here"> </v-text-field>
       </v-card>
       <v-card outlined tile>
         <v-card-title>
           Weight (%):
         </v-card-title>
-        <v-text-field label="Enter weight here">
-        </v-text-field>
+        <v-text-field label="Enter weight here"> </v-text-field>
       </v-card>
       <v-card outlined tile>
-        <v-dialog
-            v-model="dialog"
-            persistent
-            max-width="600px"
-        >
+        <v-dialog v-model="dialog" persistent max-width="600px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn class="ml-2 mt-5" outline rounded small
-                   v-bind="attrs"
-                   v-on="on">
+            <v-btn
+              class="ml-2 mt-5"
+              outlined
+              rounded
+              small
+              v-bind="attrs"
+              v-on="on"
+            >
               Add Questions
             </v-btn>
-
           </template>
           <v-card>
             <v-card-title>
@@ -44,63 +42,51 @@
                   <v-row>
                     <v-col>
                       <v-card>
-                        <v-text-field
-                            label="Question"
-                            required
+                        <v-text-field v-model="question" label="Question" required> </v-text-field>
+                      </v-card>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-card>
+                        <v-radio
+                          label="Correct Choice"
+                          value="Correct1"
+                          color="green"
                         >
-                        </v-text-field>
+                        </v-radio>
+                        <v-text-field v-model="answer1" label="Choice 1"> </v-text-field>
                       </v-card>
                     </v-col>
                     <v-col cols="12">
                       <v-card>
                         <v-radio
-                            label="Correct Choice"
-                            value="Correct1"
-                            color="green">
-
+                          label="Correct Choice"
+                          value="Correct2"
+                          color="green"
+                        >
                         </v-radio>
-                        <v-text-field
-                            label="Choice 1">
-                        </v-text-field>
+                        <v-text-field v-model="answer2" label="Choice 2"> </v-text-field>
                       </v-card>
                     </v-col>
                     <v-col cols="12">
                       <v-card>
                         <v-radio
-                            label="Correct Choice"
-                            value="Correct2"
-                            color="green">
-
+                          label="Correct Choice"
+                          value="Correct3"
+                          color="green"
+                        >
                         </v-radio>
-                        <v-text-field
-                            label="Choice 2">
-                        </v-text-field>
+                        <v-text-field v-model="answer3" label="Choice 3"> </v-text-field>
                       </v-card>
                     </v-col>
                     <v-col cols="12">
                       <v-card>
                         <v-radio
-                            label="Correct Choice"
-                            value="Correct3"
-                            color="green">
-
+                          label="Correct Choice"
+                          value="Correct4"
+                          color="green"
+                        >
                         </v-radio>
-                        <v-text-field
-                            label="Choice 3">
-                        </v-text-field>
-                      </v-card>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-card>
-                        <v-radio
-                            label="Correct Choice"
-                            value="Correct4"
-                            color="green">
-
-                        </v-radio>
-                        <v-text-field
-                            label="Choice 4">
-                        </v-text-field>
+                        <v-text-field v-model="answer4" label="Choice 4"> </v-text-field>
                       </v-card>
                     </v-col>
                   </v-row>
@@ -110,18 +96,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                  color="green"
-                  text
-                  @click="dialog = false"
-              >
+              <v-btn color="green" text @click="dialog = false">
                 Cancel
               </v-btn>
-              <v-btn
-                  color="green"
-                  text
-                  @click="dialog = false"
-              >
+              <v-btn color="green" text @click="dialog = false">
                 Add
               </v-btn>
             </v-card-actions>
@@ -146,62 +124,50 @@
 </template>
 
 <script>
-
 export default {
   name: 'App',
-  // question: [],
-  // answers: [],
 
-  // computed: {
-  //       items () {
-  //         const questionLength = this.question.length
-  //         const answersLength = this.answers.length
+  methods: {
+    addAssignmentQuestion: function() {
+      this.answers.push({
+        answers: [this.answer1, this.answer2, this.answer3, this.answer4]
+      })
 
-  //         return Array.from({ length: 10 }, (k, v) => {
-  //           const question = this.question[]
-  //           const asnwer = this.answer[]
+      this.assignment.push({
+        answer: answers,
+        question: this.question
+      })
+    },
 
-  //           return {
-  //             color: this.colors[this.genRandomIndex(colorsLength)],
-  //             fullName: `${name} ${surname}`,
-  //             initials: `${name[0]} ${surname[0]}`,
-  //           }
-  //         })
-  //       },
-  //     },
+    submit() {
+      axios.post('courses/courseId/assingments', {data: this.assignment})
+      this.$router.go(-1)
+    },
+},
 
-// for testing add v-bind:key="question.text" to the question text
-
-//add Answers and correct answer?
-  // methods: {
-  //   addAssignmentQuestion: function() {
-  //     this.assignment.push({
-  //       text: this.question.text
-  //     })
-  //   }
-  // },
-
-  data(){
-    return{
+  data() {
+    return {
+      question: '',
+      answer1:'',
+      answer2:'',
+      answer3:'',
+      answer4:'',
+      answers: [],
+      assignment: [],
       radioGroup: 1,
       enteredNote: '',
       courseName: 'Learn Programming with Python',
       dialog: false,
-      questions: ['Question 1', 'Question 2', 'Question 3' ,"Question 4"]
+      questions: ['Question 1', 'Question 2', 'Question 3', 'Question 4'],
     }
-    assignment : [
-      
-    ]
+    assignment: []
   },
-};
+}
 </script>
 
 
 <style scoped>
-.header{
+.header {
   text-align: center;
 }
-
-
-
 </style>
