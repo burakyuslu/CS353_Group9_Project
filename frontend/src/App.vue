@@ -7,7 +7,8 @@
         <router-link to="/student/profile">Student Profile</router-link> |
         <router-link to="/instructor/home">Instructor</router-link> |
         <router-link to="/lecture">Lecture</router-link> |
-        <router-link to="/course">Course Details</router-link>
+        <router-link to="/course">Course Details</router-link> |
+        <router-link to="/student/quiz">Student Quiz</router-link>
         <!-- -->
       </nav>
     </v-app-bar>

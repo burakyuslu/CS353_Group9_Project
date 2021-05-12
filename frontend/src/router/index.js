@@ -14,6 +14,7 @@ import CourseDetails from '../views/student/Course.vue'
 import StudentDiscover from '../views/student/Discover.vue'
 import Lecture from '../views/student/Lecture.vue'
 import StudentProfile from '../views/student/Profile.vue'
+import Quiz from '../views/student/Quiz.vue'
 
 Vue.use(VueRouter)
 
@@ -110,6 +111,11 @@ const routes = [
     name: 'course.details',
     component: CourseDetails,
   },
+  {
+    path:'/student/quiz',
+    name: 'student.quiz',
+    component: Quiz,
+  }
 ]
 
 const router = new VueRouter({
