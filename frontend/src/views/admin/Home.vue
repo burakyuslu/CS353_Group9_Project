@@ -81,6 +81,13 @@
           >
             Set Discount As Entered
           </v-btn>
+          <v-btn
+              outlined
+              text
+              v-on:click="cancelDiscount (disc)"
+          >
+            Cancel Discounts
+          </v-btn>
         </v-card-actions>
       </v-card>
     </section>
@@ -175,16 +182,12 @@ export default {
     },
 
     setDiscount: function( disc) {
-
-    disc.percentage = disc.discPercentageNew;
-//      let i;
-//      for( i = 0; i < this.discountableList.length; i++){
-//        if( this.discountableList[i] === coId){
-//          this.discountableList[i].percentage = this.discountableList[i].discPercentageNew;
-//        }
-//
-//      }
+      disc.percentage = disc.discPercentageNew;
     },
+
+    cancelDiscount: function(disc){
+      disc.percentage = 0;
+    }
   }
 }
 </script>
