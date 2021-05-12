@@ -33,8 +33,7 @@ discountRouter.post('/applyDiscount', async (request, response) => {
 
 
     const applyDiscount = await db.query(`
-        INSERT INTO Discount(admin_id, course_id, percentage, end_date)
-            VALUES(?, ?, ?, SYSDATE());`, [admin_id, course_id, percentage]);
+        UPDATE Course SET percentage = ? WHERE course_id = ?;`, [percentage, course_id]);
 
     const result = helper.emptyOrRows(applyDiscount);
     response.json(result)
@@ -42,13 +41,13 @@ discountRouter.post('/applyDiscount', async (request, response) => {
 
 discountRouter.delete('/cancelDiscount', async (request, response) => {
     const discount_id = request.query.discount_id
-
+    const course_id = body.course_id
     if (isEmpty(discount_id)) {
         response.status(400).json({error: "You must supply discount_id"})
     }
 
     const cancelDiscount = await db.query(`
-        DELETE FROM discount WHERE discount_id = ?;`, [discount_id]);
+        UPDATE Course SET percentage = ? WHERE course_id = ?;`, [0, course_id]);
 
     const result = helper.emptyOrRows(cancelDiscount);
     response.json(result)
