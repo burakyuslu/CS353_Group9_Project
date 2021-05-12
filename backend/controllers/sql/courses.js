@@ -192,10 +192,7 @@ module.exports.POST_COURSE_ASSIGNMENT_PROJECT = `
 
 module.exports.GET_COURSE_ASSIGNMENT_DETAILS = `SELECT * FROM quizquestion where assignment_id = ?`
 
-module.exports.POST_COURSE_ASSIGNMENT_SUBMISSION = `
-    INSERT INTO submits(assignment_id, student_id, submission, avg_score) VALUES(?, ?, ?, ?);`
-
-module.exports.POST_ASSIGNMENT_QUESTION = `INSERT INTO answers VALUES(?, ?, ?, ?);`
+/*module.exports.POST_ASSIGNMENT_QUESTION = `INSERT INTO answers VALUES(?, ?, ?, ?);`*/
 
 module.exports.GET_GRADING_PEER_SUBMISSION = ``
 

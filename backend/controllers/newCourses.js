@@ -23,7 +23,6 @@ const {
     POST_COURSE_RATING,
     POST_LECTURE,
     POST_LECTURE_NOTE,
-    POST_ASSIGNMENT_QUESTION,
     POST_QNA_THREAD
 } = require("./sql/courses");
 
@@ -365,19 +364,31 @@ courseRouter.get("/:courseId/assignments/:assignmentId", async (req, res, next) 
 })
 
 courseRouter.post("/:courseId/assignments/:assignmentId", async (req, res, next) => {
-    /*
+
     const {instructorId, studentId} = req
     try {
-        const {body} = req.body
-        const {quizId} = body_quizId
-        const {questionId} = body.questionId
-        const {answer} = body.answer
+        let query = `INSERT INTO answers VALUES`;
+        let params = [];
 
-        const {submitQuestion} = await db.query(POST_ASSIGNMENT_QUESTION, [studentId, questionId, 0, answer])
-        //const {submitAssignment} = await db.query(POST_COURSE_ASSIGNMENT_SUBMISSION, [quizId, studentId, answer, 0])
+        const bodyArray = req.body
+        for (let i = 0; i < bodyArray.length; i++){
+            const {questionId, answer} = bodyArray[i];
+            query += "(" + studentId + ", ?, 0, ?)";
+            if(i < bodyArray.length - 1){
+              query += ", "
+            }
+            else{
+                query += ";"
+            }
+            params.push(questionId);
+            params.push(answer);
+        }
+
+        const {submitQuestion} = await db.query(query, params)
+        res.json(submitQuestion)
     } catch (exception) {
-        next(exception)*/
-
+        next(exception)
+    }
 })
 
 // /:courseId/grading GET, POST(submitting)
