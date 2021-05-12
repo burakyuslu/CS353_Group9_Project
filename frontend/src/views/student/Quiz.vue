@@ -40,7 +40,7 @@
       </h2>
 
     </section>
-    <v-card v-for="qQuestion in questions" :key="qQuestion.questionId" outlined>
+    <v-card v-for="qQuestion in questions" :key="qQuestion.questionId" outlined @click="updateStudentAnswer(qQuestion.questionId, $event)">
       <v-card-title>
         {{ qQuestion.questionText }}
       </v-card-title>
@@ -48,11 +48,13 @@
       <v-col>
         <v-radio-group
             column
+            v-model="qQuestion.answer"
         >
           <v-radio
               v-for="option in qQuestion.options"
-              :label="`${option}`"
-              :key="option"
+              :label="option"
+              :value="option"
+              :key="qQuestion.questionId+option"
           ></v-radio>
         </v-radio-group>
       </v-col>
@@ -71,6 +73,7 @@ export default {
       quizName: "Example Quiz",
       quizSubmitted: 0,
       quizScore: 0,
+      selectedOption:"",
       questions: [
         {
           questionId: 1,
@@ -80,7 +83,8 @@ export default {
             option2: "B",
             option3: "C",
             option4: "D",
-          }
+          },
+          answer: ""
         },
         {
           questionId: 2,
@@ -90,31 +94,53 @@ export default {
             option2: "Y",
             option3: "Z",
             option4: "W",
-          }
+          },
+          answer: ""
         },
         {
-          questionId: 1,
+          questionId: 3,
           questionText: "Bla bla bla?",
           options: {
             option1: "K",
             option2: "L",
             option3: "M",
             option4: "N",
-          }
+          },
+          answer: ""
         }
       ],
-      studentAnswers: []
     }
   },
   computed: {},
   methods: {
     submitQuiz: function () {
-      this.quizSubmitted = 1;
+      // compare with actual answers to calculate the result & set score
+      // grade
       this.quizScore = 69.69;
 
+      // print the result
+      this.quizSubmitted = 1;
+
+      // debug
+      console.log(this.questions);
     },
     leaveQuiz: function () {
       this.quizSubmitted = 0;
+    },
+    updateStudentAnswer(questId){
+      //let i;
+      //// if an answer already exists for that question, delete it from the student answers
+      //for( i = 0; i < this.studentAnswers.length; i++){
+      //  if( this.studentAnswers[i].solvedQuestionId === questId){
+      //    this.studentAnswers.splice(i, 1);
+      //  }
+      //}
+//
+      //// add the student's answer to the student answers array
+      //this.studentAnswers.push( {
+      //  solvedQuestionId: questId,
+      //  studentAnswer: this.selectedOption
+      //})
     }
 
   }
