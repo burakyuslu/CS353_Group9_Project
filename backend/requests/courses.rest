@@ -21,3 +21,19 @@ GET http://localhost:3003/api/courses/certificates
 
 ###
 GET http://localhost:3003/api/courses
+
+###
+POST http://localhost:3003/api/courses/1/assignments/1?studentId=3
+Content-Type: application/json
+
+[
+  {
+    "questionId": "2",
+    "answer": "answer1"
+  },
+  {
+    "questionId": "3",
+    "answer": "answer2"
+  }
+]
+
