@@ -9,18 +9,12 @@
     </v-container>
 
     <v-container>
-      <v-text-field>
-        <template v-slot:label>
-          Add the name of your lecture  
-        </template>
+      <v-text-field v-model="lectureName" label="Add the name of your lecture">
       </v-text-field>
     </v-container>
     
     <v-container>
-      <v-text-field>
-        <template v-slot:label>
-          Add the URL of your lecture video here 
-        </template>
+      <v-text-field v-model="url" label="Add the URL of your lecture video here">
       </v-text-field>
     </v-container>
 
@@ -41,7 +35,20 @@
 </template>
 
 <script>
-export default {}
+import axios from '../../utils/config.js'
+export default {
+  methods: {
+    submit() {
+      axios.post('', {data:lectureName, data:url}) // fill the link
+      this.$router.go(-1)
+    }
+  },
+  data() {
+    lectureName: ''
+    url: ''
+  }
+
+}
 </script>
 
 <style></style>
