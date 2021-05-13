@@ -17,9 +17,11 @@ const {
     POST_COMPLETED_LECTURE,
     POST_COURSE,
     POST_COURSE_ANNOUNCEMENT,
-    POST_COURSE_ASSIGNMENT_QUIZ,
+    POST_COURSE_ASSIGNMENT_QUIZ1,
+    POST_COURSE_ASSIGNMENT_QUIZ2,
     POST_COURSE_ASSIGNMENT_SUBMISSION,
-    POST_COURSE_ASSIGNMENT_QUIZ_QUESTION,
+    POST_COURSE_ASSIGNMENT_QUIZ_QUESTION1,
+    POST_COURSE_ASSIGNMENT_QUIZ_QUESTION2,
     POST_COURSE_QNA_THREAD_ENTRY,
     POST_COURSE_RATING,
     POST_LECTURE,
@@ -346,13 +348,20 @@ courseRouter.post("/:courseId/assignments/quizzes", async (req, res, next) => {
         //TODO: properly extract url parameters
         const {courseId} = req.params
         const {weight, quizName} = req
-        const result = await db.query(POST_COURSE_ASSIGNMENT_QUIZ, [courseId, weight, quizName])
+
+
+        const result = await db.query(POST_COURSE_ASSIGNMENT_QUIZ1, [courseId, 35])
+        const result2 = await db.query(POST_COURSE_ASSIGNMENT_QUIZ2, [result.insertId, "quiz_name1"])
 
         const questions = req.body
 
         for (let i = 0; i < questions.length; i++){
             const {questionText, answer, answer1, answer2, answer3, answer4} = questions[i];
-            const {addQuestion} = await db.query(POST_COURSE_ASSIGNMENT_QUIZ_QUESTION, [questionText, answer, answer1, answer2, answer3, answer4])
+            const addQuestion = await db.query(POST_COURSE_ASSIGNMENT_QUIZ_QUESTION1, [result.insertId, questionText, answer])
+            //res.json(addQuestion)
+            //return;
+            const {addOptions} = await db.query(POST_COURSE_ASSIGNMENT_QUIZ_QUESTION2,
+                [addQuestion.insertId, answer1, addQuestion.insertId, answer2, addQuestion.insertId, answer3, addQuestion.insertId, answer4]);
         }
 
         res.json(result)

@@ -40,7 +40,7 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:3003/api/courses/1/assignments/quizzes?weight=35&quizName=Capital_Cities
+POST http://localhost:3003/api/courses/1/assignments/quizzes
 Content-Type: application/json
 
 [
@@ -53,7 +53,7 @@ Content-Type: application/json
     "answer4": "Bratislava"
   },
   {
-    "question": "What is the capital city of Russia?",
+    "questionText": "What is the capital city of Russia?",
     "answer": "Moscow",
     "answer1": "Moscow",
     "answer2": "Beirut",
@@ -61,7 +61,7 @@ Content-Type: application/json
     "answer4": "Rome"
   },
   {
-    "question": "What is the capital city of Greece?",
+    "questionText": "What is the capital city of Greece?",
     "answer": "Athens",
     "answer1": "Ankara",
     "answer2": "London",

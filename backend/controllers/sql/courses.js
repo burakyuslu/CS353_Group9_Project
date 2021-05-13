@@ -176,19 +176,23 @@ module.exports.GET_COURSE_ASSIGNMENTS_QUIZ = `
              join quiz q on a1.assignment_id = q.quiz_id
     WHERE course_id = ?
 `
-module.exports.POST_COURSE_ASSIGNMENT_QUIZ = `
+module.exports.POST_COURSE_ASSIGNMENT_QUIZ1 = `
     INSERT INTO assignmentmaterial(course_id, weight)
-    VALUES (?, ?);
-    SELECT @assignmentId = LAST_INSERT_ID();
-    INSERT INTO quiz(quiz_id, quiz_name)
-    VALUES (@assignmentId, ?);`
+    VALUES (?, ?);`
 
+module.exports.POST_COURSE_ASSIGNMENT_QUIZ2 = `
+    INSERT INTO quiz(quiz_id, quiz_name)
+    VALUES (?, ?);
+    `
+    
 //TODO:check later
-module.exports.POST_COURSE_ASSIGNMENT_QUIZ_QUESTION = `
-    SELECT @quizId = LAST_INSERT_ID() FROM quiz;
-    INSERT INTO quizquestion(assignment_id, question_text, question_answer) VALUES(@assignmentId, ?, ?);
-    SELECT @questionId = LAST_INSERT_ID();
-    INSERT INTO quizoption VALUES (@questionId,?), (@questionId,?), (@questionId,?), (@questionId,?);
+module.exports.POST_COURSE_ASSIGNMENT_QUIZ_QUESTION1 = `
+    INSERT INTO quizquestion(assignment_id, question_text, question_answer) VALUES(?, ?, ?);
+
+    `
+
+module.exports.POST_COURSE_ASSIGNMENT_QUIZ_QUESTION2 = `
+    INSERT INTO quizoption VALUES (?,?), (?,?), (?,?), (?,?);
     `
 
 module.exports.POST_COURSE_ASSIGNMENT_PROJECT = `
