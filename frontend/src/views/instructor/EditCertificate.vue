@@ -43,7 +43,7 @@ import axios from '../../utils/config.js'
 export default {
   methods: {
     submit() {
-      axios.post('', {certificate:this.certificate}) // fill the link
+      axios.post('certificates', {certificate:this.certificate})
       this.$router.go(-1)
     }
   },
