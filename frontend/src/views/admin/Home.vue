@@ -152,8 +152,8 @@ export default {
     seeRefundRequests: async function(){
 
       // TODO CHECk i have literally 0 idea if this is correct, at all
-      let refundRequestsArr = await axios.get( '/v1/request/listRefundRequests');
-      console.log(refundRequestArr);
+      // let refundRequestsArr = await axios.get( '/v1/request/listRefundRequests');
+      // console.log(refundRequestArr);
       // this.refundReqList = refundRequestArr; // do we initialize its properties inside a for loop
       // or do we just do it plainly like this
 
