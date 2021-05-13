@@ -19,6 +19,7 @@ const {
     POST_COURSE_ANNOUNCEMENT,
     POST_COURSE_ASSIGNMENT_QUIZ,
     POST_COURSE_ASSIGNMENT_SUBMISSION,
+    POST_COURSE_ASSIGNMENT_QUIZ_QUESTION,
     POST_COURSE_QNA_THREAD_ENTRY,
     POST_COURSE_RATING,
     POST_LECTURE,
@@ -342,9 +343,18 @@ courseRouter.get("/:courseId/assignments", async (req, res, next) => {
 
 courseRouter.post("/:courseId/assignments/quizzes", async (req, res, next) => {
     try {
+        //TODO: properly extract url parameters
         const {courseId} = req.params
+        const {weight, quizName} = req
+        const result = await db.query(POST_COURSE_ASSIGNMENT_QUIZ, [courseId, weight, quizName])
 
-        const result = await db.query(POST_COURSE_ASSIGNMENT_QUIZ, [courseId])
+        const questions = req.body
+
+        for (let i = 0; i < questions.length; i++){
+            const {questionText, answer, answer1, answer2, answer3, answer4} = questions[i];
+            const {addQuestion} = await db.query(POST_COURSE_ASSIGNMENT_QUIZ_QUESTION, [questionText, answer, answer1, answer2, answer3, answer4])
+        }
+
         res.json(result)
     } catch (exception) {
         next(exception)
