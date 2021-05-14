@@ -10,13 +10,13 @@
         <v-card-title>
           Quiz Name:
         </v-card-title>
-        <v-text-field label="Enter name here"> </v-text-field>
+        <v-text-field label="Enter name here" v-model="quizName"> </v-text-field>
       </v-card>
       <v-card outlined tile>
         <v-card-title>
           Weight (%):
         </v-card-title>
-        <v-text-field label="Enter weight here"> </v-text-field>
+        <v-text-field label="Enter weight here" v-model="weight"> </v-text-field>
       </v-card>
       <v-card outlined tile>
         <v-dialog v-model="dialog" persistent max-width="600px">
@@ -145,11 +145,14 @@ export default {
   name: 'App',
 
   methods: {
-    addAssignmentQuestion: function() {
+    addAssignmentQuestion(){
       this.assignment.push({
+        questionText: this.question,
         answer: this.answer,
-        answers: [this.answer1, this.answer2, this.answer3, this.answer4],
-        question: this.question,
+        answer1: this.answer1,
+        answer2: this.answer2,
+        answer3: this.answer3,
+        answer4: this.answer4
       })
       console.log(this.assignment)
       this.question = ''
@@ -158,7 +161,7 @@ export default {
     },
 
     submit() {
-      axios.post('courses/courseId/assignments', {assignment: this.assignment})
+      axios.post('courses/2/assignments/quizzes', {quizName: this.quizName, weight: this.weight, assignment: this.assignment})
       this.$router.go(-1)
     },
   },
@@ -178,6 +181,8 @@ export default {
       courseName: 'Learn Programming with Python',
       dialog: false,
       questions: ['Question 1', 'Question 2', 'Question 3', 'Question 4'],
+      quizName: '',
+      weight: ''
     }
   },
 }

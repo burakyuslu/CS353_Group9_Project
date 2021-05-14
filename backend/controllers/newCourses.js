@@ -347,13 +347,15 @@ courseRouter.post("/:courseId/assignments/quizzes", async (req, res, next) => {
     try {
         //TODO: properly extract url parameters
         const {courseId} = req.params
-        const {weight, quizName} = req
 
+        const quizName = req.body.quizName
+        const weight = req.body.weight
 
-        const result = await db.query(POST_COURSE_ASSIGNMENT_QUIZ1, [courseId, 35])
-        const result2 = await db.query(POST_COURSE_ASSIGNMENT_QUIZ2, [result.insertId, "quiz_name1"])
+        const result = await db.query(POST_COURSE_ASSIGNMENT_QUIZ1, [courseId, weight])
+        const result2 = await db.query(POST_COURSE_ASSIGNMENT_QUIZ2, [result.insertId, quizName])
 
-        const questions = req.body
+        const questions = req.body.assignment
+        console.log(questions)
 
         for (let i = 0; i < questions.length; i++){
             const {questionText, answer, answer1, answer2, answer3, answer4} = questions[i];
