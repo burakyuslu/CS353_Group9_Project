@@ -20,11 +20,12 @@ export default new Vuex.Store({
       email: '',
       balance: '',
     },
-    studentsCourseDetails: [],
+    studentsCourseDetails: {},
     courseList: [],
     studentProfileData: {},
     studentNotifications: [],
     courseRating: {},
+    lectureContent: {},
   },
   getters: {
     [getters.GET_COURSES_STUDENT_HOME]: state => {
@@ -38,6 +39,9 @@ export default new Vuex.Store({
     },
     [getters.GET_STUDENT_COURSE_DETAILS]: state => {
       return state.studentsCourseDetails
+    },
+    getLectureContent(state) {
+      return state.lectureContent
     },
   },
   mutations: {
@@ -65,6 +69,9 @@ export default new Vuex.Store({
     },
     [mutations.SET_STUDENT_COURSE_DETAILS](state, { data }) {
       state.studentsCourseDetails = data
+    },
+    setLectureContent(state, { data }) {
+      state.lectureContent = data
     },
   },
   actions: {
@@ -128,7 +135,6 @@ export default new Vuex.Store({
           data: { courseId },
           params: { studentId: state.user.userId },
         })
-        commit(mutations.SET_STUDENT_PROFILE_DATA, { data })
       } catch (error) {
         // todo set error
         // cannot login
@@ -162,6 +168,120 @@ export default new Vuex.Store({
         // todo set error
         // cannot login
         console.log(error)
+      }
+    },
+    async addToWishlist({ commit, state }, { courseId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.post(`${URL.USER_WISHLIST}`, {
+          courseId,
+          studentId: state.user.userId,
+        })
+      } catch (error) {
+        // todo set error
+        // cannot login
+        console.log(error)
+      }
+    },
+    async buyCourse({ commit, state }, { courseId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.post('payments/checkouts', {
+          studentId: state.user.userId,
+          courseId,
+        })
+      } catch (error) {
+        // todo set error
+        // cannot login
+        return error
+      }
+    },
+    async fetchLectureContent({ commit, state }, { courseId, lectureId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.get(
+          `courses/${courseId}/lectures/${lectureId}`,
+          {
+            params: { studentId: state.user.userId },
+          },
+        )
+        commit('setLectureContent', { data })
+        return undefined
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
+      }
+    },
+    async fetchThread({ commit, state }, { courseId, threadId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.get(
+          `courses/${courseId}/qna/${threadId}`,
+          {
+            params: { studentId: state.user.userId },
+          },
+        )
+        return data
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
+      }
+    },
+    async fetchQuiz({ commit, state }, { courseId, assignmentId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.get(
+          `courses/${courseId}/assignments/${assignmentId}`,
+          {
+            params: { studentId: state.user.userId },
+          },
+        )
+        return data
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
+      }
+    },
+    async completeLecture({ commit, state }, { courseId, lectureId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const data = await axios.post(
+          `courses/${courseId}/lectures/completed-lectures`,
+          {
+            studentId: state.user.userId,
+            lectureId: lectureId,
+          },
+        )
+        return undefined
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
+      }
+    },
+    async createNote({ commit, state }, { courseId, lectureId, noteText }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const data = await axios.post(
+          `courses/${courseId}/lectures/${lectureId}/notes`,
+          {
+            studentId: state.user.userId,
+            noteText,
+          },
+        )
+        return data
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
       }
     },
   },

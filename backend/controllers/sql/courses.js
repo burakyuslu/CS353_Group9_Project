@@ -119,25 +119,24 @@ module.exports.POST_COMPLETED_LECTURE = `INSERT INTO completes
                                          VALUES (?, ?)`
 
 module.exports.GET_LECTURE_NOTES = `
-    SELECT id as note_id, note_text, date
-    FROM notes
+    SELECT note_id, note_text, cdate
+    FROM createsnote
     where student_id = ?
       AND lecture_id = ?
-    ORDER BY date
+    ORDER BY cdate
 `
 
 module.exports.POST_LECTURE_NOTE = `
-    INSERT INTO notes(note_text, date, student_id, lecture_id)
+    INSERT INTO createsnote(note_text, cdate, student_id, lecture_id)
     VALUES (?, SYSDATE(), ?, ?)
 `
 
 module.exports.GET_QNA_THREADS = `
     SELECT q.qna_id,
-           q.course_id,
-           t.thread_id,
-           t.post_text,
+           t.thread_id as id,
+           t.post_text as title,
            t.user_id,
-           u.name
+           u.name      as creator
     FROM qna q,
          thread t
              join useracc u on u.user_id = t.user_id
@@ -151,11 +150,18 @@ module.exports.POST_QNA_THREAD = `
 `
 
 module.exports.GET_COURSE_QNA_THREAD_ENTRIES = `
-    SELECT entry_id,
-           entry_text,
-           name
-    FROM entry e
-             join useracc u on e.thread_id = ? AND u.user_id = e.user_id
+    SELECT e.entry_id,
+           e.entry_text as content,
+           e.thread_id,
+           e.user_id,
+           u.name       as poster
+    FROM qna
+             JOIN course c on c.course_id = qna.course_id
+             JOIN thread t on qna.qna_id = t.qna_id
+             JOIN entry e on t.thread_id = e.thread_id
+             JOIN useracc u on u.user_id = e.user_id
+
+#              join useracc u on e.thread_id = ? AND u.user_id = e.user_id
 `
 
 module.exports.POST_COURSE_QNA_THREAD_ENTRY = `
@@ -183,17 +189,22 @@ module.exports.POST_COURSE_ASSIGNMENT_QUIZ1 = `
 module.exports.POST_COURSE_ASSIGNMENT_QUIZ2 = `
     INSERT INTO quiz(quiz_id, quiz_name)
     VALUES (?, ?);
-    `
-    
+`
+
 //TODO:check later
 module.exports.POST_COURSE_ASSIGNMENT_QUIZ_QUESTION1 = `
-    INSERT INTO quizquestion(assignment_id, question_text, question_answer) VALUES(?, ?, ?);
+    INSERT INTO quizquestion(assignment_id, question_text, question_answer)
+    VALUES (?, ?, ?);
 
-    `
+`
 
 module.exports.POST_COURSE_ASSIGNMENT_QUIZ_QUESTION2 = `
-    INSERT INTO quizoption VALUES (?,?), (?,?), (?,?), (?,?);
-    `
+    INSERT INTO quizoption
+    VALUES (?, ?),
+           (?, ?),
+           (?, ?),
+           (?, ?);
+`
 
 module.exports.POST_COURSE_ASSIGNMENT_PROJECT = `
     INSERT INTO assignmentmaterial(course_id, weight)
@@ -201,7 +212,10 @@ module.exports.POST_COURSE_ASSIGNMENT_PROJECT = `
 `
 
 
-module.exports.GET_COURSE_ASSIGNMENT_DETAILS = `SELECT * FROM quizquestion where assignment_id = ?`
+module.exports.GET_COURSE_ASSIGNMENT_DETAILS = `SELECT q.question_id, assignment_id, question_text, question_option
+                                                FROM quizquestion
+                                                         join quizoption q on quizquestion.question_id = q.question_id
+                                                where assignment_id = ?`
 
 /*module.exports.POST_ASSIGNMENT_QUESTION = `INSERT INTO answers VALUES(?, ?, ?, ?);`*/
 

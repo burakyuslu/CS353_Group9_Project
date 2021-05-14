@@ -15,7 +15,7 @@ export const URL = {
   USER_WISHLIST: 'users/wishes',
   USER_CERTIFICATES: 'users/certificates',
   USER_STUDENT_PROFILE_DATA: 'users/students/profile',
-  USER_STUDENT_WISH_COURSE: 'users/students/wishes'
-  
+  USER_STUDENT_WISH_COURSE: 'users/students/wishes',
+  COURSE_COMMENTS: 'courses/'
 }
 export default axiosInstance

@@ -49,6 +49,12 @@ const routes = [
         props: true,
       },
       {
+        path: 'courses/:courseId/:lectureId/quiz/:quizId',
+        name: 'student.quiz',
+        component: Quiz,
+        props: true,
+      },
+      {
         path: 'courses/:courseId/:lectureId',
         name: 'student.lecture',
         component: Lecture,
@@ -112,10 +118,10 @@ const routes = [
     component: CourseDetails,
   },
   {
-    path:'/student/quiz',
+    path: '/student/quiz',
     name: 'student.quiz',
     component: Quiz,
-  }
+  },
 ]
 
 const router = new VueRouter({

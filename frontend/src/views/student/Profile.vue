@@ -84,7 +84,13 @@
                 <v-btn v-if="true" class="ml-2 mt-5" outlined rounded small>
                   view certificate
                 </v-btn>
-                <v-btn class="ml-2 mt-5" outlined rounded small>
+                <v-btn
+                  :to="goToCourse(item)"
+                  class="ml-2 mt-5"
+                  outlined
+                  rounded
+                  small
+                >
                   go to course
                 </v-btn>
               </v-card-actions>
@@ -100,7 +106,12 @@
                 Wishlist
               </v-card-title>
             </v-card>
-            <v-row v-for="item in courses" :key="item.course_name">
+            <v-row
+              v-for="item in wishlist.filter(
+                w => !courses.map(c => c.course_id).includes(w.course_id),
+              )"
+              :key="item.course_name"
+            >
               <v-col>
                 <v-card outlined tile>
                   <v-card-title v-text="item.course_name"></v-card-title>
@@ -121,12 +132,18 @@
                       outlined
                       rounded
                       small
-                      @click="unwish({ courseId: item.course_id })"
+                      @click="removeFromWishlist(item.course_id)"
                     >
                       Remove
                     </v-btn>
-                    <v-btn class="ml-2 mt-5" outlined rounded small>
-                      go to course
+                    <v-btn
+                      :to="goToCourse(item)"
+                      class="ml-2 mt-5"
+                      outlined
+                      rounded
+                      small
+                    >
+                      Go to course
                     </v-btn>
                   </v-card-actions>
                 </v-card>
@@ -157,9 +174,20 @@ export default {
       unwish: actions.UNWISH_COURSE,
       requestRefund: actions.REQUEST_REFUND,
     }),
+    goToCourse(item) {
+      console.log(item)
+      return {
+        name: 'student.course',
+        params: { courseId: item.course_id },
+      }
+    },
     openDialog(item) {
       this.dialogItem = item
       this.dialog = true
+    },
+    async removeFromWishlist(courseId) {
+      await this.unwish({ courseId })
+      await this.fetchUserProfile()
     },
   },
   computed: {
@@ -173,7 +201,7 @@ export default {
     },
     wishlist() {
       // profile data includes : courses, refundRequests, wishlist, certificates
-      return this.userProfileData.wishlist
+      return this.userProfileData.wishlist || []
     },
     user() {
       // profile data includes : courses, refundRequests, wishlist, certificates

@@ -78,25 +78,11 @@ usersRouter.get("/wishes", [async (req, res, next) => {
 }])
 
 usersRouter.post("/wishes", [async (req, res, next) => {
-    const {studentId} = req
-    const {courseId} = req.body
+    const {} = req
+    const {studentId, courseId} = req.body
     try {
         const result = await db.query(`INSERT INTO addtowishlist
                                        VALUES (?, ?)`, [studentId, courseId])
-        res.json(result)
-    } catch (exception) {
-        next(exception)
-    }
-}])
-
-usersRouter.delete("/wishes", [async (req, res, next) => {
-    const {studentId} = req
-    const {courseId} = req.body
-    try {
-        const result = await db.query(`DELETE
-                                       FROM addtowishlist
-                                       WHERE student_id = ?
-                                         AND course_id = ?`, [studentId, courseId])
         res.json(result)
     } catch (exception) {
         next(exception)
@@ -106,12 +92,12 @@ usersRouter.delete("/wishes", [async (req, res, next) => {
 usersRouter.delete("/students/wishes", [async (req, res, next) => {
     const {studentId} = req
     const {courseId} = req.body
-    console.log(`hello, ${courseId}`)
-    res.status(200)
     try {
-        const result = await db.query(`INSERT INTO addtowishlist
-                                       VALUES (?, ?)`, [studentId, courseId])
-        res.json(result[0])
+        const result = await db.query(`DELETE
+                                       FROM addtowishlist
+                                       WHERE student_id = ?
+                                         AND course_id = ?`, [studentId, courseId])
+        res.json(result)
     } catch (exception) {
         next(exception)
     }

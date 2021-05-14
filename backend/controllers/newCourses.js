@@ -2,10 +2,10 @@ const {
     GET_COMPLETED_LECTURES,
     GET_COURSE,
     GET_COURSE_ANNOUNCEMENTS,
-    GET_COURSE_ASSIGNMENTS,
+    GET_COURSE_ASSIGNMENTS_QUIZ,
     GET_COURSE_CERTIFICATE,
     GET_COURSE_LIST,
-    GET_COURSE_QNA_THREAD,
+    GET_QNA_THREADS,
     GET_COURSE_ASSIGNMENT_DETAILS,
     GET_COURSE_QNA_THREAD_ENTRIES,
     GET_COURSE_RATINGS,
@@ -13,7 +13,6 @@ const {
     GET_LECTURE_CONTENT,
     GET_LECTURE_NOTES,
     GET_LECTURES,
-    GET_QNA_THREADS,
     POST_COMPLETED_LECTURE,
     POST_COURSE,
     POST_COURSE_ANNOUNCEMENT,
@@ -99,13 +98,23 @@ courseRouter.get("/:courseId", [async (req, res, next) => {
         const ratings = await db.query(GET_COURSE_RATINGS, [courseId])
         const [{avgRating, ratingCount},] = await db.query(GET_AVERAGE_RATING, [courseId])
         const lectures = await db.query(GET_LECTURES, [courseId])
-        const [studentCount, ] = await db.query(`SELECT count(c.course_id) as count
-                                             FROM course c
-                                                      JOIN buys b ON c.course_id = ? AND c.course_id = b.course_id
+        const [studentCount,] = await db.query(`SELECT count(c.course_id) as count
+                                                FROM course c
+                                                         JOIN buys b ON c.course_id = ? AND c.course_id = b.course_id
         `, [courseId])
         let completedLectures
+        let wishlist, studentCourses
         if (studentId) {
             completedLectures = await db.query(GET_COMPLETED_LECTURES, [courseId, studentId])
+            wishlist = await db.query(`SELECT course_id
+                                       FROM course
+                                                natural join addtowishlist
+                                       WHERE student_id = ?`, [studentId])
+            studentCourses = await db.query(`SELECT course_id
+
+                                             FROM student s
+                                                      JOIN buys b ON s.student_id = ? AND s.student_id = b.student_id`, [studentId])
+
         }
         res.json({
             course,
@@ -114,17 +123,20 @@ courseRouter.get("/:courseId", [async (req, res, next) => {
             ratingCount,
             lectures,
             completedLectures: completedLectures?.map(l => l.lecture_id),
-            studentCount: studentCount.count
+            studentCount: studentCount.count,
+            wishlist: wishlist?.map(c => c.course_id),
+            studentCourses: studentCourses?.map(c => c.course_id)
         })
-    } catch (exception) {
+    } catch
+        (exception) {
         next(exception)
     }
+}
 
-},
 // todo paywall...
 ])
 
-// get course certificate
+// course certificate
 courseRouter.get("/:courseId/certificate", async (req, res, next) => {
     const {instructorId} = req
     try {
@@ -138,14 +150,13 @@ courseRouter.get("/:courseId/certificate", async (req, res, next) => {
 
 // post course certificate
 // courseRouter.post("/:courseId/certificate", async (req, res, next) => {
-//     try {
+// try {
 //
-//     } catch (exception) {
-//         next(exception)
-//     }
+// } catch (exception) {
+// next (exception)
+// }
 // })
 
-// get course announcements
 courseRouter.get("/:courseId/announcements", async (req, res, next) => {
     const {instructorId, studentId} = req
     try {
@@ -215,7 +226,6 @@ courseRouter.post("/:courseId/lectures", async (req, res, next) => {
         const {courseId} = req.params
         const {lectureName, content, type} = req.body
         const result = await db.query(POST_LECTURE, [lectureName, courseId, content, type])
-
         res.json(result)
     } catch (exception) {
         next(exception)
@@ -223,7 +233,8 @@ courseRouter.post("/:courseId/lectures", async (req, res, next) => {
 })
 courseRouter.get("/:courseId/lectures/completed-lectures", async (req, res, next) => {
     const {studentId} = req
-    console.log(`here ${req.instructorId}, ${req.studentId}`)
+    console.log(`
+            here ${req.instructorId}, ${req.studentId}`)
     try {
         const result = await db.query(GET_COMPLETED_LECTURES, [studentId])
         res.json(result)
@@ -235,8 +246,8 @@ courseRouter.get("/:courseId/lectures/completed-lectures", async (req, res, next
 courseRouter.post("/:courseId/lectures/completed-lectures", async (req, res, next) => {
     const {studentId} = req
     try {
-        const {lectureId} = req.body
-        const result = await db.query(POST_COMPLETED_LECTURE, [lectureId, studentId])
+        const {lectureId, studentId} = req.body
+        const result = await db.query(POST_COMPLETED_LECTURE, [studentId, lectureId])
         res.json(result)
     } catch (exception) {
         next(exception)
@@ -245,10 +256,29 @@ courseRouter.post("/:courseId/lectures/completed-lectures", async (req, res, nex
 
 // gets all lecture content by id
 courseRouter.get("/:courseId/lectures/:lectureId", async (req, res, next) => {
+    const {studentId} = req
     try {
-        const {lecture_Id} = req.params
-        const result = await db.query(GET_LECTURE_CONTENT, [lecture_Id])
-        res.json(result)
+        const {courseId, lectureId} = req.params
+        const lectures = await db.query(GET_LECTURES, [courseId])
+        const [content,] = await db.query(GET_LECTURE_CONTENT, [lectureId])
+        const quizzes = await db.query(GET_COURSE_ASSIGNMENTS_QUIZ, [courseId])
+        const qna = await db.query(GET_QNA_THREADS, [courseId])
+        let notes, completedLectures
+
+        const announcements = await db.query(GET_COURSE_ANNOUNCEMENTS, [courseId])
+        if (studentId) {
+            notes = await db.query(GET_LECTURE_NOTES, [studentId, lectureId])
+            completedLectures = await db.query(GET_COMPLETED_LECTURES, [courseId, studentId])
+        }
+        res.json({
+            content,
+            lectures,
+            qna,
+            notes,
+            announcements,
+            quizzes,
+            completedLectures: completedLectures?.map(l => l.lecture_id),
+        })
     } catch (exception) {
         next(exception)
     }
@@ -259,7 +289,7 @@ courseRouter.get("/:courseId/lectures/:lectureId", async (req, res, next) => {
 courseRouter.get("/:courseId/lectures/:lectureId/notes", async (req, res, next) => {
     const {studentId} = req
     try {
-        const {noteText} = req.body
+        // const {noteText} = req.body
         const {lectureId} = req.params
         const result = await db.query(GET_LECTURE_NOTES,
             [noteText, studentId, lectureId])
@@ -271,9 +301,9 @@ courseRouter.get("/:courseId/lectures/:lectureId/notes", async (req, res, next) 
 
 // post notes for the lecture
 courseRouter.post("/:courseId/lectures/:lectureId/notes", async (req, res, next) => {
-    const {studentId} = req
+    // const {studentId} = req
     try {
-        const {noteText} = req.body
+        const {studentId, noteText} = req.body
         const {lectureId} = req.params
         const result = await db.query(POST_LECTURE_NOTE,
             [noteText, studentId, lectureId])
@@ -309,10 +339,11 @@ courseRouter.post("/:courseId/qna", async (req, res, next) => {
 
 // gets all thread related data, entries etc.
 courseRouter.get("/:courseId/qna/:threadId", async (req, res, next) => {
-    const {instructorId, studentId} = req
+    const {courseId, threadId} = req.params
     try {
-        const {courseId, threadId} = req.params
-        const thread = await db.query(GET_COURSE_QNA_THREAD, [courseId])
+
+        console.log(courseId, threadId)
+        const thread = await db.query(GET_QNA_THREADS, [courseId])
         const entries = await db.query(GET_COURSE_QNA_THREAD_ENTRIES, [threadId])
         res.json({thread, entries})
     } catch (exception) {
@@ -336,7 +367,7 @@ courseRouter.post("/:courseId/qna/:threadId", async (req, res, next) => {
 courseRouter.get("/:courseId/assignments", async (req, res, next) => {
     try {
         const {courseId} = req.params
-        const result = await db.query(GET_COURSE_ASSIGNMENTS, [courseId])
+        const result = await db.query(GET_COURSE_ASSIGNMENTS_QUIZ, [courseId])
         res.json(result)
     } catch (exception) {
         next(exception)
@@ -357,7 +388,7 @@ courseRouter.post("/:courseId/assignments/quizzes", async (req, res, next) => {
         const questions = req.body.assignment
         console.log(questions)
 
-        for (let i = 0; i < questions.length; i++){
+        for (let i = 0; i < questions.length; i++) {
             const {questionText, answer, answer1, answer2, answer3, answer4} = questions[i];
             const addQuestion = await db.query(POST_COURSE_ASSIGNMENT_QUIZ_QUESTION1, [result.insertId, questionText, answer])
             //res.json(addQuestion)
@@ -376,9 +407,20 @@ courseRouter.post("/:courseId/assignments/quizzes", async (req, res, next) => {
 courseRouter.get("/:courseId/assignments/:assignmentId", async (req, res, next) => {
 
     try {
-        const {quizId} = req.params
-        const result = await db.query(GET_COURSE_ASSIGNMENT_DETAILS, [quizId])
-        res.json(result)
+        const {assignmentId} = req.params
+        const result = await db.query(GET_COURSE_ASSIGNMENT_DETAILS, [assignmentId])
+        const questions = []
+        result.forEach(q => {
+            if (!questions.map(q => q.questionId).includes(q.question_id)) {
+                questions.push({
+                    questionId: q.question_id,
+                    questionText: q.question_text,
+                    answer: '',
+                    options: result.filter(r => r.question_id === q.question_id).map(f => f.question_option)
+                })
+            }
+        })
+        res.json(questions)
     } catch (exception) {
         next(exception)
     }
@@ -388,17 +430,19 @@ courseRouter.post("/:courseId/assignments/:assignmentId", async (req, res, next)
 
     const {instructorId, studentId} = req
     try {
-        let query = `INSERT INTO answers VALUES`;
+        let query = `
+            INSERT
+            INTO answers
+            VALUES`;
         let params = [];
 
         const bodyArray = req.body
-        for (let i = 0; i < bodyArray.length; i++){
+        for (let i = 0; i < bodyArray.length; i++) {
             const {questionId, answer} = bodyArray[i];
             query += "(" + studentId + ", ?, 0, ?)";
-            if(i < bodyArray.length - 1){
-              query += ", "
-            }
-            else{
+            if (i < bodyArray.length - 1) {
+                query += ", "
+            } else {
                 query += ";"
             }
             params.push(questionId);
