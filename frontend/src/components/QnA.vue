@@ -64,10 +64,10 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
   components: {},
-  props: ['threads', 'courseId'],
+  props: ['threads', 'courseId', 'lectureId'],
   data() {
     return {
       // shownPart=1 -> show threads, shownPart=2 -> show selected Thread, shownPart=3-> show create a new thread screen
@@ -81,9 +81,16 @@ export default {
       entries: [],
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(''),
+  },
   methods: {
-    ...mapActions(['fetchThread']),
+    ...mapActions([
+      'fetchThread',
+      'createThread',
+      'fetchLectureContent',
+      'createThreadEntry',
+    ]),
     ...mapMutations(['setThreadEntries']),
     async seeThread(id) {
       console.log('See Thread called.')
@@ -103,36 +110,42 @@ export default {
       this.entries = thread.entries
       this.threadTitle = this.threads[this.selectedThreadIndex].title
     },
-    postAnswer: function() {
+    async postAnswer() {
       console.log('Post answer called.')
-      let entryToInsert = {
-        content: this.userEnteredAnswer,
-        poster: 'I DONT KNOW HOW TO RECORD THE USER WHO DID THIS', // todo
-      }
-      this.threads[this.selectedThreadIndex].entries.splice(
-        this.threads[this.selectedThreadIndex].entries.length,
-        0,
-        entryToInsert,
-      )
+      await this.createThreadEntry({
+        threadId: this.selectedThreadId,
+        courseId: this.courseId,
+        entryText: this.userEnteredAnswer,
+      })
+      const thread = await this.fetchThread({
+        courseId: this.courseId,
+        threadId: this.threads[this.selectedThreadIndex].id,
+      })
+      this.entries = thread.entries
+      // let entryToInsert = {
+      //   content: this.userEnteredAnswer,
+      //   poster:
+      // }
+      // this.threads[this.selectedThreadIndex].entries.splice(
+      //   this.threads[this.selectedThreadIndex].entries.length,
+      //   0,
+      //   entryToInsert,
+      // )
+      this.userEnteredAnswer = ''
     },
     goToCreateNewThread: function() {
       this.showPart = 3
     },
-    createNewThread: function() {
-      let entryToAdd = {
-        id: this.threads[0].id + 1,
-        title: this.userEnteredThreadTitle,
-        creator: 'I DONT KNOW HOW TO RECORD THE USER WHO DID THIS', // todo
-        entries: [
-          {
-            content: this.userEnteredThreadTitle,
-            poster: 'I DONT KNOW HOW TO RECORD THE USER WHO DID THIS', // todo
-          },
-        ],
-      }
-      this.threads.splice(0, 0, entryToAdd)
-      console.log('Create new thread called.')
-      // go back to threads list after creating
+    async createNewThread() {
+      await this.createThread({
+        courseId: this.courseId,
+        postText: this.userEnteredThreadTitle,
+      })
+      await this.fetchLectureContent({
+        courseId: this.courseId,
+        lectureId: this.lectureId,
+      })
+      this.userEnteredThreadTitle = ''
       this.showPart = 1
       this.goBackToThreads()
     },

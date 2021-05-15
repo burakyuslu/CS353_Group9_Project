@@ -53,7 +53,7 @@ export default new Vuex.Store({
     },
     [mutations.SET_SIGN_IN](state, { token }) {
       // Alter defaults after instance has been created
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      axios.defaults.headers.common['authorization'] = `bearer ${token}`
       state.signedIn = true
     },
     [mutations.LOG_OUT](state) {
@@ -287,6 +287,92 @@ export default new Vuex.Store({
         return error
       }
     },
+    async createThread({ commit, state }, { courseId, postText }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const data = await axios.post(`courses/${courseId}/qna`, {
+          studentId: state.user.userId,
+          postText,
+        })
+        return data
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
+      }
+    },
+    async createThreadEntry(
+      { commit, state },
+      { threadId, courseId, entryText },
+    ) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const data = await axios.post(`courses/${courseId}/qna/${threadId}`, {
+          studentId: state.user.userId,
+          entryText,
+        })
+        return data
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
+      }
+    },
+    async submitQuizAnswers(
+      { commit, state },
+      { questions, courseId, assignmentId },
+    ) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const data = await axios.post(
+          `courses/${courseId}/assignments/${assignmentId}`,
+          {
+            studentId: state.user.userId,
+            questions,
+          },
+        )
+        return data
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
+      }
+    },
+    async earnCertificate({ commit, state }, { courseId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const data = await axios.post(`users/certificates/${courseId}`, {
+          studentId: state.user.userId,
+        })
+        return data
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
+      }
+    },
+    async fetchCertificate({ commit, state }, { certificateId }) {
+      commit(mutations.SET_USER_DETAILS, { data: { userId: 1 } })
+      try {
+        const { data } = await axios.get(
+          `users/certificates/${certificateId}`,
+          {
+            params: {
+              studentId: state.user.userId,
+            },
+          },
+        )
+        return data
+      } catch (error) {
+        // todo set error
+        // cannot login
+        // console.log(error)
+        return error
+      }
+    },
   },
-  modules: {},
 })

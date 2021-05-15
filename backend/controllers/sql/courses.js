@@ -163,8 +163,8 @@ module.exports.GET_COURSE_QNA_THREAD_ENTRIES = `
 `
 
 module.exports.POST_COURSE_QNA_THREAD_ENTRY = `
-    INSERT INTO entry(entry_text, thread_id, user_id, date)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO entry( entry_text, thread_id, user_id)
+    VALUES (?, ?, ?)
 `
 
 module.exports.GET_COURSE_ASSIGNMENTS_PROJECT = `

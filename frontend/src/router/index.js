@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import AdminHome from '../views/admin/Home.vue'
 //v2
 import Login from '../views/auth/Login.vue'
+import Certificate from '../views/Certificate.vue'
 import AddAssignment from '../views/instructor/AddAssignment.vue'
 import AddLecture from '../views/instructor/AddLecture.vue'
 import CreateCourse from '../views/instructor/CreateCourse.vue'
@@ -121,6 +122,12 @@ const routes = [
     path: '/student/quiz',
     name: 'student.quiz',
     component: Quiz,
+  },
+  {
+    path: '/certificate/:certificateId',
+    name: 'student.certificate',
+    component: Certificate,
+    props: true,
   },
 ]
 

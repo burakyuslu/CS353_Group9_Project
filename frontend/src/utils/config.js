@@ -16,6 +16,7 @@ export const URL = {
   USER_CERTIFICATES: 'users/certificates',
   USER_STUDENT_PROFILE_DATA: 'users/students/profile',
   USER_STUDENT_WISH_COURSE: 'users/students/wishes',
-  COURSE_COMMENTS: 'courses/'
+  COURSE_COMMENTS: 'courses/',
 }
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer 1`
 export default axiosInstance

@@ -10,9 +10,20 @@
                 <v-card outlined tile>
                   <v-card-title>
                     {{ lectureContent.content.lecture_name }}
+                    <v-spacer> </v-spacer>
+                    <div v-if="completedActivities === totalActivities">
+                      <v-btn
+                        @click="earn"
+                        v-if="lectureContent.certificate.length === 0"
+                        >Earn Certificate</v-btn
+                      >
+                      <v-btn v-else link :to="getCertificatePath"
+                        >View Certificate</v-btn
+                      >
+                    </div>
                   </v-card-title>
                   <div>
-                    <v-card-text>
+                    <v-card-text class="text-md-center">
                       <youtube
                         :player-width="playerWidth"
                         :player-height="playerHeight"
@@ -42,6 +53,7 @@
                         <qna
                           :threads="lectureContent.qna"
                           :courseId="courseId"
+                          :lectureId="lectureId"
                         ></qna
                       ></v-container>
                     </v-tab-item>
@@ -104,9 +116,10 @@
               <v-card-title>
                 Videos
                 <v-spacer></v-spacer>
-                Completed:
-                {{ lectureContent.completedLectures.length }} /
-                {{ lectureContent.lectures.length }}
+                Completed Activities:
+                {{ completedActivities }}
+                /
+                {{ totalActivities }}
               </v-card-title>
               <v-list-item
                 v-for="item in lectureContent.lectures"
@@ -168,7 +181,18 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchLectureContent', 'completeLecture']),
+    ...mapActions([
+      'fetchLectureContent',
+      'completeLecture',
+      'earnCertificate',
+    ]),
+    async earn() {
+      await this.earnCertificate({ courseId: this.courseId })
+      await this.fetchLectureContent({
+        courseId: this.courseId,
+        lectureId: this.lectureId,
+      })
+    },
     onResize() {
       this.windowSize = { x: window.innerWidth, y: window.innerHeight }
     },
@@ -190,6 +214,25 @@ export default {
   },
   computed: {
     ...mapGetters({ lectureContent: 'getLectureContent' }),
+    getCertificatePath() {
+      return {
+        name: `student.certificate`,
+        params: {
+          certificateId: this.lectureContent.certificate[0].certificate_id,
+        },
+      }
+    },
+    completedActivities() {
+      return (
+        this.lectureContent.completedLectures.length +
+        this.lectureContent.answers.length
+      )
+    },
+    totalActivities() {
+      return (
+        this.lectureContent.lectures.length + this.lectureContent.quizzes.length
+      )
+    },
     playerHeight() {
       return (this.windowSize.y * 500) / 937
     },

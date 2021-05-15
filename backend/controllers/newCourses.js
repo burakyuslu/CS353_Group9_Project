@@ -103,8 +103,9 @@ courseRouter.get("/:courseId", [async (req, res, next) => {
                                                          JOIN buys b ON c.course_id = ? AND c.course_id = b.course_id
         `, [courseId])
         let completedLectures
-        let wishlist, studentCourses
+        let wishlist, studentCourses, certificate
         if (studentId) {
+
             completedLectures = await db.query(GET_COMPLETED_LECTURES, [courseId, studentId])
             wishlist = await db.query(`SELECT course_id
                                        FROM course
@@ -265,8 +266,24 @@ courseRouter.get("/:courseId/lectures/:lectureId", async (req, res, next) => {
         const qna = await db.query(GET_QNA_THREADS, [courseId])
         let notes, completedLectures
 
+        const answers = await db.query(`SELECT a.assignment_id, (SUM(a2.score) / COUNT(a2.score)) * 100 as score
+                                        FROM assignmentmaterial a
+                                                 JOIN quiz q on a.assignment_id = q.quiz_id
+                                                 JOIN quizquestion q2 on q.quiz_id = q2.assignment_id
+                                                 JOIN answers a2
+                                                      on q2.assignment_id = q.quiz_id AND q2.question_id = a2.question_id
+                                        WHERE a.course_id = ?
+                                          AND a2.student_id = ?
+                                        GROUP BY a.assignment_id`, [courseId, studentId])
+
         const announcements = await db.query(GET_COURSE_ANNOUNCEMENTS, [courseId])
+        let certificate
         if (studentId) {
+            certificate = await db.query(`SELECT c.certificate_id
+                                          FROM course
+                                                   JOIN certificate c on course.course_id = c.course_id
+                                                   JOIN earns e on c.certificate_id = e.certificate_id
+                                          WHERE e.student_id = ?`, [studentId])
             notes = await db.query(GET_LECTURE_NOTES, [studentId, lectureId])
             completedLectures = await db.query(GET_COMPLETED_LECTURES, [courseId, studentId])
         }
@@ -277,6 +294,8 @@ courseRouter.get("/:courseId/lectures/:lectureId", async (req, res, next) => {
             notes,
             announcements,
             quizzes,
+            answers,
+            certificate,
             completedLectures: completedLectures?.map(l => l.lecture_id),
         })
     } catch (exception) {
@@ -327,10 +346,14 @@ courseRouter.get("/:courseId/qna", async (req, res, next) => {
 
 // create a new thread
 courseRouter.post("/:courseId/qna", async (req, res, next) => {
-    const {instructorId, studentId} = req
+    // const {instructorId, studentId} = req
     try {
         const {courseId} = req.params
-        const result = await db.query(GET_QNA_THREADS, [courseId])
+        const [qna,] = await db.query(`SELECT qna_id
+                                       FROM course
+                                                join qna q on course.course_id = ? AND course.course_id = q.course_id`, [courseId])
+        const {studentId, postText} = req.body
+        const result = await db.query(POST_QNA_THREAD, [postText, studentId, qna.qna_id])
         res.json(result)
     } catch (exception) {
         next(exception)
@@ -355,8 +378,9 @@ courseRouter.get("/:courseId/qna/:threadId", async (req, res, next) => {
 courseRouter.post("/:courseId/qna/:threadId", async (req, res, next) => {
     const {instructorId, studentId} = req
     try {
-        const {courseId} = req.params
-        const result = await db.query(POST_COURSE_QNA_THREAD_ENTRY, [courseId])
+        const {courseId, threadId} = req.params
+        const {studentId, entryText} = req.body
+        const result = await db.query(POST_COURSE_QNA_THREAD_ENTRY, [entryText, threadId, studentId])
         res.json(result)
     } catch (exception) {
         next(exception)
@@ -405,9 +429,19 @@ courseRouter.post("/:courseId/assignments/quizzes", async (req, res, next) => {
 
 // /:courseId/assignments/:assignmentId GET, POST(submitting)
 courseRouter.get("/:courseId/assignments/:assignmentId", async (req, res, next) => {
-
+    const {studentId} = req
     try {
         const {assignmentId} = req.params
+        const answers = await db.query(`SELECT q.question_id,
+                                               assignment_id,
+                                               score
+                                        FROM quizquestion q
+                                                 JOIN answers a on q.assignment_id = ? AND q.question_id = a.question_id
+                                        WHERE a.student_id = ?`, [assignmentId, studentId])
+        const score = answers.length === 0 ? 0 : answers.map(a => a.score).reduce((total, curr) => total + curr) / answers.length * 100
+        const hasSubmitted = answers.length !== 0
+
+
         const result = await db.query(GET_COURSE_ASSIGNMENT_DETAILS, [assignmentId])
         const questions = []
         result.forEach(q => {
@@ -420,7 +454,7 @@ courseRouter.get("/:courseId/assignments/:assignmentId", async (req, res, next) 
                 })
             }
         })
-        res.json(questions)
+        res.json({hasSubmitted, score, questions})
     } catch (exception) {
         next(exception)
     }
@@ -428,7 +462,8 @@ courseRouter.get("/:courseId/assignments/:assignmentId", async (req, res, next) 
 
 courseRouter.post("/:courseId/assignments/:assignmentId", async (req, res, next) => {
 
-    const {instructorId, studentId} = req
+    // const {instructorId, studentId} = req
+    const {studentId} = req.body
     try {
         let query = `
             INSERT
@@ -436,7 +471,7 @@ courseRouter.post("/:courseId/assignments/:assignmentId", async (req, res, next)
             VALUES`;
         let params = [];
 
-        const bodyArray = req.body
+        const bodyArray = req.body.questions
         for (let i = 0; i < bodyArray.length; i++) {
             const {questionId, answer} = bodyArray[i];
             query += "(" + studentId + ", ?, 0, ?)";

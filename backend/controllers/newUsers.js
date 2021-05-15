@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const db = require("../services/db")
 const {getOffset, emptyOrRows} = require("../utils/helper")
 const {listPerPage} = require("../utils/config")
+const {GET_LECTURES, GET_COMPLETED_LECTURES, GET_COURSE_ASSIGNMENTS_QUIZ} = require('./sql/courses')
 //
 // ...
 //
@@ -123,16 +124,58 @@ usersRouter.get("/certificates/:courseId", [async (req, res, next) => {
     const {studentId} = req
     try {
         const {courseId} = req.params
-        const result = await db.query(`SELECT *
+        const result = await db.query(`SELECT C.certificate_id,
+                                              certification_text,
+                                              final_grade,
+                                              cdate,
+                                              course_name,
+                                              course_summary,
+                                              name,
+                                              surname
                                        FROM certificate C
-                                                NATURAL JOIN earns E
+                                                JOIN earns e on C.certificate_id = e.certificate_id
+                                                JOIN course c2 on C.course_id = c2.course_id
+                                                JOIN useracc u on e.student_id = u.user_id
                                        WHERE student_id = ?
-                                         AND course_id = ?`, [studentId, courseId])
+                                         AND C.course_id = ?`, [studentId, courseId])
         res.json(result)
     } catch (exception) {
         next(exception)
     }
 }])
+
+usersRouter.post('/certificates/:courseId', async (req, res, next) => {
+    const {courseId} = req.params
+    const {studentId} = req.body
+
+    try {
+        const lectures = await db.query(GET_LECTURES, [courseId])
+        const completedLectures = await db.query(GET_COMPLETED_LECTURES, [courseId, studentId])
+        const quizzes = await db.query(GET_COURSE_ASSIGNMENTS_QUIZ, [courseId])
+        const answers = await db.query(`SELECT a.assignment_id, (SUM(a2.score) / COUNT(a2.score)) * 100 as score
+                                        FROM assignmentmaterial a
+                                                 JOIN quiz q on a.assignment_id = q.quiz_id
+                                                 JOIN quizquestion q2 on q.quiz_id = q2.assignment_id
+                                                 JOIN answers a2
+                                                      on q2.assignment_id = q.quiz_id AND q2.question_id = a2.question_id
+                                        WHERE a.course_id = ?
+                                          AND a2.student_id = ?
+                                        GROUP BY a.assignment_id`, [courseId, studentId])
+        const finalGrade = answers.map(a => a.score).reduce((tot, num) => tot + num, 0) / answers.length * 100
+        const [certificate,] = await db.query('SELECT certificate_id, certification_text, course_id FROM certificate c WHERE c.course_id = ?', [courseId])
+        if ((lectures.length + quizzes.length) === (completedLectures.length + answers.length)) {
+            const result = await db.query(`INSERT INTO earns(student_id, certificate_id, final_grade, cdate)
+                                           VALUES (?, ?, ?, SYSDATE()) `, [studentId, certificate.certificate_id, finalGrade])
+            console.log(result)
+            res.json(result)
+        } else {
+            res.status(401).json({error: "Certificate cannot be earned"})
+        }
+    } catch (exception) {
+        next(exception)
+    }
+
+})
 
 // /complaints GET ?adminId=, POST post a new complaint, PUT(resolve) ?complaintId=
 usersRouter.get("/complaints/:adminId", [async (req, res, next) => {
