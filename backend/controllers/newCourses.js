@@ -281,9 +281,9 @@ courseRouter.get("/:courseId/lectures/:lectureId", async (req, res, next) => {
         if (studentId) {
             certificate = await db.query(`SELECT c.certificate_id
                                           FROM course
-                                                   JOIN certificate c on course.course_id = c.course_id
+                                                   JOIN certificate c on course.course_id = ? AND course.course_id = c.course_id
                                                    JOIN earns e on c.certificate_id = e.certificate_id
-                                          WHERE e.student_id = ?`, [studentId])
+                                          WHERE e.student_id = ?`, [courseId, studentId])
             notes = await db.query(GET_LECTURE_NOTES, [studentId, lectureId])
             completedLectures = await db.query(GET_COMPLETED_LECTURES, [courseId, studentId])
         }

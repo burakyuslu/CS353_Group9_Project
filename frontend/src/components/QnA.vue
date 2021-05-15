@@ -81,9 +81,7 @@ export default {
       entries: [],
     }
   },
-  computed: {
-    ...mapGetters(''),
-  },
+  computed: {},
   methods: {
     ...mapActions([
       'fetchThread',

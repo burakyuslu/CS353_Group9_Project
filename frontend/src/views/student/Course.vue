@@ -18,11 +18,7 @@
       </v-col>
       <v-col order="1">
         <v-card class="pa-5">
-          <div
-            v-if="
-              shouldShowStudentButtons && courses && !courses.includes(courseId)
-            "
-          >
+          <div v-if="courses.findIndex(c => c === courseId) < 0">
             <p>
               The price of the course is ${{
                 courseDetails.course && courseDetails.course.price
@@ -296,7 +292,7 @@ export default {
       )
     },
   },
-  async created() {
+  async mounted() {
     this.fetchCourseDetails({ courseId: this.courseId })
     this.fetchUserProfile()
   },

@@ -138,6 +138,7 @@ usersRouter.get("/certificates/:courseId", [async (req, res, next) => {
                                                 JOIN useracc u on e.student_id = u.user_id
                                        WHERE student_id = ?
                                          AND C.course_id = ?`, [studentId, courseId])
+
         res.json(result)
     } catch (exception) {
         next(exception)
