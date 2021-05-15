@@ -155,10 +155,8 @@ module.exports.GET_COURSE_QNA_THREAD_ENTRIES = `
            e.thread_id,
            e.user_id,
            u.name       as poster
-    FROM qna
-             JOIN course c on c.course_id = qna.course_id
-             JOIN thread t on qna.qna_id = t.qna_id
-             JOIN entry e on t.thread_id = e.thread_id
+    FROM thread t
+             JOIN entry e on t.thread_id = e.thread_id AND t.thread_id = ?
              JOIN useracc u on u.user_id = e.user_id
 
 #              join useracc u on e.thread_id = ? AND u.user_id = e.user_id

@@ -73,6 +73,9 @@ export default new Vuex.Store({
     setLectureContent(state, { data }) {
       state.lectureContent = data
     },
+    setThreadEntries(state, { threadIndex, entries }) {
+      state.lectureContent.qna[threadIndex].entries = entries
+    },
   },
   actions: {
     async [actions.SIGN_IN]({ commit, state }, { userType, email, password }) {

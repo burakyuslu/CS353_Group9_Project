@@ -19,11 +19,7 @@
     </section>
     <section v-else-if="showPart == 2">
       <h3>Viewing Thread: {{ threadTitle }}</h3>
-      <v-card
-        v-for="entry in threads[selectedThreadIndex].entries"
-        :key="entry.content"
-        outlined
-      >
+      <v-card v-for="entry in entries" :key="entry.content" outlined>
         <v-card-title class="headline mb-2">
           {{ entry.poster }} Says:
         </v-card-title>
@@ -68,13 +64,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 export default {
   components: {},
   props: ['threads', 'courseId'],
-  created() {
-    console.log(this.threads)
-  },
   data() {
     return {
       // shownPart=1 -> show threads, shownPart=2 -> show selected Thread, shownPart=3-> show create a new thread screen
@@ -85,55 +78,15 @@ export default {
       userEnteredThreadTitle: '',
       userEnteredAnswer: '',
       selectedThreadIndex: -1,
-      // threads: [
-      //   {
-      //     id: '2',
-      //     title: 'How to write better SQL?',
-      //     creator: 'Student User 1',
-      //     entries: [
-      //       {
-      //         content: 'Prompt by student user 1, same as the thread title.',
-      //         poster: 'Student User 1',
-      //       },
-      //       {
-      //         content: 'Advice by student user 3.',
-      //         poster: 'Student User 3',
-      //       },
-      //       {
-      //         content: 'Advice by student user 4.',
-      //         poster: 'Student User 4',
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     id: '1',
-      //     title:
-      //       'Question about triggers, it will be the same as first entry in final implementation.',
-      //     creator: 'Student User 2',
-      //     entries: [
-      //       {
-      //         content: 'Prompt by student user 2, , same as the thread title.',
-      //         poster: 'Student User 2',
-      //       },
-      //       {
-      //         content: 'Advice by student user 6.',
-      //         poster: 'Student User 5',
-      //       },
-      //       {
-      //         content: 'Advice by student user 5.',
-      //         poster: 'Student User 6',
-      //       },
-      //     ],
-      //   },
-      // ],
+      entries: [],
     }
   },
   computed: {},
   methods: {
     ...mapActions(['fetchThread']),
+    ...mapMutations(['setThreadEntries']),
     async seeThread(id) {
       console.log('See Thread called.')
-      this.showPart = 2
       this.selectedThreadId = id // is used when posting answer, do not refactor
       let i
       for (i = 0; i < this.threads.length; i++) {
@@ -145,7 +98,9 @@ export default {
         courseId: this.courseId,
         threadId: this.threads[this.selectedThreadIndex].id,
       })
-      this.threads[this.selectedThreadIndex].entries = thread.entries
+      this.showPart = 2
+      // this.threads[this.selectedThreadIndex].entries = thread.entries
+      this.entries = thread.entries
       this.threadTitle = this.threads[this.selectedThreadIndex].title
     },
     postAnswer: function() {
