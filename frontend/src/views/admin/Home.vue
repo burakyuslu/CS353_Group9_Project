@@ -191,7 +191,12 @@ export default {
     },
 
     setDiscount: function( disc) {
-      disc.percentage = disc.discPercentageNew;
+      if (disc.discPercentageNew === ''){
+        alert( "Error: Discount percentage cannot be set to empty!");
+      }
+      else{
+        disc.percentage = disc.discPercentageNew;
+      }
     },
 
     cancelDiscount: function(disc){
