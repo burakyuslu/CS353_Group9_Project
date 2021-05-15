@@ -14,7 +14,8 @@ const {
     GET_LECTURE_NOTES,
     GET_LECTURES,
     POST_COMPLETED_LECTURE,
-    POST_COURSE,
+    POST_COURSE1,
+    POST_COURSE2,
     POST_COURSE_ANNOUNCEMENT,
     POST_COURSE_ASSIGNMENT_QUIZ1,
     POST_COURSE_ASSIGNMENT_QUIZ2,
@@ -78,11 +79,18 @@ courseRouter.get("/", async (req, res, next) => {
 
 // post and publish a course without any lectures
 courseRouter.post("/", [async (req, res, next) => {
-    const {instructorId} = req
+    //TODO: get request parameters
     try {
-        const {courseName, courseSummary, price, category, certificationText} = req.body
-        const result = await db.query(POST_COURSE,
-            [courseName, courseSummary, price, category, instructorId, certificationText])
+        const {courseName, courseSummary, price, category, instructorId, certificationText} = req.body
+        const result = await db.query(POST_COURSE1,
+            [courseName, courseSummary, price, category])
+
+        const result2 = await db.query(`INSERT INTO certificate(certification_text, course_id)
+        VALUES (?, ?);`, [certificationText, result.insertId])
+        const result3 = await db.query(`INSERT INTO publish(course_id, instructor_id, publish_date)
+        VALUES (?, ?, SYSDATE());`, [result.insertId, 4])
+        const result4 = await db.query(`INSERT INTO qna(course_id)
+                                        VALUES (?);`, [result.insertId])
         res.json(result)
     } catch (exception) {
         next(exception)
@@ -173,7 +181,8 @@ courseRouter.get("/:courseId/announcements", async (req, res, next) => {
 courseRouter.post("/:courseId/announcements", async (req, res, next) => {
     const {instructorId} = req
     try {
-        const {courseId, announcementText} = req.body
+        const {announcementText} = req.body
+        const courseId = req
         const result = await db.query(POST_COURSE_ANNOUNCEMENT, [instructorId, courseId, announcementText])
         res.json(result)
     } catch (exception) {

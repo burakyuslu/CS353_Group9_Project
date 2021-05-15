@@ -17,18 +17,19 @@ module.exports.GET_COURSE_LIST = `
 
 
 // transactiona gecir?
-module.exports.POST_COURSE = `
+module.exports.POST_COURSE1 = `
     INSERT INTO course(course_name, course_summary, price, category)
-    VALUES (?, ?, ?, ?);
-    SELECT @courseId := LAST_INSERT_ID();
+    VALUES (?, ?, ?, ?);`
+
+
+
+module.exports.POST_COURSE2 = `
     INSERT INTO certificate(certification_text, course_id)
-    VALUES (?, @course_id);
+    VALUES (?, ?);
     INSERT INTO publish(course_id, instructor_id, publish_date)
-    VALUES (@course_id, ?, SYSDATE());
-    INSERT INTO certificate(certification_text, course_id)
-    VALUES (?, @course_id);
+    VALUES (?, ?, SYSDATE());
     INSERT INTO qna(course_id)
-    VALUES (@course_id);
+    VALUES (?);
 `
 
 module.exports.GET_COURSE = `

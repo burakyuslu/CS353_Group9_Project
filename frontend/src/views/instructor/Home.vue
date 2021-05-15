@@ -48,9 +48,11 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
+                <router-link to="/instructor/home/announcement">
                 <v-btn class="ml-2 mt-5" outlined rounded small>
                   Go To Announcements
                 </v-btn>
+                </router-link>
 
                 <router-link to="/instructor/home/addassignment">
                   <v-btn class="ml-2 mt-5" outlined rounded small>

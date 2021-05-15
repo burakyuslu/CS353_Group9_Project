@@ -101,7 +101,6 @@
                   </v-row>
                 </v-radio-group>
               </v-container>
-              <small>*indicates required field</small>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -126,7 +125,7 @@
     <v-container>
       <router-link to="/instructor/home/">
         <v-btn class="ml-2 mt-5" outlined rounded small @click="submit">
-          Save Assingment
+          Save Assignment
         </v-btn>
       </router-link>
       <router-link to="/instructor/home/">
@@ -155,7 +154,12 @@ export default {
         answer4: this.answer4
       })
       console.log(this.assignment)
-      this.question = ''
+      this.questionText = ''
+      this.answer = ''
+      this.answer1 = ''
+      this.answer2 = ''
+      this.answer3 = ''
+      this.answer4 = ''
 
       this.dialog = false
     },

@@ -31,22 +31,18 @@ export default {
   name: 'App',
 
   methods: {
-    addAnnouncement(){
-      this.announcements.push({
-        announcementText: this.announcementText
-      })
-      this.announcementText = ''
-    },
-    submit() {
-      this.addAnnouncement()
+    addAnnouncement() {
       //axios.post('courses/2/announcements', {announcementText: this.announcementText})
       this.$router.go(-1)
     },
+    getAnnouncements(){
+      //axios.get('courses/2/announcements')
+    }
   },
   data(){
     return{
       announcementText: '',
-      announcements: []
+      announcements: axios.get('courses/2/announcements')
     }
   }
 }

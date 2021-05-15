@@ -18,12 +18,24 @@
       </v-text-field>
     </v-container>
 
+
+
     <v-container>
-      <v-text-field>
+      <v-text-field  v-model="price">
         <template v-slot:label>
           Enter The Initial Price For The Course
         </template>
       </v-text-field>
+    </v-container>
+
+    <v-container>
+      <v-textarea v-model="courseSummary" label="Enter Course Summary">
+      </v-textarea>
+    </v-container>
+
+    <v-container>
+      <v-textarea v-model="certificationText" label="Enter Course Certification Text">
+      </v-textarea>
     </v-container>
 
 
@@ -50,7 +62,8 @@ import axios from '../../utils/config.js'
 export default {
   methods: {
     submit() {
-      axios.post('', {courseName:this.courseName, category:this.category}) // fill the link
+      axios.post('courses', {courseName:this.courseName, courseSummary: this.courseSummary, price: this.price, category:this.category,
+        instructorId: 4, certificationText: this.certificationText}) // fill the link
       this.$router.go(-1)
     }
   },
@@ -58,6 +71,9 @@ export default {
     return {
       courseName: '',
       category: '',
+      courseSummary: '',
+      price: '',
+      certificationText: ''
     }
   }
 }

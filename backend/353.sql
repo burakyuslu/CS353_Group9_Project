@@ -454,7 +454,7 @@ VALUES (1, 1),
 # C: course_id
 CREATE TABLE Publish
 (
-    course_id     INT PRIMARY KEY AUTO_INCREMENT,
+    course_id     INT PRIMARY KEY,
     instructor_id INT      NOT NULL,
     publish_date  DATETIME NOT NULL,
     FOREIGN KEY (course_id) REFERENCES Course (course_id),
