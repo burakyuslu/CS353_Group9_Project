@@ -63,6 +63,19 @@ usersRouter.get("/courses", [async (req, res, next) => {
     }
 }])
 
+usersRouter.get("instructor/courses", [async (req, res, next) => {
+    const instructorId = 4
+    try {
+        const result = await db.query(`SELECT *
+                                       FROM course
+                                                NATURAL JOIN publish
+                                       WHERE instructor_id = ?`, [instructorId])
+        res.json(result)
+    } catch (exception) {
+        next(exception)
+    }
+}])
+
 
 // /:userId/wishes GET(get users' wishlist) POST(add course to wishlist
 usersRouter.get("/wishes", [async (req, res, next) => {

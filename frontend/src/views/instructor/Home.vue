@@ -48,11 +48,41 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <router-link to="/instructor/home/announcement">
-                <v-btn class="ml-2 mt-5" outlined rounded small>
-                  Go To Announcements
-                </v-btn>
-                </router-link>
+                  <v-dialog v-model="dialog" persistent max-width="600px">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                          class="ml-2 mt-5"
+                          outlined
+                          rounded
+                          small
+                          v-bind="attrs"
+                          v-on="on"
+                      >
+                        Make an Announcement
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title>
+                        <span class="headline">Make an Announcement</span>
+                      </v-card-title>
+                      <v-container>
+                         <v-text-field label="Write your announcement here..." v-model="announcement" required>
+                        </v-text-field>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="red" text @click="dialog = false">
+                          Cancel
+                        </v-btn>
+                        <v-btn color="green" text @click="makeAnnouncement">
+                          Post
+                        </v-btn>
+                      </v-card-actions>
+                      </v-container>
+                    </v-card>
+                  </v-dialog>
+
+
 
                 <router-link to="/instructor/home/addassignment">
                   <v-btn class="ml-2 mt-5" outlined rounded small>
@@ -72,7 +102,7 @@
                     Go To Course Forum
                   </v-btn>
                 </router-link>
-
+                <!--
                 <router-link to="/instructor/home/editcertificate">
                   <v-btn class="ml-2 mt-5" outlined rounded small>
                     Edit Certificate
@@ -83,7 +113,7 @@
                   <v-btn class="ml-2 mt-5" outlined rounded small>
                    Go To Course
                   </v-btn>
-                </router-link>
+                </router-link> -->
               </v-card-actions>
             </v-card>
           </v-col>
@@ -114,6 +144,11 @@ export default {
       axios.post('courses/courseId/assignments', { searchText: this.searchText })
       this.$router.go(-1)
     },
+    makeAnnouncement(){
+      axios.post('courses/3/announcements', {announcementText: this.announcement})
+      this.dialog = false
+      //axios.get('users/instructor/courses').then(res => {console.log(res[0])})
+    }
   },
   data() {
     return {
@@ -156,6 +191,7 @@ export default {
       max: 90,
       range: [0, 70],
       dialog: false,
+      announcement: ''
     }
   },
   components: {},

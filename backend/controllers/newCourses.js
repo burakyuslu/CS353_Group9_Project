@@ -179,10 +179,11 @@ courseRouter.get("/:courseId/announcements", async (req, res, next) => {
 
 // post course announcement
 courseRouter.post("/:courseId/announcements", async (req, res, next) => {
-    const {instructorId} = req
+    //TODO:extract courseid and instructorId
     try {
         const {announcementText} = req.body
-        const courseId = req
+        const courseId = 3
+        const instructorId = 4
         const result = await db.query(POST_COURSE_ANNOUNCEMENT, [instructorId, courseId, announcementText])
         res.json(result)
     } catch (exception) {

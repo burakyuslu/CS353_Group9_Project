@@ -104,7 +104,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green" text @click="dialog = false">
+              <v-btn color="red" text @click="dialog = false">
                 Cancel
               </v-btn>
               <v-btn color="green" text @click="addAssignmentQuestion">
