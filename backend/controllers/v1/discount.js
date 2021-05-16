@@ -12,7 +12,7 @@ discountRouter.get('/listDiscountableCourses', async (request, response) => {
         response.status(400).json({error: "You must supply admin_id"})
     }
 
-    const listDiscountableCourses = await db.query(`SELECT * FROM Course;`)
+    const listDiscountableCourses = await db.query(`SELECT * FROM Course WHERE discountable = 1;`)
     const result = helper.emptyOrRows(listDiscountableCourses);
     response.json(result)
 })

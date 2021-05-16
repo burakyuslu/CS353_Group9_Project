@@ -72,7 +72,7 @@ app.use('/api/request', requestRouter)
 // app.use('/api/discount', discountRouter)
 
 // api/payments
-
+app.use('/api/discount', discountRouter)
 // api/payments/refund
 // api/payments/refunds
 // api/payments/discounts

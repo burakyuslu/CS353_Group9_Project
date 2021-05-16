@@ -67,16 +67,15 @@
       <h2>
         Adjust the Discount Rate For Different Courses
       </h2>
-      <v-card v-for="disc in discountableList" :key="disc.courseId" outlined>
+      <v-card v-for="(disc, i) in discountableList" :key="i">
         <v-card-title>
-          Course: {{ disc.course}}
+          Course: {{ disc.course_name}}
         </v-card-title>
         <v-card-text>
-          Instructor: {{ disc.instructor }}
           Current Discount Percentage: {{ disc.percentage}}
         </v-card-text>
         <v-card-actions>
-          <input v-model="disc.discPercentageNew" placeholder="new discount percentage">
+          <input v-model="disc.percentage" placeholder="new discount percentage">
           <v-btn
               outlined
               text
@@ -97,6 +96,10 @@
     <pre>
       {{refundReqList}}
     </pre>
+
+    <pre>
+      {{discountableList}}
+    </pre>
   </div>
 </template>
 
@@ -111,26 +114,7 @@ export default {
       shownList: 0,
       adminReplyText: "",
       refundReqList: [],
-      discountableList: [
-        {
-          courseId: 1,
-          instructor: "Example instructor 1",
-          course: "Example course 1",
-          percentage: 0
-        },
-        {
-          courseId: 2,
-          instructor: "Example instructor 2",
-          course: "Example course 2",
-          percentage: 15
-        },
-        {
-          courseId: 3,
-          instructor: "Example instructor 3",
-          course: "Example course 3",
-          percentage: 0
-        }
-      ],
+      discountableList: [],
 
     };
   },
@@ -138,12 +122,19 @@ export default {
 
   },
   async mounted() {
-    const response = await axios.get('request/listRefundRequests' ,{
+    const response1 = await axios.get('request/listRefundRequests' ,{
       params: {
         admin_id : 1
       }
     });
-    this.refundReqList = response.data
+    this.refundReqList = response1.data
+
+    const response2 = await axios.get('discount/listDiscountableCourses', {
+      params: {
+        admin_id : 1
+      }
+    });
+    this.discountableList = response2.data
   },
   methods: {
 
@@ -190,12 +181,14 @@ export default {
     },
 
     setDiscount: function( disc) {
-      if (disc.discPercentageNew === ''){
-        alert( "Error: Discount percentage cannot be set to empty!");
-      }
-      else{
-        disc.percentage = disc.discPercentageNew;
-      }
+
+
+      // if (disc.discPercentageNew === ''){
+      //   alert( "Error: Discount percentage cannot be set to empty!");
+      // }
+      // else{
+      //   disc.percentage = disc.discPercentageNew;
+      // }
     },
 
     cancelDiscount: function(disc){
