@@ -34,25 +34,28 @@
       <h2>
         Pending Refund Requests By Students
       </h2>
-      <v-card v-for="refundReq in refundReqList" :key="refundReq.refundReqId" outlined>
+      <v-card v-for="(refundReq, i) in refundReqList" :key="i">
         <v-card-title>
-          User: {{ refundReq.requester }}
+          User: {{ refundReq.student_id }}
         </v-card-title>
         <v-card-text>
-          {{ refundReq.refundReason }}
+          {{ refundReq.reason }}
+        </v-card-text>
+        <v-card-text>
+          test
         </v-card-text>
         <v-card-actions>
           <v-btn
               outlined
               text
-              v-on:click="approveRefund (refundReq.refundReqId)"
+              v-on:click="approveRefund (refundReq.request_id)"
           >
             Approve Refund
           </v-btn>
           <v-btn
               outlined
               text
-              v-on:click="rejectRefund (refundReq.refundReqId)"
+              v-on:click="rejectRefund (refundReq.request_id)"
           >
             Reject Refund
           </v-btn>
@@ -91,7 +94,9 @@
         </v-card-actions>
       </v-card>
     </section>
-
+    <pre>
+      {{refundReqList}}
+    </pre>
   </div>
 </template>
 
@@ -105,23 +110,7 @@ export default {
       // shownPart=1 -> show refund requests, shownPart=2 -> show discount panel
       shownList: 0,
       adminReplyText: "",
-      refundReqList: [
-        {
-          refundReqId: 1,
-          requester: "Example refunder 1",
-          refundReason: "Example reason 1"
-        },
-        {
-          refundReqId: 2,
-          requester: "Example refunder 2",
-          refundReason: "Example reason 2"
-        },
-        {
-          refundReqId: 3,
-          requester: "Example refunder 3",
-          refundReason: "Example reason 3"
-        }
-      ],
+      refundReqList: [],
       discountableList: [
         {
           courseId: 1,
@@ -148,7 +137,17 @@ export default {
   computed: {
 
   },
+  async mounted() {
+    const response = await axios.get('request/listRefundRequests' ,{
+      params: {
+        admin_id : 1
+      }
+    });
+    this.refundReqList = response.data
+  },
   methods: {
+
+
     seeRefundRequests: async function(){
 
       // TODO CHECk i have literally 0 idea if this is correct, at all

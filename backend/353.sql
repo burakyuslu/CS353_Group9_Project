@@ -386,8 +386,8 @@ CREATE TABLE RequestRefund
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-# INSERT INTO RequestRefund(request_id, student_id, admin_id, course_id, reason, complain_date, resolved, is_read)
-# VALUES (1, 1, 1, 1),
+ INSERT INTO RequestRefund(request_id, student_id, admin_id, course_id, reason, complain_date, resolved, is_read)
+ VALUES (1, 1, 1, 1, 'course is bad', '2020-01-01 1:1:1', false, true);
 #        (2, 2, 2, 2),
 #        (3, 3, 3, 3);
 

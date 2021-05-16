@@ -18,6 +18,7 @@ const newCoursesRouter = require("./controllers/newCourses")
 const newUsers = require("./controllers/newUsers")
 const newPayments = require("./controllers/newPayments")
 const newAuth = require("./controllers/newAuth")
+
 // const coursesRouter = require('./controllers/courses')
 // const quizRouter = require('./controllers/quiz')
 // const projectRouter = require('./controllers/project')
@@ -38,6 +39,7 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
+
 
 // auth
 // app.use("/api/auth", ...)
@@ -66,7 +68,7 @@ app.use("/api/users", newUsers)
 // payment
 // app.use("/api/payments", ...)
 // app.use('/api/refundCourse', refundCourseRouter)
-// app.use('/api/request', requestRouter)
+app.use('/api/request', requestRouter)
 // app.use('/api/discount', discountRouter)
 
 // api/payments
