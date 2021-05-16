@@ -566,4 +566,24 @@ VALUES (1, 1, 1, 'text 1', '2020-01-01 11:11:11'),
        (3, 3, 3, 'text 3', '2020-01-01 23:23:23');
 
 
+SELECT max(price) FROM course GROUP BY category;
+
+SELECT min(price) FROM course GROUP BY category;
+
+SELECT avg(price) FROM course GROUP BY category;
+
+SELECT category, Q.student_count AS student_count
+FROM (SELECT count(student_id) AS student_count, course_id FROM buys B  GROUP BY course_id) AS Q NATURAL JOIN course
+GROUP BY category
+ORDER BY Q.student_count DESC;
+
+SELECT category, Q.lecture_count AS lecture_count
+FROM (SELECT count(lecture_id) AS lecture_count, course_id FROM lecture L  GROUP BY course_id) AS Q NATURAL JOIN course
+GROUP BY category
+ORDER BY Q.lecture_count DESC;
+
+
+
+
+
 
