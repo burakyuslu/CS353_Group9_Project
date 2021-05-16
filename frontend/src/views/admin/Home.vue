@@ -69,7 +69,7 @@
       </h2>
       <v-card v-for="(disc, i) in discountableList" :key="i">
         <v-card-title>
-          Course: {{ disc.course_name}}
+          Course: {{ disc.course_id}}
         </v-card-title>
         <v-card-text>
           Current Discount Percentage: {{ disc.percentage}}
@@ -79,7 +79,7 @@
           <v-btn
               outlined
               text
-              v-on:click="setDiscount (disc)"
+              v-on:click="setDiscount (disc.percentage)"
           >
             Set Discount As Entered
           </v-btn>
@@ -115,7 +115,7 @@ export default {
       adminReplyText: "",
       refundReqList: [],
       discountableList: [],
-
+      newPercentage: 0,
     };
   },
   computed: {
@@ -180,15 +180,16 @@ export default {
       this.refundReqList.splice(selectedThreadIndex, 1);
     },
 
-    setDiscount: function( disc) {
+    setDiscount: async function( newPercentage) {
+      try{
+        await axios.post('discount/applyDiscount',{
+            percentage : newPercentage,
+            course_id : 1
+          })
+      } catch (exception) {
+        console.log(exception)
+      }
 
-
-      // if (disc.discPercentageNew === ''){
-      //   alert( "Error: Discount percentage cannot be set to empty!");
-      // }
-      // else{
-      //   disc.percentage = disc.discPercentageNew;
-      // }
     },
 
     cancelDiscount: function(disc){
