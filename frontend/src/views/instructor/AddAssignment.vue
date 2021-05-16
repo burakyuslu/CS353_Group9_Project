@@ -171,7 +171,7 @@ export default {
         weight: this.weight,
         assignment: this.assignment,
       })
-      this.$router.go(-1)
+      this.$router.push({ name: 'instructor.home' })
     },
   },
 

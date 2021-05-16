@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     logout() {
-      this.$router.push({ name: 'auth' })
+      this.$router.push({ name: 'auth.login' })
       this.logoutMutation()
     },
     ...mapMutations(['updateToken', 'logoutMutation']),

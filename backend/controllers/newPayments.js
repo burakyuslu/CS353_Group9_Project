@@ -23,7 +23,8 @@ const {GET_COURSE} = require("./sql/courses");
 paymentsRouter.post('/checkouts', async (req, res, next) => {
     try {
         // const {noteText} = req.body
-        const {courseId, studentId} = req.body
+        const {studentId} = req
+        const {courseId} = req.body
         const [profileData,] = await db.query('SELECT user_id, name, surname, email_address, balance, reg_date FROM useracc u where user_id = ?', [studentId])
 
         const [course,] = await db.query(GET_COURSE, [courseId])

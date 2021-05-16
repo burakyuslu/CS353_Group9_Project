@@ -54,10 +54,10 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    logout(state) {
+    logoutMutation(state) {
       state.token = ''
       state.signedIn = false
-      axios.defaults.headers.common['Authorization'] = ``
+      axios.defaults.headers.common['authorization'] = ``
 
       state.type = ''
       localStorage.removeItem('signedIn')

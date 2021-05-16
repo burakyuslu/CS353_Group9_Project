@@ -15,7 +15,6 @@ const {GET_LECTURES, GET_COMPLETED_LECTURES, GET_COURSE_ASSIGNMENTS_QUIZ} = requ
 // /:userId/courses get courses bought by student or created by instructor, (completion rates too)
 usersRouter.get("/students/profile", [async (req, res, next) => {
     const {studentId, adminId, instructorId} = req
-    console.log(studentId)
     try {
         const profileData = await db.query('SELECT user_id, name, surname, email_address, balance, reg_date FROM useracc u where user_id = ?', [studentId])
         const courses = await db.query(`SELECT s.student_id,

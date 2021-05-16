@@ -52,18 +52,18 @@ courseRouter.get("/", async (req, res, next) => {
     var params;
     console.log(`hey: ${ratingLow}, ${ratingHigh}, ${search}`)
 
-    const AVG_QUERY = `(SELECT avg(rating)
-                       FROM Rates R
-                       WHERE R.course_id = P.course_id)`
+    // const AVG_QUERY = `(SELECT avg(rating)
+    //                    FROM Rates R
+    //                    WHERE R.course_id = P.course_id) `
 
     if (search === undefined || search === "") {
         // query += ` AND ( ${AVG_QUERY} ) >= ? AND ( ${AVG_QUERY} ) =< ?`
-        query += `\nAND ${AVG_QUERY} BETWEEN ? AND ?`
+        // query += `\nAND ${AVG_QUERY} BETWEEN ? AND ?`
         params = [ratingLow, ratingHigh];
     } else {
         // query += ` AND ( ${AVG_QUERY} ) >= ? AND ( ${AVG_QUERY} ) =< ? AND course_name LIKE ?`
-        // query += `\nAND (('%'C.course_name + '%' LIKE '${search}') OR  )`
-        query += `\nAND ${AVG_QUERY} BETWEEN ? AND ?`
+        query += `\nAND (('%'C.course_name + '%' LIKE '${search}') OR  )`
+        // query += `\nAND ${AVG_QUERY} BETWEEN ? AND ?`
         // params = [search, ratingLow, ratingHigh];
         params = [ratingLow, ratingHigh];
     }
@@ -80,15 +80,16 @@ courseRouter.get("/", async (req, res, next) => {
 // post and publish a course without any lectures
 courseRouter.post("/", [async (req, res, next) => {
     //TODO: get request parameters
+    const {studentId, instructorId, adminId} = req
     try {
-        const {courseName, courseSummary, price, category, instructorId, certificationText} = req.body
+        const {courseName, courseSummary, price, category, certificationText} = req.body
         const result = await db.query(POST_COURSE1,
             [courseName, courseSummary, price, category])
 
         const result2 = await db.query(`INSERT INTO certificate(certification_text, course_id)
-        VALUES (?, ?);`, [certificationText, result.insertId])
+                                        VALUES (?, ?);`, [certificationText, result.insertId])
         const result3 = await db.query(`INSERT INTO publish(course_id, instructor_id, publish_date)
-        VALUES (?, ?, SYSDATE());`, [result.insertId, 4])
+                                        VALUES (?, ?, SYSDATE());`, [result.insertId, instructorId])
         const result4 = await db.query(`INSERT INTO qna(course_id)
                                         VALUES (?);`, [result.insertId])
         res.json(result)
@@ -180,9 +181,9 @@ courseRouter.get("/:courseId/announcements", async (req, res, next) => {
 // post course announcement
 courseRouter.post("/:courseId/announcements", async (req, res, next) => {
     //TODO:extract courseid and instructorId
+    const {instructorId, studentId} = req
     try {
         const {courseId, announcementText} = req.body
-        const instructorId = 4
         const result = await db.query(POST_COURSE_ANNOUNCEMENT, [instructorId, courseId, announcementText])
         res.json(result)
     } catch (exception) {
@@ -208,7 +209,7 @@ courseRouter.post("/:courseId/ratings", async (req, res, next) => {
     const {instructorId, studentId} = req
     try {
         const {courseId} = req.params
-        const {studentId, comment, rating} = req.body
+        const {comment, rating} = req.body
         const result = await db.query(POST_COURSE_RATING, [courseId, studentId, comment, rating])
         res.json(result)
     } catch (exception) {
@@ -243,8 +244,6 @@ courseRouter.post("/:courseId/lectures", async (req, res, next) => {
 })
 courseRouter.get("/:courseId/lectures/completed-lectures", async (req, res, next) => {
     const {studentId} = req
-    console.log(`
-            here ${req.instructorId}, ${req.studentId}`)
     try {
         const result = await db.query(GET_COMPLETED_LECTURES, [studentId])
         res.json(result)
@@ -256,7 +255,7 @@ courseRouter.get("/:courseId/lectures/completed-lectures", async (req, res, next
 courseRouter.post("/:courseId/lectures/completed-lectures", async (req, res, next) => {
     const {studentId} = req
     try {
-        const {lectureId, studentId} = req.body
+        const {lectureId} = req.body
         const result = await db.query(POST_COMPLETED_LECTURE, [studentId, lectureId])
         res.json(result)
     } catch (exception) {
@@ -317,7 +316,7 @@ courseRouter.get("/:courseId/lectures/:lectureId", async (req, res, next) => {
 courseRouter.get("/:courseId/lectures/:lectureId/notes", async (req, res, next) => {
     const {studentId} = req
     try {
-        // const {noteText} = req.body
+        const {noteText} = req.body
         const {lectureId} = req.params
         const result = await db.query(GET_LECTURE_NOTES,
             [noteText, studentId, lectureId])
@@ -329,9 +328,9 @@ courseRouter.get("/:courseId/lectures/:lectureId/notes", async (req, res, next) 
 
 // post notes for the lecture
 courseRouter.post("/:courseId/lectures/:lectureId/notes", async (req, res, next) => {
-    // const {studentId} = req
+    const {studentId} = req
     try {
-        const {studentId, noteText} = req.body
+        const {noteText} = req.body
         const {lectureId} = req.params
         const result = await db.query(POST_LECTURE_NOTE,
             [noteText, studentId, lectureId])
@@ -355,13 +354,13 @@ courseRouter.get("/:courseId/qna", async (req, res, next) => {
 
 // create a new thread
 courseRouter.post("/:courseId/qna", async (req, res, next) => {
-    // const {instructorId, studentId} = req
+    const {instructorId, studentId} = req
     try {
         const {courseId} = req.params
         const [qna,] = await db.query(`SELECT qna_id
                                        FROM course
                                                 join qna q on course.course_id = ? AND course.course_id = q.course_id`, [courseId])
-        const {studentId, postText} = req.body
+        const {postText} = req.body
         const result = await db.query(POST_QNA_THREAD, [postText, studentId, qna.qna_id])
         res.json(result)
     } catch (exception) {
@@ -388,7 +387,7 @@ courseRouter.post("/:courseId/qna/:threadId", async (req, res, next) => {
     const {instructorId, studentId} = req
     try {
         const {courseId, threadId} = req.params
-        const {studentId, entryText} = req.body
+        const { entryText} = req.body
         const result = await db.query(POST_COURSE_QNA_THREAD_ENTRY, [entryText, threadId, studentId])
         res.json(result)
     } catch (exception) {
@@ -471,8 +470,8 @@ courseRouter.get("/:courseId/assignments/:assignmentId", async (req, res, next) 
 
 courseRouter.post("/:courseId/assignments/:assignmentId", async (req, res, next) => {
 
-    // const {instructorId, studentId} = req
-    const {studentId} = req.body
+    const {instructorId, studentId} = req
+    // const {studentId} = req.body
     try {
         let query = `
             INSERT
@@ -495,23 +494,6 @@ courseRouter.post("/:courseId/assignments/:assignmentId", async (req, res, next)
 
         const {submitQuestion} = await db.query(query, params)
         res.json(submitQuestion)
-    } catch (exception) {
-        next(exception)
-    }
-})
-
-// /:courseId/grading GET, POST(submitting)
-courseRouter.get("/:courseId/submissions", async (req, res, next) => {
-    try {
-
-    } catch (exception) {
-        next(exception)
-    }
-})
-
-courseRouter.post("/:courseId/submissions", async (req, res, next) => {
-    try {
-
     } catch (exception) {
         next(exception)
     }

@@ -55,7 +55,6 @@ authRouter.post('/login', async (request, response) => {
             error: 'invalid username or password',
         })
     }
-    console.log('pfd', user)
     const userForToken = {
         userType: userType,
         userIdKey: `${userType}Id`,
