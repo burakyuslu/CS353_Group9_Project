@@ -20,8 +20,56 @@
                       <v-btn v-else link :to="getCertificatePath"
                         >View Certificate</v-btn
                       >
+                      <v-btn
+                        color="primary"
+                        dark
+                        @click="dialog = true"
+                      >
+                        Comment & Rate
+                      </v-btn>
                     </div>
                   </v-card-title>
+
+                  <v-dialog
+                      v-model="dialog"
+                      width="666"
+                  >
+                    <v-card
+                        class="elevation-16 mx-auto"
+                    >
+                      <v-card-title class="headline">
+                        Comment & Rate
+                      </v-card-title>
+                      <v-card-text>
+                        Rate the Course
+
+                        <div class="text-center mt-12">
+                          <v-rating
+                              v-model="rating"
+                              color="yellow darken-3"
+                              background-color="grey darken-1"
+                              empty-icon="$ratingFull"
+                              hover
+                              large
+                          ></v-rating>
+                        </div>
+                      </v-card-text>
+
+                      <v-text-field label="Comment Here"></v-text-field>
+                      <v-divider></v-divider>
+                      <v-card-actions class="justify-space-between">
+                        <v-btn text>
+                          Close
+                        </v-btn>
+                        <v-btn
+                            color="primary"
+                            text
+                        >
+                          Rate Now
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
                   <div>
                     <v-card-text class="text-md-center">
                       <youtube
@@ -167,6 +215,8 @@ export default {
   props: ['courseId', 'lectureId'],
   data() {
     return {
+      dialog: false,
+      rating: 4.5,
       tab: 0,
       windowSize: {
         x: 0,
