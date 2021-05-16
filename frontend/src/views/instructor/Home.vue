@@ -5,28 +5,6 @@
       <v-col cols="8">
         <v-row>
           <v-col>
-            <v-card outlined tile>
-              <v-container>
-                <v-text-field
-                  v-model="searchText"
-                  label="Search"
-                  hide-details="auto"
-                >
-                  <v-icon slot="append">
-                    mdi-magnify
-                  </v-icon>
-                </v-text-field>
-              </v-container>
-              <v-container>
-                <v-btn class="ml-2 mt-5" outlined rounded small @click="search">
-                  Search
-                </v-btn>
-              </v-container>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
             <router-link to="/instructor/home/create">
               <v-btn class="ml-2 mt-5" outlined rounded small>
                 Create A New Course
