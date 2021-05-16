@@ -79,14 +79,14 @@
           <v-btn
               outlined
               text
-              v-on:click="setDiscount (disc.percentage)"
+              v-on:click="setDiscount (disc.percentage, disc.course_id)"
           >
             Set Discount As Entered
           </v-btn>
           <v-btn
               outlined
               text
-              v-on:click="cancelDiscount (disc)"
+              v-on:click="setDiscount (0, disc.course_id)"
           >
             Cancel Discounts
           </v-btn>
@@ -180,20 +180,41 @@ export default {
       this.refundReqList.splice(selectedThreadIndex, 1);
     },
 
-    setDiscount: async function( newPercentage) {
+    setDiscount: async function( newPercentage, course_id) {
       try{
         await axios.post('discount/applyDiscount',{
+
             percentage : newPercentage,
-            course_id : 1
+            course_id : course_id
           })
+        const response1 = await axios.get('request/listRefundRequests' ,{
+          params: {
+            admin_id : 1
+          }
+        });
+        this.refundReqList = response1.data
+
+        const response2 = await axios.get('discount/listDiscountableCourses', {
+          params: {
+            admin_id : 1
+          }
+        });
+        this.discountableList = response2.data
       } catch (exception) {
         console.log(exception)
       }
 
     },
 
-    cancelDiscount: function(disc){
-      disc.percentage = 0;
+    cancelDiscount: async function(disc){
+      try {
+        await axios.post('discount/applyDiscount', {
+          percentage : disc,
+          course_id: 1
+        })
+      } catch (exception) {
+        console.log(exception)
+      }
     }
   }
 }

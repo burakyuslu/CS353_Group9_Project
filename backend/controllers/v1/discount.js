@@ -41,18 +41,19 @@ discountRouter.post('/applyDiscount', async (request, response, next) => {
 
 // todo: i think remove previous method
 // just call prev method with percentage zero
-discountRouter.delete('/cancelDiscount', async (request, response) => {
-    const discount_id = request.query.discount_id
-    const course_id = body.course_id
-    if (isEmpty(discount_id)) {
-        response.status(400).json({error: "You must supply discount_id"})
+discountRouter.delete('/cancelDiscount', async (request, response, next) => {
+    try {
+        const discount_id = request.query.discount_id
+        const course_id = body.course_id
+
+        const cancelDiscount = await db.query(`
+            UPDATE Course SET percentage = ? WHERE course_id = ?;`, [0, course_id]);
+
+        const result = helper.emptyOrRows(cancelDiscount);
+        response.json(result)
+    } catch(exception) {
+        next(exception)
     }
-
-    const cancelDiscount = await db.query(`
-        UPDATE Course SET percentage = ? WHERE course_id = ?;`, [0, course_id]);
-
-    const result = helper.emptyOrRows(cancelDiscount);
-    response.json(result)
 })
 
 module.exports = discountRouter
