@@ -34,17 +34,17 @@
             </router-link>
           </v-col>
         </v-row>
-        <v-row v-for="(item, i) in items" :key="i">
+        <v-row v-for="(course, i) in courses" :key="i">
           <v-col>
             <v-card outlined tile>
-              <v-card-title class="text-h5" v-text="item.title"></v-card-title>
+              <v-card-title class="text-h5" v-text="course.course_name"></v-card-title>
               <v-card-text align-start>
                 <div class="text--primary">
-                  Instructor Name
+                  Category: {{course.category}}
                 </div>
                 <v-spacer> </v-spacer>
               </v-card-text>
-              <v-card-subtitle v-text="item.artist"></v-card-subtitle>
+              <v-card-subtitle v-text="course.course_summary"></v-card-subtitle>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -132,6 +132,7 @@
       </v-col>
     </v-row>
   </v-container>
+
 </template>
 
 <script>
@@ -144,11 +145,16 @@ export default {
       axios.post('courses/courseId/assignments', { searchText: this.searchText })
       this.$router.go(-1)
     },
-    makeAnnouncement(){
-      axios.post('courses/3/announcements', {announcementText: this.announcement})
+    async makeAnnouncement(){
+      await axios.post('courses/3/announcements', {announcementText: this.announcement})
       this.dialog = false
-      //axios.get('users/instructor/courses').then(res => {console.log(res[0])})
-    }
+    },
+
+
+  },
+  async mounted(){
+    const response = await axios.get('users/instructor/courses')
+    this.courses = response.data
   },
   data() {
     return {
@@ -191,7 +197,8 @@ export default {
       max: 90,
       range: [0, 70],
       dialog: false,
-      announcement: ''
+      announcement: '',
+      courses: []
     }
   },
   components: {},

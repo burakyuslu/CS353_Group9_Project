@@ -63,7 +63,7 @@ usersRouter.get("/courses", [async (req, res, next) => {
     }
 }])
 
-usersRouter.get("instructor/courses", [async (req, res, next) => {
+usersRouter.get("/instructor/courses", [async (req, res, next) => {
     const instructorId = 4
     try {
         const result = await db.query(`SELECT *
