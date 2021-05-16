@@ -154,7 +154,6 @@
         </v-row>
       </v-col>
     </v-row>
-    <pre>{{courses}}</pre>
   </v-container>
 </template>
 
