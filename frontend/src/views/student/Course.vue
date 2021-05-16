@@ -246,6 +246,7 @@ export default {
         console.log(error.message)
       }
     },
+
     getPath(item) {
       if (
         this.courseDetails.studentCourses &&

@@ -39,6 +39,7 @@
                           outlined
                           rounded
                           small
+                          @click="openDialog(course)"
                           v-bind="attrs"
                           v-on="on"
                       >
@@ -131,7 +132,7 @@ export default {
     },
     async makeAnnouncement(){
       try {
-        await axios.post('courses/3/announcements', {announcementText: this.announcement})
+        await axios.post('courses/3/announcements', {courseId: this.dialogItem.course_id, announcementText: this.announcement})
         this.dialog = false
         this.announced = true
         this.errorOccured = false
@@ -140,6 +141,11 @@ export default {
         this.errorOccured = true
         console.log(exception)
       }
+    },
+    openDialog(item) {
+      this.dialogItem = item
+      console.log(item)
+      this.dialog = true
     },
   },
   async mounted(){
@@ -190,7 +196,8 @@ export default {
       announcement: '',
       courses: [],
       errorOccured: false,
-      announced: false
+      announced: false,
+      dialogItem: ''
     }
   },
   components: {},
