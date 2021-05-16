@@ -8,8 +8,8 @@ const axiosInstance = axios.create({
 axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
 // axiosInstance.defaults.headers.post['Accepts'] = 'application/json'
 export const URL = {
-  LOGIN: 'users/login',
-  SIGNUP: 'users/signup',
+  LOGIN: 'auth/login',
+  SIGNUP: 'auth/signup',
   COURSE_LIST: 'courses',
   USER_COURSES: 'users/courses',
   USER_WISHLIST: 'users/wishes',
@@ -18,5 +18,4 @@ export const URL = {
   USER_STUDENT_WISH_COURSE: 'users/students/wishes',
   COURSE_COMMENTS: 'courses/',
 }
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer 1`
 export default axiosInstance

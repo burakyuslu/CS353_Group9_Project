@@ -12,10 +12,10 @@ const {listPerPage} = require('../utils/config')
 
 authRouter.post('/login', async (request, response) => {
     const {userType, email, password} = request.body
-    let user = undefined
+    let user1 = undefined
 
     if (userType === 'student') {
-        user = await db.query(
+        user1 = await db.query(
             `SELECT user_id as userId, name, surname, email_address as email, balance as balance, password
              FROM UserAcc U,
                   Student S
@@ -23,7 +23,7 @@ authRouter.post('/login', async (request, response) => {
                AND ? = U.email_address`,
             [email])
     } else if (userType === 'instructor') {
-        user = await db.query(
+        user1 = await db.query(
             `SELECT user_id as userId, name, surname, email_address as email, balance as balance, password
              FROM UserAcc U,
                   Instructor I
@@ -31,7 +31,7 @@ authRouter.post('/login', async (request, response) => {
                AND ? = U.email_address`, [email]
         )
     } else if (userType === 'admin') {
-        user = await db.query(
+        user1 = await db.query(
             `SELECT admin_id as userId, admin_username as email, admin_password as password
              FROM SiteAdmin
              WHERE ? = admin_username`
@@ -46,22 +46,27 @@ authRouter.post('/login', async (request, response) => {
     //     user === undefined
     //         ? false
     //         : await bcrypt.compare(password, user.password)
-    const passwordCorrect = password === user.password // todo remove this when signup is implemented
-
-    console.log(`${password}, ${user.password}`)
+    const user = user1[0]
+    const passwordCorrect = user1.length > 0 && password === user.password  // todo remove this when signup is implemented
+    // console.log(password, user.password)
+    // console.log(`${password}, ${user.password}`)
     if (!(user && passwordCorrect)) {
         return response.status(401).json({
             error: 'invalid username or password',
         })
     }
+    console.log('pfd', user)
     const userForToken = {
         userType: userType,
         userIdKey: `${userType}Id`,
-        userId: user.userId,
+        userId: `${user.userId}`,
     }
 
     // eslint-disable-next-line no-undef
+    // console.log('hhey', user)
     const token = jwt.sign(userForToken, process.env.SECRET)
+    // const decodedToken = jwt.verify(token, process.env.SECRET)
+    // console.log('hehe', decodedToken)
 
     response
         .status(200)

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
     <v-container>
       <v-card outlined tile>
         <v-card-title class="header">
@@ -10,13 +10,15 @@
         <v-card-title>
           Quiz Name:
         </v-card-title>
-        <v-text-field label="Enter name here" v-model="quizName"> </v-text-field>
+        <v-text-field label="Enter name here" v-model="quizName">
+        </v-text-field>
       </v-card>
       <v-card outlined tile>
         <v-card-title>
           Weight (%):
         </v-card-title>
-        <v-text-field label="Enter weight here" v-model="weight"> </v-text-field>
+        <v-text-field label="Enter weight here" v-model="weight">
+        </v-text-field>
       </v-card>
       <v-card outlined tile>
         <v-dialog v-model="dialog" persistent max-width="600px">
@@ -116,11 +118,11 @@
       </v-card>
     </v-container>
 
-    <vcontainer>
+    <v-container>
       <li v-for="item in assignment" :key="item.question">
-          {{item}}
+        {{ item }}
       </li>
-    </vcontainer>
+    </v-container>
 
     <v-container>
       <router-link to="/instructor/home/">
@@ -134,24 +136,23 @@
         </v-btn>
       </router-link>
     </v-container>
-  </v-app>
+  </div>
 </template>
 
 <script>
-
 import axios from '../../utils/config.js'
 export default {
   name: 'App',
 
   methods: {
-    addAssignmentQuestion(){
+    addAssignmentQuestion() {
       this.assignment.push({
         questionText: this.question,
         answer: this.answer,
         answer1: this.answer1,
         answer2: this.answer2,
         answer3: this.answer3,
-        answer4: this.answer4
+        answer4: this.answer4,
       })
       console.log(this.assignment)
       this.questionText = ''
@@ -165,7 +166,11 @@ export default {
     },
 
     submit() {
-      axios.post('courses/2/assignments/quizzes', {quizName: this.quizName, weight: this.weight, assignment: this.assignment})
+      axios.post(`courses/${this.$route.params.courseId}/assignments/quizzes`, {
+        quizName: this.quizName,
+        weight: this.weight,
+        assignment: this.assignment,
+      })
       this.$router.go(-1)
     },
   },
@@ -186,7 +191,7 @@ export default {
       dialog: false,
       questions: ['Question 1', 'Question 2', 'Question 3', 'Question 4'],
       quizName: '',
-      weight: ''
+      weight: '',
     }
   },
 }

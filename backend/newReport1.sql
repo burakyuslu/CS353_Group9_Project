@@ -2,7 +2,7 @@ USE cs353test;
 
 SELECT * FROM course;
 
-SELECT max(price)
+SELECT category, max(price) as maxPrice, min(price) as minPrice, avg(price) as avgPrice
 FROM course
 GROUP BY category;
 

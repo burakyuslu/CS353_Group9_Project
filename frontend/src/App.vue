@@ -1,15 +1,53 @@
 <template>
   <v-app>
-    <v-app-bar app>
-      <nav>
-        <router-link to="/admin/home">Admin</router-link> |
-        <router-link to="/student/discover">Student Discover</router-link> |
-        <router-link to="/student/profile">Student Profile</router-link> |
-        <router-link to="/instructor/home">Instructor</router-link> |
-        <!-- -->
-      </nav>
-    </v-app-bar>
+    <nav>
+      <v-app-bar app>
+        <v-toolbar-title class="mx-2 font-weight-bold">
+          YouCourse
+        </v-toolbar-title>
+        <!-- <router-link v-if="isAdmin" to="/admin/home">Admin</router-link> | -->
 
+        <router-link
+          v-if="getSignedIn && isStudent"
+          exact
+          :to="{ name: 'student.home' }"
+        >
+          <v-btn class="elevation-0 primary mx-3">
+            Discover
+          </v-btn>
+        </router-link>
+
+        <router-link
+          v-if="getSignedIn && isStudent"
+          exact
+          :to="{ name: 'student.profile' }"
+        >
+          <v-btn class="elevation-0 primary mx-3">
+            Profile
+          </v-btn>
+        </router-link>
+
+        <router-link
+          v-if="getSignedIn && isInstructor"
+          exact
+          :to="{ name: 'instructor.home' }"
+        >
+          <v-btn class="elevation-0 primary mx-3">
+            Home
+          </v-btn>
+        </router-link>
+
+        <v-spacer></v-spacer>
+        <v-btn
+          v-if="getSignedIn"
+          exact
+          @click="logout"
+          class="elevation-0 primary mx-3"
+        >
+          Logout
+        </v-btn>
+      </v-app-bar>
+    </nav>
     <!-- Sizes your content based upon application components -->
     <v-main>
       <v-container fluid>
@@ -24,7 +62,34 @@
   </v-app>
 </template>
 <script>
-export default { name: 'App', data: () => ({}) }
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+export default {
+  name: 'App',
+  data: () => ({}),
+  computed: {
+    ...mapGetters(['userType', 'getSignedIn']),
+    isAdmin() {
+      return this.userType === 'admin'
+    },
+    isStudent() {
+      return this.userType === 'student'
+    },
+    isInstructor() {
+      return this.userType === 'instructor'
+    },
+  },
+  methods: {
+    logout() {
+      this.$router.push({ name: 'auth' })
+      this.logoutMutation()
+    },
+    ...mapMutations(['updateToken', 'logoutMutation']),
+  },
+
+  created() {
+    this.updateToken()
+  },
+}
 </script>
 
 <style lang="scss">

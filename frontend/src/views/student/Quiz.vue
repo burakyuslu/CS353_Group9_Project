@@ -76,6 +76,7 @@ export default {
       quizScore: 0,
       selectedOption: '',
       questions: [],
+      courses: [],
     }
   },
   computed: {},

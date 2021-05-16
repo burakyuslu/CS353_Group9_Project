@@ -1,5 +1,5 @@
 const logger = require('./logger')
-
+const jwt = require("jsonwebtoken");
 const requestLogger = (request, response, next) => {
     logger.info('Method:', request.method)
     logger.info('Path:  ', request.path)
@@ -30,11 +30,15 @@ const tokenExtractor = (request, response, next) => {
     const authorization = request.get('authorization')
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
         request.token = authorization.substring(7)
+
+        const decodedToken = jwt.verify(request.token, process.env.SECRET)
+        request[decodedToken.userIdKey] = Number(decodedToken.userId)
     }
     // todo determine who is who
-    request.studentId = request.query.studentId
-    request.instructorId = request.query.instructorId
-    request.adminId = request.query.adminId
+    // request.studentId = request.query.studentId
+    // request.instructorId = request.query.instructorId
+    // request.adminId = request.query.adminId
+
     next()
 }
 

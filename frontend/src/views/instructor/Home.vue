@@ -21,38 +21,43 @@
         <v-row v-for="(course, i) in courses" :key="i">
           <v-col>
             <v-card outlined tile>
-              <v-card-title class="text-h5" v-text="course.course_name"></v-card-title>
+              <v-card-title
+                class="text-h5"
+                v-text="course.course_name"
+              ></v-card-title>
               <v-card-text align-start>
-                <div class="text--primary">
-                  Category: {{course.category}}
-                </div>
+                <div class="text--primary">Category: {{ course.category }}</div>
                 <v-spacer> </v-spacer>
               </v-card-text>
               <v-card-subtitle v-text="course.course_summary"></v-card-subtitle>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                  <v-dialog v-model="dialog" persistent max-width="600px">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                          class="ml-2 mt-5"
-                          outlined
-                          rounded
-                          small
-                          @click="openDialog(course)"
-                          v-bind="attrs"
-                          v-on="on"
+                <v-dialog v-model="dialog" persistent max-width="600px">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="ml-2 mt-5"
+                      outlined
+                      rounded
+                      small
+                      @click="openDialog(course)"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      Make an Announcement
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      <span class="headline">Make an Announcement</span>
+                    </v-card-title>
+                    <v-container>
+                      <v-text-field
+                        label="Write your announcement here..."
+                        v-model="announcement"
+                        required
                       >
-                        Make an Announcement
-                      </v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title>
-                        <span class="headline">Make an Announcement</span>
-                      </v-card-title>
-                      <v-container>
-                         <v-text-field label="Write your announcement here..." v-model="announcement" required>
-                        </v-text-field>
+                      </v-text-field>
 
                       <v-card-actions>
                         <v-spacer></v-spacer>
@@ -63,18 +68,20 @@
                           Post
                         </v-btn>
                       </v-card-actions>
-                      </v-container>
-                    </v-card>
-                  </v-dialog>
+                    </v-container>
+                  </v-card>
+                </v-dialog>
 
-
-
-                <router-link to="/instructor/home/addassignment">
+                <router-link
+                  :to="{
+                    name: 'instructor.home.addAssignment',
+                    params: { courseId: course.course_id },
+                  }"
+                >
                   <v-btn class="ml-2 mt-5" outlined rounded small>
                     Add Assignment
                   </v-btn>
                 </router-link>
-
 
                 <router-link to="/instructor/home/addlecture">
                   <v-btn class="ml-2 mt-5" outlined rounded small>
@@ -117,26 +124,29 @@
       </v-col>
     </v-row>
   </v-container>
-
 </template>
 
 <script>
-
 import axios from '../../utils/config.js'
 export default {
   name: 'InstructorHome',
   methods: {
     search() {
-      axios.post('courses/courseId/assignments', { searchText: this.searchText })
+      axios.post('courses/courseId/assignments', {
+        searchText: this.searchText,
+      })
       this.$router.go(-1)
     },
-    async makeAnnouncement(){
+    async makeAnnouncement(courseId) {
       try {
-        await axios.post('courses/3/announcements', {courseId: this.dialogItem.course_id, announcementText: this.announcement})
+        await axios.post(`courses/${this.dialogItem.course_id}/announcements`, {
+          courseId: this.dialogItem.course_id,
+          announcementText: this.announcement,
+        })
         this.dialog = false
         this.announced = true
         this.errorOccured = false
-      } catch (exception){
+      } catch (exception) {
         this.announced = false
         this.errorOccured = true
         console.log(exception)
@@ -148,7 +158,7 @@ export default {
       this.dialog = true
     },
   },
-  async mounted(){
+  async mounted() {
     const response = await axios.get('users/instructor/courses')
     this.courses = response.data
   },
@@ -157,38 +167,6 @@ export default {
       selectedCategories: ['Vuetify', 'Programming'],
       categoryItems: ['Programming', 'Design', 'Vue', 'Vuetify'],
       searchText: '',
-      items: [
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-          title: 'Course 1',
-          artist: 'Course 1 - Info',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-          title: 'Course 2',
-          artist: 'Course 2 - Info',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-          title: 'Course 3',
-          artist: 'Course 3 - Info',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-          title: 'Course 4',
-          artist: 'Course 4 - Info',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-          title: 'Course 5',
-          artist: 'Course 5 - Info',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-          title: 'Course 6',
-          artist: 'Course 6 - Info',
-        },
-      ],
       min: 0,
       max: 90,
       range: [0, 70],
@@ -197,7 +175,7 @@ export default {
       courses: [],
       errorOccured: false,
       announced: false,
-      dialogItem: ''
+      dialogItem: '',
     }
   },
   components: {},

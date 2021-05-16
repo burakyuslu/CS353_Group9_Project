@@ -8,10 +8,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    signedIn: false,
-    type: '',
+    signedIn: localStorage.getItem('signedIn') == 'true' || false,
+    token: localStorage.getItem('token') || undefined,
+    type: localStorage.getItem('userType') || '',
     user: {
-      token: '',
       userId: '',
       userType: '',
       name: '',
@@ -20,6 +20,9 @@ export default new Vuex.Store({
       email: '',
       balance: '',
     },
+    // userDetails: localStorage.getItem('userDetails')
+    //   ? JSON.parse(localStorage.getItem)
+    //   : {},
     studentsCourseDetails: {},
     courseList: [],
     studentProfileData: {},
@@ -43,24 +46,53 @@ export default new Vuex.Store({
     getLectureContent(state) {
       return state.lectureContent
     },
+    getSignedIn(state) {
+      return state.signedIn
+    },
+    userType(state) {
+      return state.type
+    },
   },
   mutations: {
+    logout(state) {
+      state.token = ''
+      state.signedIn = false
+      axios.defaults.headers.common['Authorization'] = ``
+
+      state.type = ''
+      localStorage.removeItem('signedIn')
+      localStorage.removeItem('token')
+      localStorage.removeItem('userType')
+    },
+    updateToken(state) {
+      const token = localStorage.getItem('token') || undefined
+      axios.defaults.headers.common['authorization'] = token
+        ? `bearer ${token}`
+        : ''
+      if (token === 'tata') {
+        state.token = undefined
+      } else {
+        state.signedIn = true
+      }
+    },
     [mutations.SET_USER_DETAILS](state, { data }) {
       state.user = data
     },
     [mutations.SET_USER_TYPE](state, { type }) {
+      localStorage.setItem('userType', type)
       state.type = type
     },
     [mutations.SET_SIGN_IN](state, { token }) {
       // Alter defaults after instance has been created
       axios.defaults.headers.common['authorization'] = `bearer ${token}`
       state.signedIn = true
+      console.log('state: ')
+      console.log(state)
+      state.token = token
+      localStorage.setItem('signedIn', 'true')
+      localStorage.setItem('token', token)
     },
-    [mutations.LOG_OUT](state) {
-      state.token = ''
-      state.signedIn = false
-      axios.defaults.headers.common['Authorization'] = `Bearer 1`
-    },
+    [mutations.LOG_OUT](state) {},
     [mutations.SET_COURSE_LIST](state, { data }) {
       state.courseList = data
     },
@@ -82,6 +114,7 @@ export default new Vuex.Store({
       // if (mock?.should) {
       //   mock
       // }
+      const stateRes = { ...state }
       try {
         const response = await axios.post(URL.LOGIN, {
           userType,
@@ -89,11 +122,14 @@ export default new Vuex.Store({
           password,
         })
         const { data } = response
-        commit(mutations.SET_USER_DETAILS, data)
+        console.log('vuex, ', data)
         commit(mutations.SET_SIGN_IN, { token: data.token })
+        localStorage.setItem('userDetails', JSON.stringify(data))
+        commit(mutations.SET_USER_DETAILS, data)
         commit(mutations.SET_USER_TYPE, { type: data.userType })
       } catch (error) {
         // todo set error
+        throw error
         // cannot login
       }
     },

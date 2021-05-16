@@ -14,8 +14,8 @@ const {GET_LECTURES, GET_COMPLETED_LECTURES, GET_COURSE_ASSIGNMENTS_QUIZ} = requ
 
 // /:userId/courses get courses bought by student or created by instructor, (completion rates too)
 usersRouter.get("/students/profile", [async (req, res, next) => {
-    const {studentId} = req
-
+    const {studentId, adminId, instructorId} = req
+    console.log(studentId)
     try {
         const profileData = await db.query('SELECT user_id, name, surname, email_address, balance, reg_date FROM useracc u where user_id = ?', [studentId])
         const courses = await db.query(`SELECT s.student_id,
@@ -33,8 +33,8 @@ usersRouter.get("/students/profile", [async (req, res, next) => {
                                                  JOIN course c ON b.course_id = c.course_id
                                                  JOIN publish p on c.course_id = p.course_id
                                                  JOIn useracc u on p.instructor_id = u.user_id
-                                                 JOIN certificate c2 on c.course_id = c2.course_id
-                                                 JOIN earns e on c2.certificate_id = e.certificate_id
+                                                 LEFT JOIN certificate c2 on c.course_id = c2.course_id
+                                                 LEFT JOIN earns e on c2.certificate_id = e.certificate_id
         `, [studentId])
         // const refundRequests  = // todo
         const wishlist = await db.query(`SELECT *
@@ -51,7 +51,7 @@ usersRouter.get("/students/profile", [async (req, res, next) => {
     }
 }])
 usersRouter.get("/courses", [async (req, res, next) => {
-    const studentId = req
+    const {studentId, adminId, instructorId} = req
     try {
         const result = await db.query(`SELECT *
                                        FROM course
@@ -64,7 +64,7 @@ usersRouter.get("/courses", [async (req, res, next) => {
 }])
 
 usersRouter.get("/instructor/courses", [async (req, res, next) => {
-    const instructorId = 4
+    const {studentId, adminId, instructorId} = req
     try {
         const result = await db.query(`SELECT *
                                        FROM course
@@ -79,7 +79,7 @@ usersRouter.get("/instructor/courses", [async (req, res, next) => {
 
 // /:userId/wishes GET(get users' wishlist) POST(add course to wishlist
 usersRouter.get("/wishes", [async (req, res, next) => {
-    const {studentId} = req
+    const {studentId, adminId, instructorId} = req
     try {
         const result = await db.query(`SELECT *
                                        FROM course
@@ -92,8 +92,8 @@ usersRouter.get("/wishes", [async (req, res, next) => {
 }])
 
 usersRouter.post("/wishes", [async (req, res, next) => {
-    const {} = req
-    const {studentId, courseId} = req.body
+    const {studentId, adminId, instructorId} = req
+    const {courseId} = req.body
     try {
         const result = await db.query(`INSERT INTO addtowishlist
                                        VALUES (?, ?)`, [studentId, courseId])
@@ -104,7 +104,7 @@ usersRouter.post("/wishes", [async (req, res, next) => {
 }])
 
 usersRouter.delete("/students/wishes", [async (req, res, next) => {
-    const {studentId} = req
+    const {studentId, adminId, instructorId} = req
     const {courseId} = req.body
     try {
         const result = await db.query(`DELETE
@@ -119,7 +119,7 @@ usersRouter.delete("/students/wishes", [async (req, res, next) => {
 
 // /:userId/certificates
 usersRouter.get("/certificates", [async (req, res, next) => {
-    const {studentId} = req
+    const {studentId, adminId, instructorId} = req
     try {
         const result = await db.query(`SELECT *
                                        FROM certificate
@@ -134,7 +134,7 @@ usersRouter.get("/certificates", [async (req, res, next) => {
 
 // /:userId/certificates/:courseId
 usersRouter.get("/certificates/:courseId", [async (req, res, next) => {
-    const {studentId} = req
+    const {studentId, adminId, instructorId} = req
     try {
         const {courseId} = req.params
         const result = await db.query(`SELECT C.certificate_id,
@@ -160,7 +160,7 @@ usersRouter.get("/certificates/:courseId", [async (req, res, next) => {
 
 usersRouter.post('/certificates/:courseId', async (req, res, next) => {
     const {courseId} = req.params
-    const {studentId} = req.body
+    const {studentId, adminId, instructorId} = req
 
     try {
         const lectures = await db.query(GET_LECTURES, [courseId])
@@ -221,15 +221,16 @@ usersRouter.post("/complaints", [async (req, res, next) => {
 }])
 
 usersRouter.post("/requestRefund", [async (req, res, next) => {
+    const {studentId, adminId, instructorId} = req
     try {
         const [admin,] = await db.query(`SELECT admin_id
-                                        FROM siteadmin
-                                        ORDER BY RAND()
-                                        LIMIT 1`)
-        const studentId = 3
+                                         FROM siteadmin
+                                         ORDER BY RAND()
+                                         LIMIT 1`)
         const {courseId, reason} = req.body
-        const result = await db.query(`INSERT INTO requestrefund(student_id, admin_id, course_id, reason, complain_date, resolved, is_read) 
-            VALUES(?,?,?,?,SYSDATE(),?,?)`, [studentId, admin.admin_id, courseId, reason, 0, 0])
+        const result = await db.query(`INSERT INTO requestrefund(student_id, admin_id, course_id, reason, complain_date,
+                                                                 resolved, is_read)
+                                       VALUES (?, ?, ?, ?, SYSDATE(), ?, ?)`, [studentId, admin.admin_id, courseId, reason, 0, 0])
         res.json(result)
     } catch (exception) {
         next(exception)
