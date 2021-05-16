@@ -219,6 +219,22 @@ usersRouter.post("/complaints", [async (req, res, next) => {
         next(exception)
     }
 }])
+
+usersRouter.post("/requestRefund", [async (req, res, next) => {
+    try {
+        const [admin,] = await db.query(`SELECT admin_id
+                                        FROM siteadmin
+                                        ORDER BY RAND()
+                                        LIMIT 1`)
+        const studentId = 3
+        const {courseId, reason} = req.body
+        const result = await db.query(`INSERT INTO requestrefund(student_id, admin_id, course_id, reason, complain_date, resolved, is_read) 
+            VALUES(?,?,?,?,SYSDATE(),?,?)`, [studentId, admin.admin_id, courseId, reason, 0, 0])
+        res.json(result)
+    } catch (exception) {
+        next(exception)
+    }
+}])
 //
 
 // /:userId/notifications get notifications of the user

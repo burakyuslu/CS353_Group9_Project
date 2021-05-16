@@ -34,18 +34,18 @@
             <v-card-title>
               <span class="headline">User Profile</span>
             </v-card-title>
-            <v-card-text>
               <v-container>
-                <v-row> </v-row>
+                  <v-text-field label="Please specify your reason" v-model="reasonText">
+                  </v-text-field>
+                <small>*indicates required field</small>
               </v-container>
-              <small>*indicates required field</small>
-            </v-card-text>
+
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="dialog = false">
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text @click="dialog = false">
+              <v-btn color="blue darken-1" text @click="postRefundRequest()">
                 Save
               </v-btn>
             </v-card-actions>
@@ -78,6 +78,7 @@
                   outlined
                   rounded
                   small
+
                 >
                   request refund
                 </v-btn>
@@ -153,10 +154,12 @@
         </v-row>
       </v-col>
     </v-row>
+    <pre>{{courses}}</pre>
   </v-container>
 </template>
 
 <script>
+import axios from '../../utils/config.js'
 import { mapActions, mapGetters } from 'vuex'
 import { getters, actions } from '../../store/types.js'
 export default {
@@ -165,7 +168,7 @@ export default {
       myCourses: [],
       dialog: false,
       dialogItem: {},
-      reason: '',
+      reasonText: '',
     }
   },
   methods: {
@@ -183,12 +186,18 @@ export default {
     },
     openDialog(item) {
       this.dialogItem = item
+      console.log(item)
       this.dialog = true
     },
     async removeFromWishlist(courseId) {
       await this.unwish({ courseId })
       await this.fetchUserProfile()
     },
+    async postRefundRequest(){
+      await axios.post("users/requestRefund", {courseId: this.dialogItem.course_id,  reason: this.reasonText})
+      this.dialog = false
+      this.reasonText = ''
+    }
   },
   computed: {
     ...mapGetters({
