@@ -7,26 +7,17 @@
             class="listItem"
             v-for="announcement in announcements"
             :key="announcement.ann_date"
-        >- {{ announcement.ann_text }}</v-list-item
+        >{{ announcement.ann_text }} ({{announcement.ann_date}})</v-list-item
         >
       </v-list>
-    </v-card>
-    <v-card>
-      <v-card-title>
-        Post an Announcement
-      </v-card-title>
-      <v-text-field v-model="announcementText">
-        Write your announcement here
-      </v-text-field>
-      <v-btn @click="submit">
-        Post
-      </v-btn>
     </v-card>
   </v-container>
 </template>
 
 <script>
 //import axios from '../../utils/config.js'
+import axios from "../utils/config";
+
 export default {
   name: 'App',
 
@@ -42,6 +33,10 @@ export default {
       //axios.post('courses/2/announcements', {announcementText: this.announcementText})
       this.$router.go(-1)
     },
+  },
+  async mounted(){
+    const response = await axios.get('courses/1/announcements')
+    this.announcements = response.data
   },
   data(){
     return{

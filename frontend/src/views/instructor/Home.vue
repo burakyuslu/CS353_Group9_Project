@@ -12,6 +12,12 @@
             </router-link>
           </v-col>
         </v-row>
+        <v-alert class="mt-2" v-model="announced" type="success" dismissible>
+          Announcement posted.
+        </v-alert>
+        <v-alert v-model="errorOccured" type="error" dismissible>
+          An error occured while posting the announcement
+        </v-alert>
         <v-row v-for="(course, i) in courses" :key="i">
           <v-col>
             <v-card outlined tile>
@@ -124,11 +130,17 @@ export default {
       this.$router.go(-1)
     },
     async makeAnnouncement(){
-      await axios.post('courses/3/announcements', {announcementText: this.announcement})
-      this.dialog = false
+      try {
+        await axios.post('courses/3/announcements', {announcementText: this.announcement})
+        this.dialog = false
+        this.announced = true
+        this.errorOccured = false
+      } catch (exception){
+        this.announced = false
+        this.errorOccured = true
+        console.log(exception)
+      }
     },
-
-
   },
   async mounted(){
     const response = await axios.get('users/instructor/courses')
@@ -176,7 +188,9 @@ export default {
       range: [0, 70],
       dialog: false,
       announcement: '',
-      courses: []
+      courses: [],
+      errorOccured: false,
+      announced: false
     }
   },
   components: {},
