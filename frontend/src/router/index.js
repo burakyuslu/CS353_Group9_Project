@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store/index.js'
 import AdminHome from '../views/admin/Home.vue'
-//v2
 import Login from '../views/auth/Login.vue'
+import Signup from '../views/auth/Signup.vue'
 import Certificate from '../views/Certificate.vue'
 import AddAssignment from '../views/instructor/AddAssignment.vue'
 import AddLecture from '../views/instructor/AddLecture.vue'
@@ -16,23 +17,25 @@ import StudentDiscover from '../views/student/Discover.vue'
 import Lecture from '../views/student/Lecture.vue'
 import StudentProfile from '../views/student/Profile.vue'
 import Quiz from '../views/student/Quiz.vue'
-
 Vue.use(VueRouter)
 
 const routes = [
   { path: '/', redirect: { name: 'auth.login' } },
   { path: '/auth', redirect: { name: 'auth.login' } },
   { path: '/auth/login', name: 'auth.login', component: Login },
+  { path: '/auth/signup', name: 'auth.signup', component: Signup },
   {
     path: '/student',
     name: 'student',
     component: Student,
-    redirect: { name: 'student.home' },
     children: [
       {
         path: 'home',
         name: 'student.home',
         component: StudentDiscover,
+        meta: {
+          requiresAuth: true,
+        },
       },
       {
         path: 'profile',
@@ -62,66 +65,66 @@ const routes = [
         props: true,
       },
     ],
-  },
-  {
-    path: '/student/discover',
-    name: 'student.discover',
-    component: StudentDiscover,
-  },
-  {
-    path: '/student/profile',
-    name: 'student.profile',
-    component: StudentProfile,
+    meta: {
+      requiresAuth: true,
+      requiresStudent: true,
+    },
   },
   {
     path: '/instructor/home',
     name: 'instructor.home',
     component: InstructorHome,
+    meta: {
+      requiresInstructor: true,
+      requiresAuth: true,
+    },
   },
   {
     path: '/instructor/home/create',
     name: 'instructor.home.createCourse',
     component: CreateCourse,
+    meta: {
+      requiresInstructor: true,
+      requiresAuth: true,
+    },
   },
   {
     path: '/instructor/home/editcertificate',
     name: 'instructor.home.editCertificate',
     component: EditCertificate,
+    meta: {
+      requiresAuth: true,
+      requiresInstructor: true,
+    },
   },
   {
     path: '/instructor/home/addlecture',
     name: 'instructor.home.addLecture',
     component: AddLecture,
+    meta: {
+      requiresAuth: true,
+      requiresInstructor: true,
+    },
   },
   {
-    path: '/instructor/home/addassignment',
+    path: '/instructor/home/addassignment/:courseId',
     name: 'instructor.home.addAssignment',
     component: AddAssignment,
+    props: true,
+    meta: {
+      requiresAuth: true,
+      requiresInstructor: true,
+    },
   },
   {
-    path: '/instructor/home/gotocourseforum',
+    path: '/instructor/home/:courseId',
     name: 'instructor.home.goToCourseForum',
     component: GoToCourseForum,
-  },
-  {
-    path: '/admin/home',
-    name: 'admin.home',
-    component: AdminHome,
-  },
-  {
-    path: '/lecture',
-    name: 'course.lecture',
-    component: Lecture,
-  },
-  {
-    path: '/course',
-    name: 'course.details',
-    component: CourseDetails,
-  },
-  {
-    path: '/student/quiz',
-    name: 'student.quiz',
-    component: Quiz,
+    props: true,
+    meta: {
+      requiresAuth: true,
+      requiresInstructor: true,
+    },
   },
   {
     path: '/certificate/:certificateId',
@@ -129,12 +132,63 @@ const routes = [
     component: Certificate,
     props: true,
   },
+  {
+    path: '/admin/home',
+    name: 'admin.home',
+    component: AdminHome,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+    },
+  },
+  {
+    path: '*',
+    redirect: { name: 'student.home' },
+  },
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const requiresVisitor = to.matched.some(record => record.meta.requiresVisitor)
+  const requiresStudent = to.matched.some(record => record.meta.requiresStudent)
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
+  const requiresInstructor = to.matched.some(
+    record => record.meta.requiresInstructor,
+  )
+  if (requiresAuth && !store.getters.getSignedIn) {
+    next({ name: 'auth.login' })
+  } else if (requiresVisitor && store.getters.getSignedIn) {
+    if (store.getters.userType) {
+      next({ name: `${store.getters.userType}.home` })
+    } else {
+      next({ name: 'auth.login' })
+    }
+  } else {
+    if (
+      (requiresAdmin || requiresInstructor) &&
+      store.getters.userType === 'student'
+    ) {
+      next({ name: `${store.getters.userType}.home` })
+    } else if (
+      (requiresStudent || requiresInstructor) &&
+      store.getters.userType === 'admin'
+    ) {
+      next({ name: `${store.getters.userType}.home` })
+    } else if (
+      (requiresStudent || requiresAdmin) &&
+      store.getters.userType === 'instructor'
+    ) {
+      next({ name: `${store.getters.userType}.home` })
+    }
+
+    next()
+  }
 })
 
 export default router
