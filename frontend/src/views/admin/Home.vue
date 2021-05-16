@@ -69,7 +69,7 @@
       </h2>
       <v-card v-for="(disc, i) in discountableList" :key="i">
         <v-card-title>
-          Course: {{ disc.course_name}}
+          Course: {{ disc.course_id}}
         </v-card-title>
         <v-card-text>
           Current Discount Percentage: {{ disc.percentage}}
@@ -79,14 +79,14 @@
           <v-btn
               outlined
               text
-              v-on:click="setDiscount (disc)"
+              v-on:click="setDiscount (disc.percentage, disc.course_id)"
           >
             Set Discount As Entered
           </v-btn>
           <v-btn
               outlined
               text
-              v-on:click="cancelDiscount (disc)"
+              v-on:click="setDiscount (0, disc.course_id)"
           >
             Cancel Discounts
           </v-btn>
@@ -115,7 +115,7 @@ export default {
       adminReplyText: "",
       refundReqList: [],
       discountableList: [],
-
+      newPercentage: 0,
     };
   },
   computed: {
@@ -180,19 +180,41 @@ export default {
       this.refundReqList.splice(selectedThreadIndex, 1);
     },
 
-    setDiscount: function( disc) {
+    setDiscount: async function( newPercentage, course_id) {
+      try{
+        await axios.post('discount/applyDiscount',{
 
+            percentage : newPercentage,
+            course_id : course_id
+          })
+        const response1 = await axios.get('request/listRefundRequests' ,{
+          params: {
+            admin_id : 1
+          }
+        });
+        this.refundReqList = response1.data
 
-      // if (disc.discPercentageNew === ''){
-      //   alert( "Error: Discount percentage cannot be set to empty!");
-      // }
-      // else{
-      //   disc.percentage = disc.discPercentageNew;
-      // }
+        const response2 = await axios.get('discount/listDiscountableCourses', {
+          params: {
+            admin_id : 1
+          }
+        });
+        this.discountableList = response2.data
+      } catch (exception) {
+        console.log(exception)
+      }
+
     },
 
-    cancelDiscount: function(disc){
-      disc.percentage = 0;
+    cancelDiscount: async function(disc){
+      try {
+        await axios.post('discount/applyDiscount', {
+          percentage : disc,
+          course_id: 1
+        })
+      } catch (exception) {
+        console.log(exception)
+      }
     }
   }
 }
