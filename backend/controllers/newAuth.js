@@ -14,6 +14,7 @@ authRouter.post('/login', async (request, response) => {
     const {userType, email, password} = request.body
     let user1 = undefined
 
+    console.log(user1)
     if (userType === 'student') {
         user1 = await db.query(
             `SELECT user_id as userId, name, surname, email_address as email, balance as balance, password
@@ -32,10 +33,15 @@ authRouter.post('/login', async (request, response) => {
         )
     } else if (userType === 'admin') {
         user1 = await db.query(
-            `SELECT admin_id as userId, admin_username as email, admin_password as password
-             FROM SiteAdmin
-             WHERE ? = admin_username`
-                [email])
+            `SELECT s.admin_id as userId, s.admin_username as email, s.admin_password as password
+             FROM siteadmin s
+             WHERE 1 = 1
+               AND s.admin_username = ?`,
+            [email])
+        // user1 = {
+        //     password = 'admin_password_'
+        // }
+        console.log('here', user1)
     } else {
         return response.status(401).json({
             error: 'invalid type of user',
@@ -47,7 +53,7 @@ authRouter.post('/login', async (request, response) => {
     //         ? false
     //         : await bcrypt.compare(password, user.password)
     const user = user1[0]
-    const passwordCorrect = user1.length > 0 && password === user.password  // todo remove this when signup is implemented
+    const passwordCorrect = user1 && user1.length > 0 && password === user.password  // todo remove this when signup is implemented
     // console.log(password, user.password)
     // console.log(`${password}, ${user.password}`)
     if (!(user && passwordCorrect)) {
@@ -102,13 +108,15 @@ authRouter.post('/signup', async (request, response) => {
           AND ? = U.password;*/
 
     const signup1 = await db.query(`INSERT INTO useracc (name, surname, password, email_address, balance, reg_date)
-                                 VALUES (?, ?, ?, ?, 0, SYSDATE());
-        `, [name, surname,  password, email])
+                                    VALUES (?, ?, ?, ?, 0, SYSDATE());
+    `, [name, surname, password, email])
 
     if (!isInstructor) {
-        const signup2 = await db.query(`INSERT INTO student VALUES(?)`, [signup1.insertId])
-    } else{
-        const signup2 = await db.query(`INSERT INTO instructor VALUES(?)`, [signup1.insertId])
+        const signup2 = await db.query(`INSERT INTO student
+                                        VALUES (?)`, [signup1.insertId])
+    } else {
+        const signup2 = await db.query(`INSERT INTO instructor
+                                        VALUES (?)`, [signup1.insertId])
     }
     /*else {
         return response.status(401).json({

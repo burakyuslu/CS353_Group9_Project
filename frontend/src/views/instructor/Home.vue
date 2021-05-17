@@ -18,6 +18,32 @@
         <v-alert v-model="errorOccured" type="error" dismissible>
           An error occured while posting the announcement
         </v-alert>
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <template> </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">Make an Announcement</span>
+            </v-card-title>
+            <v-container>
+              <v-text-field
+                label="Write your announcement here..."
+                v-model="announcement"
+                required
+              >
+              </v-text-field>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red" text @click="dialog = false">
+                  Cancel
+                </v-btn>
+                <v-btn color="green" text @click="makeAnnouncement">
+                  Post
+                </v-btn>
+              </v-card-actions>
+            </v-container>
+          </v-card>
+        </v-dialog>
         <v-row v-for="(course, i) in courses" :key="i">
           <v-col>
             <v-card outlined tile>
@@ -33,44 +59,15 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-dialog v-model="dialog" persistent max-width="600px">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="ml-2 mt-5"
-                      outlined
-                      rounded
-                      small
-                      @click="openDialog(course)"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      Make an Announcement
-                    </v-btn>
-                  </template>
-                  <v-card>
-                    <v-card-title>
-                      <span class="headline">Make an Announcement</span>
-                    </v-card-title>
-                    <v-container>
-                      <v-text-field
-                        label="Write your announcement here..."
-                        v-model="announcement"
-                        required
-                      >
-                      </v-text-field>
-
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="red" text @click="dialog = false">
-                          Cancel
-                        </v-btn>
-                        <v-btn color="green" text @click="makeAnnouncement">
-                          Post
-                        </v-btn>
-                      </v-card-actions>
-                    </v-container>
-                  </v-card>
-                </v-dialog>
+                <v-btn
+                  class="ml-2 mt-5"
+                  outlined
+                  rounded
+                  small
+                  @click="openDialog(course)"
+                >
+                  Make an Announcement
+                </v-btn>
 
                 <router-link
                   :to="{

@@ -32,6 +32,7 @@ const tokenExtractor = (request, response, next) => {
         request.token = authorization.substring(7)
 
         const decodedToken = jwt.verify(request.token, process.env.SECRET)
+        console.log(decodedToken)
         request[decodedToken.userIdKey] = Number(decodedToken.userId)
     }
     // todo determine who is who
