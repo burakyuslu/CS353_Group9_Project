@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store/index.js'
 import AdminHome from '../views/admin/Home.vue'
+import Admin from '../views/auth/Admin.vue'
 import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
 import Certificate from '../views/Certificate.vue'
@@ -24,6 +25,7 @@ const routes = [
   { path: '/auth', redirect: { name: 'auth.login' } },
   { path: '/auth/login', name: 'auth.login', component: Login },
   { path: '/auth/signup', name: 'auth.signup', component: Signup },
+  { path: '/auth/admin', name: 'auth.admin', component: Admin },
   {
     path: '/student',
     name: 'student',
