@@ -31,19 +31,20 @@
 
         </v-card>
       </v-row>
+      {{certificate}}
     </pre>
   </div>
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   // TODO FINAL GRADE
   async mounted() {
     const certificateId = this.$route.params.certificateId
-
-    this.certificate = await this.fetchCertificate({certificateId})
+    const res = await this.fetchCertificate({ certificateId })
+    this.certificate = res[0]
   },
   methods: {
     ...mapActions(['fetchCertificate']),
