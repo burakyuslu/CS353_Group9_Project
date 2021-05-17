@@ -19,8 +19,7 @@ module.exports.GET_COURSE_LIST = `
 // transactiona gecir?
 module.exports.POST_COURSE1 = `
     INSERT INTO course(course_name, course_summary, price, category, discountable, percentage)
-    VALUES (?, ?, ?, ?);`
-
+    VALUES (?, ?, ?, ?, ?,?);`
 
 
 module.exports.POST_COURSE2 = `
@@ -164,7 +163,7 @@ module.exports.GET_COURSE_QNA_THREAD_ENTRIES = `
 `
 
 module.exports.POST_COURSE_QNA_THREAD_ENTRY = `
-    INSERT INTO entry( entry_text, thread_id, user_id)
+    INSERT INTO entry(entry_text, thread_id, user_id)
     VALUES (?, ?, ?)
 `
 

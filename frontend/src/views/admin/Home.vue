@@ -72,13 +72,6 @@
         </v-card-actions>
       </v-card>
     </section>
-    <pre>
-      {{ refundReqList }}
-    </pre>
-
-    <pre>
-      {{ discountableList }}
-    </pre>
   </div>
 </template>
 
