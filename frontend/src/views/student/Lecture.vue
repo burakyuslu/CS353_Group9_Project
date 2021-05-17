@@ -326,7 +326,7 @@ export default {
   async created() {
     this.lectureLoading = true
     const { data } = await axios.get(`courses/${this.courseId}/ratings`)
-    this.ratings = data
+    this.ratings = data.ratings || []
     const error = await this.fetchLectureContent({
       courseId: this.courseId,
       lectureId: this.lectureId,
@@ -350,8 +350,7 @@ export default {
   watch: {
     async dialog(newValue) {
       if (newValue) {
-        const { data } = await axios.get(`courses/${this.courseId}/ratings`)
-        console.log(data)
+        const { data } = await axios.get(`courses/${this.courseid}/ratings`)
         this.ratings = data.ratings || []
       }
     },
