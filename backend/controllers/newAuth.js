@@ -52,8 +52,8 @@ authRouter.post('/login', async (request, response) => {
     //     user === undefined
     //         ? false
     //         : await bcrypt.compare(password, user.password)
-    const user = user1[0]
     const passwordCorrect = user1 && user1.length > 0 && password === user.password  // todo remove this when signup is implemented
+    const user = user1[0]
     // console.log(password, user.password)
     // console.log(`${password}, ${user.password}`)
     if (!(user && passwordCorrect)) {
