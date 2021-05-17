@@ -91,16 +91,17 @@ const routes = [
     },
   },
   {
-    path: '/instructor/home/editcertificate',
+    path: '/instructor/home/editcertificate/:courseId',
     name: 'instructor.home.editCertificate',
     component: EditCertificate,
+    props: true,
     meta: {
       requiresAuth: true,
       requiresInstructor: true,
     },
   },
   {
-    path: '/instructor/home/addlecture',
+    path: '/instructor/home/addlecture/:courseId',
     name: 'instructor.home.addLecture',
     component: AddLecture,
     meta: {
