@@ -90,33 +90,33 @@ authRouter.post('/signup', async (request, response) => {
     // const userName = body.username
     // const userPassword = body.password
     // const emailAddress = body.email
-    const {userType, name, surname, email, password} = request.body
+    const {isInstructor, name, surname, password, email} = request.body
 
     // let signup = undefined //needs to be fixed
 
-    if (userType === "student") {
-        signup = await db.query(`INSERT INTO UserAcc
-                                 VALUES (?, ?, ?, ?, ?, 0, SYSDATE());
+    /*
         INSERT INTO Student(student_id)
         SELECT U.user_id
         FROM UserAcc U
-        WHERE ? = U.username
-          AND ? = U.password;`, [name, surname, userName, userPassword, emailAddress, userName, userPassword])
-    } else if (userType === "instructor") {
-        signup = await db.query(`INSERT INTO UserAcc
-                                 VALUES (?, ?, ?, ?, ?, 0, SYSDATE());
-        INSERT INTO Instructor(instructor_id)
-        SELECT U.user_id
-        FROM UserAcc U
-        WHERE ? = U.username
-          AND ? = U.password;`, [name, surname, userName, userPassword, emailAddress, userName, userPassword])
-    } else {
+        WHERE ? = U.name
+          AND ? = U.password;*/
+
+    const signup1 = await db.query(`INSERT INTO useracc (name, surname, password, email_address, balance, reg_date)
+                                 VALUES (?, ?, ?, ?, 0, SYSDATE());
+        `, [name, surname,  password, email])
+
+    if (!isInstructor) {
+        const signup2 = await db.query(`INSERT INTO student VALUES(?)`, [signup1.insertId])
+    } else{
+        const signup2 = await db.query(`INSERT INTO instructor VALUES(?)`, [signup1.insertId])
+    }
+    /*else {
         return response.status(401).json({
             error: 'invalid type of user',
         })
-    }
+    }*/
 
-    response.status(200).send({token, username: user.username, user_id: user.user_id})
+    response.status(200)
 
 })
 module.exports = authRouter
