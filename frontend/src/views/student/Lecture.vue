@@ -45,7 +45,7 @@
 
                         <div class="text-center mt-12">
                           <v-rating
-                              v-model="rating"
+                              v-model="commentRate.rate"
                               color="yellow darken-3"
                               background-color="grey darken-1"
                               empty-icon="$ratingFull"
@@ -55,15 +55,22 @@
                         </div>
                       </v-card-text>
 
-                      <v-text-field label="Comment Here"></v-text-field>
+                      <v-text-field
+                          label="Comment Here"
+                          v-model="commentRate.comment">
+                      </v-text-field>
+
                       <v-divider></v-divider>
                       <v-card-actions class="justify-space-between">
-                        <v-btn text>
+                        <v-btn
+                            text
+                            v-on:click="dialog = false">
                           Close
                         </v-btn>
                         <v-btn
                             color="primary"
                             text
+                            v-on:click="commentAndRate(commentRate.comment, commentRate.rate)"
                         >
                           Rate Now
                         </v-btn>
@@ -199,7 +206,12 @@
         </v-row>
       </v-container>
     </div>
+    <pre>
+    {{commentRate}}
+  </pre>
   </div>
+
+
 </template>
 
 <script>
@@ -209,6 +221,7 @@ import qna from '../../components/QnA.vue'
 import { mapActions, mapGetters } from 'vuex'
 import { getters, actions } from '../../store/types'
 import { getIdFromURL, getTimeFromURL } from 'vue-youtube-embed'
+import axios from "../../utils/config";
 export default {
   components: { Announcement, Notes, qna },
   name: 'Lecture',
@@ -224,6 +237,10 @@ export default {
       },
       url: 'https://www.youtube.com/watch?v=qZXt1Aom3Cs',
       lectureLoading: true,
+      commentRate: {
+        comment : "",
+        rate : "",
+      }
     }
   },
   mounted() {
@@ -236,6 +253,13 @@ export default {
       'completeLecture',
       'earnCertificate',
     ]),
+
+    async commentAndRate(comment, rate) {
+      await axios.post(`courses/${this.$route.params.courseId}/ratings`,{
+        comment: comment,
+        rating: rate
+      })
+    },
     async earn() {
       await this.earnCertificate({ courseId: this.courseId })
       await this.fetchLectureContent({
