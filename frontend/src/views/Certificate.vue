@@ -15,23 +15,21 @@
           <v-card-text
               class="font-weight-medium"
           >
-            ID Of This Certificate Of Completion: {{ certificate.certificateId }}
+            ID Of This Certificate Of Completion: {{ certificate.certificate_id }}
           <v-divider></v-divider>
             Holder Of This Certificate: {{ certificate.name }} {{ certificate.surname }}
           <v-divider></v-divider>
-            Completed Course: {{ certificate.courseName }}
+            Completed Course: {{ certificate.course_name }}
           <v-divider></v-divider>
-            Data Awarded: {{ certificate.date }}
+            Date Awarded: {{ certificate.cdate }}
           <v-divider></v-divider>
-            Final Grade: final grade for certificates are held at Earns, which cannot be accessed here.
-            Either remove this line or add the grade to certificate.
+            Final Grade: {{ certificate.final_grade}}
           <v-divider></v-divider>
-            Instructor's Note: {{ certificate.certificationText }}
+            Instructor's Note: {{ certificate.certification_text }}
           </v-card-text>
 
         </v-card>
       </v-row>
-      {{certificate}}
     </pre>
   </div>
 </template>
@@ -40,7 +38,6 @@
 import { mapActions } from 'vuex'
 
 export default {
-  // TODO FINAL GRADE
   async mounted() {
     const certificateId = this.$route.params.certificateId
     const res = await this.fetchCertificate({ certificateId })
