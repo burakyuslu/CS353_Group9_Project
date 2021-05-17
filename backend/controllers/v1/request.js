@@ -48,8 +48,9 @@ requestRouter.delete('/resolveRequest', async (request, response, next) => {
                  WHERE student_id = ?
                    AND course_id = ?;`, [student_id, course_id]);
 
+            const resolveRequest = await db.query(`UPDATE requestrefund SET resolved = 1 WHERE request_id = ?;`, [request_id])
+
         } else {
-            //blah blah blah don't give muneh back to the student
             console.log("\nDo nothing, the refund request is rejected.\n")
         }
 
