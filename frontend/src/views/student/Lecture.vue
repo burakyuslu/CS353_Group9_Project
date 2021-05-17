@@ -20,57 +20,66 @@
                       <v-btn v-else link :to="getCertificatePath"
                         >View Certificate</v-btn
                       >
-                      <v-btn
-                        color="primary"
-                        dark
-                        @click="dialog = true"
-                      >
+                      <v-btn color="primary" dark @click="dialog = true">
                         Comment & Rate
                       </v-btn>
                     </div>
                   </v-card-title>
 
-                  <v-dialog
-                      v-model="dialog"
-                      width="666"
-                  >
-                    <v-card
-                        class="elevation-16 mx-auto"
-                    >
+                  <v-dialog v-model="dialog" width="666">
+                    <div v-if="ratings.length > 0">
+                      <v-card
+                        v-for="rating in ratings"
+                        :key="`${rating.studentName}_${rating.comment}`"
+                      >
+                        <v-rating
+                          color="primary"
+                          hover
+                          length="5"
+                          readonly
+                          size="32"
+                          :value="rating.rating"
+                        ></v-rating>
+                        <v-card-subtitle>
+                          {{ rating.studentName }}
+                        </v-card-subtitle>
+                        <v-card-text v-if="rating.comment">
+                          {{ rating.comment }}
+                        </v-card-text>
+                      </v-card>
+                    </div>
+                    <v-card class="elevation-16 mx-auto" v-else>
                       <v-card-title class="headline">
                         Comment & Rate
                       </v-card-title>
-                      <v-card-text>
-                        Rate the Course
-
-                        <div class="text-center mt-12">
-                          <v-rating
-                              v-model="commentRate.rate"
-                              color="yellow darken-3"
-                              background-color="grey darken-1"
-                              empty-icon="$ratingFull"
-                              hover
-                              large
-                          ></v-rating>
-                        </div>
-                      </v-card-text>
-
+                      <v-rating
+                        color="primary"
+                        hover
+                        length="5"
+                        readonly
+                        size="32"
+                        :value="rating.rating"
+                      ></v-rating>
                       <v-text-field
-                          label="Comment Here"
-                          v-model="commentRate.comment">
+                        label="Comment Here"
+                        v-model="commentRate.comment"
+                      >
                       </v-text-field>
 
                       <v-divider></v-divider>
                       <v-card-actions class="justify-space-between">
-                        <v-btn
-                            text
-                            v-on:click="dialog = false">
+                        <v-btn text v-on:click="dialog = false">
                           Close
                         </v-btn>
                         <v-btn
-                            color="primary"
-                            text
-                            v-on:click="commentAndRate(commentRate.comment, commentRate.rate)"
+                          color="primary"
+                          text
+                          v-on:click="
+                            commentAndRate(
+                              commentRate.comment,
+                              commentRate.rate,
+                            )
+                          "
                         >
                           Rate Now
                         </v-btn>
@@ -207,11 +216,10 @@
       </v-container>
     </div>
     <pre>
-    {{commentRate}}
-  </pre>
+    {{ commentRate }}
+  </pre
+    >
   </div>
-
-
 </template>
 
 <script>
@@ -219,9 +227,7 @@ import Announcement from '../../components/Announcement.vue'
 import Notes from '../../components/Notes.vue'
 import qna from '../../components/QnA.vue'
 import { mapActions, mapGetters } from 'vuex'
-import { getters, actions } from '../../store/types'
-import { getIdFromURL, getTimeFromURL } from 'vue-youtube-embed'
-import axios from "../../utils/config";
+import axios from '../../utils/config'
 export default {
   components: { Announcement, Notes, qna },
   name: 'Lecture',
@@ -238,9 +244,9 @@ export default {
       url: 'https://www.youtube.com/watch?v=qZXt1Aom3Cs',
       lectureLoading: true,
       commentRate: {
-        comment : "",
-        rate : "",
-      }
+        comment: '',
+        rate: 0,
+      },
     }
   },
   mounted() {
@@ -255,9 +261,9 @@ export default {
     ]),
 
     async commentAndRate(comment, rate) {
-      await axios.post(`courses/${this.$route.params.courseId}/ratings`,{
+      await axios.post(`courses/${this.$route.params.courseId}/ratings`, {
         comment: comment,
-        rating: rate
+        rating: rate,
       })
     },
     async earn() {
@@ -319,6 +325,8 @@ export default {
   },
   async created() {
     this.lectureLoading = true
+    const { data } = await axios.get(`courses/${this.courseId}/ratings`)
+    this.ratings = data.ratings || []
     const error = await this.fetchLectureContent({
       courseId: this.courseId,
       lectureId: this.lectureId,
@@ -336,9 +344,16 @@ export default {
     if (error) {
       console.log(error)
     }
+
     this.lectureLoading = false
   },
   watch: {
+    async dialog(newValue) {
+      if (newValue) {
+        const { data } = await axios.get(`courses/${this.courseid}/ratings`)
+        this.ratings = data.ratings || []
+      }
+    },
     async lectureId() {
       if (!this.lectureContent.completedLectures.includes(this.lectureId)) {
         const error = await this.completeLecture({

@@ -1,18 +1,15 @@
 <template>
   <v-form>
-    <v-container >
+    <v-container>
       <v-card outlined tile>
-              <v-card-title>
-                Edit Certificate
-              </v-card-title>
+        <v-card-title>
+          Edit Certificate
+        </v-card-title>
       </v-card>
     </v-container>
 
-    <v-container> 
-      <v-textarea
-        color="teal"
-        v-model="certificate"
-      >
+    <v-container>
+      <v-textarea color="teal" v-model="certificate">
         <template v-slot:label>
           <div>
             Input Your Certificate As Text Here
@@ -24,34 +21,32 @@
     <v-container>
       <router-link to="/instructor/home/">
         <v-btn class="ml-2 mt-5" outlined rounded small @click="submit">
-            Save Your Certificate
+          Save Your Certificate
         </v-btn>
       </router-link>
       <router-link to="/instructor/home/">
         <v-btn class="ml-2 mt-5" outlined rounded small>
-            Cancel
+          Cancel
         </v-btn>
       </router-link>
     </v-container>
-
   </v-form>
 </template>
 
 <script>
-
 import axios from '../../utils/config.js'
 export default {
   methods: {
-    submit() {
-      axios.post('certificates', {certificate:this.certificate})
+    async submit() {
+      await axios.post('certificates', { certificate: this.certificate })
       this.$router.go(-1)
+    },
+  },
+  data() {
+    return {
+      certificate: '',
     }
   },
-  data(){
-    return {
-      certificate: ''
-    }
-  }
 }
 </script>
 

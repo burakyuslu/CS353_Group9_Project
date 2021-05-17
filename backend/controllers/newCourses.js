@@ -197,9 +197,14 @@ courseRouter.get("/:courseId/ratings", async (req, res, next) => {
     const {instructorId, studentId} = req
     try {
         const {courseId} = req.params
-        const ratings = await db.query(GET_COURSE_RATINGS, [courseId])
-        const averageRating = await db.query(GET_AVERAGE_RATING, [courseId])
-        res.json({ratings, averageRating})
+        const ratings = await db.query(`SELECT course_id, student_id, comment, rating, name as studentName
+                                        FROM Rates R
+                                                 join useracc U on R.student_id = U.user_id
+                                        WHERE R.course_id = ?
+                                          AND R.student_id = ?`, [courseId, studentId])
+        // const ratings = await db.query(GET_COURSE_RATINGS, [courseId])
+        // const averageRating = await db.query(GET_AVERAGE_RATING, [courseId])
+        res.json({ratings})
     } catch (exception) {
         next(exception)
     }
@@ -356,13 +361,19 @@ courseRouter.get("/:courseId/qna", async (req, res, next) => {
 // create a new thread
 courseRouter.post("/:courseId/qna", async (req, res, next) => {
     const {instructorId, studentId} = req
+    let userId
+    if (instructorId) {
+        userId = instructorId
+    } else {
+        userId = studentId
+    }
     try {
         const {courseId} = req.params
         const [qna,] = await db.query(`SELECT qna_id
                                        FROM course
                                                 join qna q on course.course_id = ? AND course.course_id = q.course_id`, [courseId])
         const {postText} = req.body
-        const result = await db.query(POST_QNA_THREAD, [postText, studentId, qna.qna_id])
+        const result = await db.query(POST_QNA_THREAD, [postText, userId, qna.qna_id])
         res.json(result)
     } catch (exception) {
         next(exception)
@@ -386,10 +397,17 @@ courseRouter.get("/:courseId/qna/:threadId", async (req, res, next) => {
 // creates a new thread post (posts an entry on a thread)
 courseRouter.post("/:courseId/qna/:threadId", async (req, res, next) => {
     const {instructorId, studentId} = req
+    let userId
+    if (instructorId) {
+        userId = instructorId
+    } else {
+        userId = studentId
+    }
+    console.log(instructorId)
     try {
         const {courseId, threadId} = req.params
         const {entryText} = req.body
-        const result = await db.query(POST_COURSE_QNA_THREAD_ENTRY, [entryText, threadId, studentId])
+        const result = await db.query(POST_COURSE_QNA_THREAD_ENTRY, [entryText, threadId, userId])
         res.json(result)
     } catch (exception) {
         next(exception)

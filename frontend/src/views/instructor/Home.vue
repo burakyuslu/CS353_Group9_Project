@@ -83,13 +83,23 @@
                   </v-btn>
                 </router-link>
 
-                <router-link to="/instructor/home/addlecture">
+                <router-link
+                  :to="{
+                    name: 'instructor.home.addLecture',
+                    params: { courseId: course.course_id },
+                  }"
+                >
                   <v-btn class="ml-2 mt-5" outlined rounded small>
                     Add Lecture
                   </v-btn>
                 </router-link>
 
-                <router-link to="/instructor/home/gotocourseforum">
+                <router-link
+                  :to="{
+                    name: 'instructor.home.goToCourseForum',
+                    params: { courseId: course.course_id },
+                  }"
+                >
                   <v-btn class="ml-2 mt-5" outlined rounded small>
                     Go To Course Forum
                   </v-btn>
