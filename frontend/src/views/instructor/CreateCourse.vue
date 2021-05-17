@@ -79,7 +79,7 @@ export default {
         certificationText: this.certificationText,
         discountable: this.discount ? 1 : 0,
       })
-      this.$router.go(-1)
+      this.$router.push({ name: 'instructor.home' })
     },
   },
   data() {
