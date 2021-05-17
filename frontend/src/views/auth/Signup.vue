@@ -1,6 +1,9 @@
 <template>
   <v-container class="grey lighten-5">
     <v-card>
+      <v-alert v-model="errorOccured" type="error" dismissible>
+        Sign up failed
+      </v-alert>
       <v-container>
         <v-switch :label="text" v-model="value"></v-switch>
         <v-text-field label="Name" v-model="name"></v-text-field>
@@ -8,9 +11,6 @@
         <v-text-field label="E-mail" v-model="email"></v-text-field>
         <v-text-field type="password" label="Password" v-model="password"> </v-text-field>
       </v-container>
-      <v-alert v-model="messageModel" type="error" dismissible>
-        {{ errorMessage }}
-      </v-alert>
       <v-card-actions>
         <v-btn @click="signup"> Sign Up </v-btn>
         <v-btn :to="{name: 'auth.login'}" >Go to Sign In</v-btn>
@@ -33,7 +33,7 @@ export default {
       name: '',
       surname: '',
       messageModel: false,
-      errorMessage: '',
+      errorOccured: false
     }
   },
   methods: {
@@ -56,9 +56,21 @@ export default {
 
       this.$router.push({ name: `${this.userType}.home` })
     },
-    signup(){
-      axios.post(`auth/signup`, {isInstructor: this.value, name: this.name, surname: this.surname, password: this.password, email: this.email})
-      this.$router.push({name: 'auth.login'})
+    async signup(){
+      try {
+        await axios.post(`auth/signup`, {
+          isInstructor: this.value,
+          name: this.name,
+          surname: this.surname,
+          password: this.password,
+          email: this.email
+        })
+        this.errorOccured = false
+        await this.$router.push({name: 'auth.login'})
+      }catch (exception){
+        this.errorOccured = true
+      }
+
     }
   },
   computed: {
