@@ -34,6 +34,7 @@
       </router-link>
     </v-container>
   </v-form>
+
 </template>
 
 <script>
@@ -41,9 +42,11 @@ import axios from '../../utils/config.js'
 export default {
   methods: {
     submit() {
-      axios.post(`courses/${this.$route.params.course_id}/lectures`, {
+      axios.post(`courses/${this.$route.params.courseId}/lectures`, {
         lectureName: this.lectureName,
         url: this.url,
+        content: "https://www.youtube.com/watch?v=qZXt1Aom3Cs",
+        type: "video"
       })
       this.$router.push({ name: 'instructor.home' })
     },
