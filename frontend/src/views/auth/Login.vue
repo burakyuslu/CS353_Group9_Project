@@ -11,6 +11,7 @@
       >
       <v-card-actions>
         <v-btn @click="login"> Sign In </v-btn>
+        <v-btn :to="{name: 'auth.signup'}" >Go to Sign Up</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
