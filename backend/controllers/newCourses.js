@@ -81,9 +81,9 @@ courseRouter.post("/", [async (req, res, next) => {
     //TODO: get request parameters
     const {studentId, instructorId, adminId} = req
     try {
-        const {courseName, courseSummary, price, category, certificationText} = req.body
+        const {courseName, courseSummary, price, category, certificationText, discountable} = req.body
         const result = await db.query(POST_COURSE1,
-            [courseName, courseSummary, price, category])
+            [courseName, courseSummary, price, category, discountable, 0])
 
         const result2 = await db.query(`INSERT INTO certificate(certification_text, course_id)
                                         VALUES (?, ?);`, [certificationText, result.insertId])

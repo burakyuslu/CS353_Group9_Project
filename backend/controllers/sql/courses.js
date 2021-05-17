@@ -18,7 +18,7 @@ module.exports.GET_COURSE_LIST = `
 
 // transactiona gecir?
 module.exports.POST_COURSE1 = `
-    INSERT INTO course(course_name, course_summary, price, category)
+    INSERT INTO course(course_name, course_summary, price, category, discountable, percentage)
     VALUES (?, ?, ?, ?);`
 
 
