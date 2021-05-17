@@ -38,6 +38,13 @@
       </v-textarea>
     </v-container>
 
+    <v-container>
+      <v-switch
+          v-model="discount"
+          :label="`Do you want your course to be discountable: ${discount.toString()}`"
+      ></v-switch>
+    </v-container>
+
 
     <v-container>
       <router-link to="/instructor/home/">
@@ -63,12 +70,13 @@ export default {
   methods: {
     submit() {
       axios.post('courses', {courseName:this.courseName, courseSummary: this.courseSummary, price: this.price, category:this.category,
-        instructorId: 4, certificationText: this.certificationText}) // fill the link
+        instructorId: 4, certificationText: this.certificationText})
       this.$router.go(-1)
     }
   },
   data() {
     return {
+      discount: '',
       courseName: '',
       category: '',
       courseSummary: '',
