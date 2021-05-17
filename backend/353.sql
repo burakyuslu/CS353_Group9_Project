@@ -54,13 +54,13 @@ CREATE TABLE UserAcc
     reg_date      DATETIME     NOT NULL
 ) ENGINE = InnoDB;
 
-INSERT INTO UserAcc (user_id, name, surname, password, email_address, balance, reg_date)
-VALUES (1, 's1_name', 's1_surname', 's1_password', 'mail1', 1, '2020-01-01 10:10:10'),
-       (2, 's2_name', 's2_surname', 's2_password', 'mail2', 2, '2020-02-02 11:11:11'),
-       (3, 's3_name', 's3_surname', 's3_password', 'mail3', 3, '2020-03-03 12:12:12'),
-       (4, 'i1_name', 'i1_surname', 'i1_password', 'mail4', 4, '2020-04-04 13:13:13'),
-       (5, 'i2_name', 'i2_surname', 'i2_password', 'mail5', 5, '2020-05-05 14:14:14'),
-       (6, 'i3_name', 'i3_surname', 'i3_password', 'mail6', 6, '2020-06-06 15:15:15');
+# INSERT INTO UserAcc (user_id, name, surname, password, email_address, balance, reg_date)
+# VALUES (1, 's1_name', 's1_surname', 's1_password', 'mail1', 1, '2020-01-01 10:10:10'),
+#        (2, 's2_name', 's2_surname', 's2_password', 'mail2', 2, '2020-02-02 11:11:11'),
+#        (3, 's3_name', 's3_surname', 's3_password', 'mail3', 3, '2020-03-03 12:12:12'),
+#        (4, 'i1_name', 'i1_surname', 'i1_password', 'mail4', 4, '2020-04-04 13:13:13'),
+#        (5, 'i2_name', 'i2_surname', 'i2_password', 'mail5', 5, '2020-05-05 14:14:14'),
+#        (6, 'i3_name', 'i3_surname', 'i3_password', 'mail6', 6, '2020-06-06 15:15:15');
 
 # DONE
 #Student(student_id)
@@ -71,10 +71,10 @@ CREATE TABLE Student
     FOREIGN KEY (student_id) REFERENCES UserAcc (user_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Student (student_id)
-VALUES (1),
-       (2),
-       (3);
+# INSERT INTO Student (student_id)
+# VALUES (1),
+#        (2),
+#        (3);
 
 # DONE
 # Instructor(instructor_id)
@@ -85,10 +85,10 @@ CREATE TABLE Instructor
     FOREIGN KEY (instructor_id) REFERENCES UserAcc (user_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Instructor (instructor_id)
-VALUES (4),
-       (5),
-       (6);
+# INSERT INTO Instructor (instructor_id)
+# VALUES (4),
+#        (5),
+#        (6);
 
 # DONE
 # Course(course_id, course_name, price, category, {keyword})
@@ -104,10 +104,10 @@ CREATE TABLE Course
     percentage     TINYINT       NOT NULL
 ) ENGINE = InnoDB;
 
-INSERT INTO Course (course_id, course_name, course_summary, price, category, discountable, percentage)
-VALUES (1, 'c1_name', 'c1_summary', 10, 'c1_category', true, 30),
-       (2, 'c2_name', 'c2_summary', 20, 'c2_category', false, 0),
-       (3, 'c3_name', 'c3_summary', 30, 'c3_category', true, 50);
+# INSERT INTO Course (course_id, course_name, course_summary, price, category, discountable, percentage)
+# VALUES (1, 'c1_name', 'c1_summary', 10, 'c1_category', true, 30),
+#        (2, 'c2_name', 'c2_summary', 20, 'c2_category', false, 0),
+#        (3, 'c3_name', 'c3_summary', 30, 'c3_category', true, 50);
 
 # DONE
 # CourseKeyword(course_id, keyword)
@@ -120,10 +120,10 @@ CREATE TABLE CourseKeyword
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO CourseKeyword (course_id, keyword)
-VALUES (1, 'c1_keyword'),
-       (2, 'c2_keyword'),
-       (3, 'c3_keyword');
+# INSERT INTO CourseKeyword (course_id, keyword)
+# VALUES (1, 'c1_keyword'),
+#        (2, 'c2_keyword'),
+#        (3, 'c3_keyword');
 
 # DONE
 # Rates(course_id, student_id, comment, rating)
@@ -139,10 +139,10 @@ CREATE TABLE Rates
     FOREIGN KEY (student_id) REFERENCES Student (student_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Rates (course_id, student_id, comment, rating)
-VALUES (1, 1, 'comment1', 1),
-       (2, 2, 'comment2', 2),
-       (3, 3, 'comment3', 3);
+# INSERT INTO Rates (course_id, student_id, comment, rating)
+# VALUES (1, 1, 'comment1', 1),
+#        (2, 2, 'comment2', 2),
+#        (3, 3, 'comment3', 3);
 
 # Done
 # Certificate(certificate_id, certification_text, course_id)
@@ -155,10 +155,10 @@ CREATE TABLE Certificate
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Certificate (certificate_id, certification_text, course_id)
-VALUES (1, 'cert_text_1', 1),
-       (2, 'cert_text_2', 2),
-       (3, 'cert_text_3', 3);
+# INSERT INTO Certificate (certificate_id, certification_text, course_id)
+# VALUES (1, 'cert_text_1', 1),
+#        (2, 'cert_text_2', 2),
+#        (3, 'cert_text_3', 3);
 
 # DONE
 # Earns(student_id, certificate_id, final_grade, date)
@@ -172,10 +172,10 @@ CREATE TABLE Earns
     PRIMARY KEY (student_id, certificate_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Earns
-VALUES (1, 1, 1, '2020-01-01 10:10:10'),
-       (2, 2, 2, '2020-02-02 1:1:1'),
-       (3, 3, 3, '2020-03-03 2:2:2');
+# INSERT INTO Earns
+# VALUES (1, 1, 1, '2020-01-01 10:10:10'),
+#        (2, 2, 2, '2020-02-02 1:1:1'),
+#        (3, 3, 3, '2020-03-03 2:2:2');
 
 # Done
 # SiteAdmin(admin_id, admin_username, admin_password)
@@ -187,10 +187,10 @@ create table SiteAdmin
     admin_password VARCHAR(256) NOT NULL
 ) ENGINE = InnoDB;
 
-INSERT INTO SiteAdmin(admin_id, admin_username, admin_password)
-VALUES (1, 'admin_username_1', 'admin_password_1'),
-       (2, 'admin_username_2', 'admin_password_2'),
-       (3, 'admin_username_3', 'admin_password_3');
+# INSERT INTO SiteAdmin(admin_id, admin_username, admin_password)
+# VALUES (1, 'admin_username_1', 'admin_password_1'),
+#        (2, 'admin_username_2', 'admin_password_2'),
+#        (3, 'admin_username_3', 'admin_password_3');
 
 # Done
 # AssignmentMaterial(assignment_id, course_id, weight)
@@ -203,10 +203,10 @@ CREATE TABLE AssignmentMaterial
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO AssignmentMaterial(assignment_id, course_id, weight)
-VALUES (1, 1, 1),
-       (2, 2, 1),
-       (3, 3, 1);
+# INSERT INTO AssignmentMaterial(assignment_id, course_id, weight)
+# VALUES (1, 1, 1),
+#        (2, 2, 1),
+#        (3, 3, 1);
 
 #
 # Project(assignment_id, title, prompt)
@@ -219,10 +219,10 @@ CREATE TABLE Project
     FOREIGN KEY (assignment_id) REFERENCES AssignmentMaterial (assignment_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Project(assignment_id, title, prompt)
-VALUES (1, 'project_title_1', 'prompt1'),
-       (2, 'project_title_2', 'prompt2'),
-       (3, 'project_title_3', 'prompt3');
+# INSERT INTO Project(assignment_id, title, prompt)
+# VALUES (1, 'project_title_1', 'prompt1'),
+#        (2, 'project_title_2', 'prompt2'),
+#        (3, 'project_title_3', 'prompt3');
 
 # DONE
 # Quiz(quiz_id, quiz_name)
@@ -234,10 +234,10 @@ CREATE TABLE Quiz
     FOREIGN KEY (quiz_id) REFERENCES AssignmentMaterial (assignment_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Quiz(quiz_id, quiz_name)
-VALUES (1, 'quiz_name_1'),
-       (2, 'quiz_name_2'),
-       (3, 'quiz_name_3');
+# INSERT INTO Quiz(quiz_id, quiz_name)
+# VALUES (1, 'quiz_name_1'),
+#        (2, 'quiz_name_2'),
+#        (3, 'quiz_name_3');
 
 # DONE
 # QuizQuestion(assignment_id, question_text, {answer}, {option})
@@ -251,10 +251,10 @@ CREATE TABLE QuizQuestion
     FOREIGN KEY (assignment_id) REFERENCES Quiz (quiz_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO QuizQuestion(question_id, assignment_id, question_text, question_answer)
-VALUES (1, 1, 'question_text_1', 'answer'),
-       (2, 2, 'question_text_2', 'answer2'),
-       (3, 2, 'question_text_3', 'answer3');
+# INSERT INTO QuizQuestion(question_id, assignment_id, question_text, question_answer)
+# VALUES (1, 1, 'question_text_1', 'answer'),
+#        (2, 2, 'question_text_2', 'answer2'),
+#        (3, 2, 'question_text_3', 'answer3');
 
 # DONE
 # QuizOption(question_id, question_option)
@@ -267,10 +267,10 @@ CREATE TABLE QuizOption
     FOREIGN KEY (question_id) REFERENCES QuizQuestion (question_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO QuizOption(question_id, question_option)
-VALUES (1, 'question_option_1'),
-       (2, 'question_option_2'),
-       (3, 'question_option_3');
+# INSERT INTO QuizOption(question_id, question_option)
+# VALUES (1, 'question_option_1'),
+#        (2, 'question_option_2'),
+#        (3, 'question_option_3');
 
 # DONE
 # Lecture(lecture_id, lecture_name, course_id)
@@ -285,10 +285,10 @@ CREATE TABLE Lecture
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Lecture(lecture_id, lecture_name, course_id, content, type)
-VALUES (1, 'lecture_name_1', 1, 'content1', 'type1'),
-       (2, 'lecture_name_2', 2, 'content2', 'type2'),
-       (3, 'lecture_name_3', 3, 'content3', 'type3');
+# INSERT INTO Lecture(lecture_id, lecture_name, course_id, content, type)
+# VALUES (1, 'lecture_name_1', 1, 'content1', 'type1'),
+#        (2, 'lecture_name_2', 2, 'content2', 'type2'),
+#        (3, 'lecture_name_3', 3, 'content3', 'type3');
 
 # DONE
 # QnA(qna_id, course_id, lecture_id)
@@ -302,10 +302,10 @@ CREATE TABLE QnA
     FOREIGN KEY (lecture_id) REFERENCES Lecture (lecture_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO QnA (qna_id, course_id, lecture_id)
-VALUES (1, 1, 1),
-       (2, 2, 2),
-       (3, 3, 3);
+# INSERT INTO QnA (qna_id, course_id, lecture_id)
+# VALUES (1, 1, 1),
+#        (2, 2, 2),
+#        (3, 3, 3);
 
 # DONE
 # Thread(thread_id, post_text, user_id, qna_id)
@@ -320,10 +320,10 @@ CREATE TABLE Thread
     FOREIGN KEY (qna_id) REFERENCES QnA (qna_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Thread(thread_id, post_text, user_id, qna_id)
-VALUES (1, 'post_text_1', 1, 1),
-       (2, 'post_text_2', 2, 2),
-       (3, 'post_text_3', 3, 3);
+# INSERT INTO Thread(thread_id, post_text, user_id, qna_id)
+# VALUES (1, 'post_text_1', 1, 1),
+#        (2, 'post_text_2', 2, 2),
+#        (3, 'post_text_3', 3, 3);
 
 # DONE
 # Entry(entry_id, entry_text, user_id, thread_id)
@@ -338,10 +338,10 @@ CREATE TABLE Entry
     FOREIGN KEY (thread_id) REFERENCES Thread (thread_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Entry(entry_id, entry_text, thread_id, user_id)
-VALUES (1, 'entry_text_1', 1, 1),
-       (2, 'entry_text_2', 2, 2),
-       (3, 'entry_text_3', 3, 3);
+# INSERT INTO Entry(entry_id, entry_text, thread_id, user_id)
+# VALUES (1, 'entry_text_1', 1, 1),
+#        (2, 'entry_text_2', 2, 2),
+#        (3, 'entry_text_3', 3, 3);
 
 # INSERT INTO Complains (id, admin_id, student_id, course_id, reason, complain_date, resolved)
 # VALUES (1, 1, 1, 1, 'hi', '2020-01-01 1:1:1', false),
@@ -363,10 +363,10 @@ CREATE TABLE Buys
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Buys (student_id, course_id, price, buy_date)
-VALUES (1, 1, 1, '2020-01-01 1:1:1'),
-       (2, 2, 22, '2020-02-02 22:22:22'),
-       (3, 3, 33, '2020-03-03 23:23:23');
+# INSERT INTO Buys (student_id, course_id, price, buy_date)
+# VALUES (1, 1, 1, '2020-01-01 1:1:1'),
+#        (2, 2, 22, '2020-02-02 22:22:22'),
+#        (3, 3, 33, '2020-03-03 23:23:23');
 
 # DONE
 # RequestRefund(request_id, student_id, admin_id, course_id)
@@ -386,8 +386,8 @@ CREATE TABLE RequestRefund
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
- INSERT INTO RequestRefund(request_id, student_id, admin_id, course_id, reason, complain_date, resolved, is_read)
- VALUES (1, 1, 1, 1, 'course is bad', '2020-01-01 1:1:1', false, true);
+#  INSERT INTO RequestRefund(request_id, student_id, admin_id, course_id, reason, complain_date, resolved, is_read)
+#  VALUES (1, 1, 1, 1, 'course is bad', '2020-01-01 1:1:1', false, true);
 #        (2, 2, 2, 2),
 #        (3, 3, 3, 3);
 
@@ -404,10 +404,10 @@ CREATE TABLE Completes
     FOREIGN KEY (lecture_id) REFERENCES Lecture (lecture_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Completes (student_id, lecture_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3);
+# INSERT INTO Completes (student_id, lecture_id)
+# VALUES (1, 1),
+#        (2, 2),
+#        (3, 3);
 
 
 # DONE
@@ -422,10 +422,10 @@ CREATE TABLE AddToWishlist
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO AddToWishlist (student_id, course_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3);
+# INSERT INTO AddToWishlist (student_id, course_id)
+# VALUES (1, 1),
+#        (2, 2),
+#        (3, 3);
 
 
 -- # DONE
@@ -461,10 +461,10 @@ CREATE TABLE Publish
     FOREIGN KEY (instructor_id) REFERENCES Instructor (instructor_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Publish (instructor_id, course_id, publish_date)
-VALUES (4, 1, '2020-01-01 1:1:1'),
-       (5, 2, '2020-02-02 2:2:2'),
-       (6, 3, '2020-03-03 3:3:3');
+# INSERT INTO Publish (instructor_id, course_id, publish_date)
+# VALUES (4, 1, '2020-01-01 1:1:1'),
+#        (5, 2, '2020-02-02 2:2:2'),
+#        (6, 3, '2020-03-03 3:3:3');
 
 
 # Answers(student_id, quiz_id)
@@ -480,13 +480,13 @@ CREATE TABLE Answers
     FOREIGN KEY (question_id) REFERENCES QuizQuestion (question_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Answers (student_id, question_id, score, answer)
-VALUES (1, 2, 1, 'a'),
-       (1, 3, 1, 'a'),
-       (2, 1, 1, 'a'),
-       (2, 3, 1, 'a'),
-       (2, 2, 1, 'a'),
-       (3, 1, 1, 'a');
+# INSERT INTO Answers (student_id, question_id, score, answer)
+# VALUES (1, 2, 1, 'a'),
+#        (1, 3, 1, 'a'),
+#        (2, 1, 1, 'a'),
+#        (2, 3, 1, 'a'),
+#        (2, 2, 1, 'a'),
+#        (3, 1, 1, 'a');
 
 
 #DONE
@@ -503,10 +503,10 @@ CREATE TABLE Announcement
     FOREIGN KEY (course_id) REFERENCES Course (course_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Announcement(instructor_id, course_id, ann_date, ann_text)
-VALUES (4, 1, '2020-01-01 1:1:1', 'ann_text_1'),
-       (5, 2, '2020-02-02 2:2:2', 'ann_text_2'),
-       (6, 3, '2020-03-03 3:3:3', 'ann_text_3');
+# INSERT INTO Announcement(instructor_id, course_id, ann_date, ann_text)
+# VALUES (4, 1, '2020-01-01 1:1:1', 'ann_text_1'),
+#        (5, 2, '2020-02-02 2:2:2', 'ann_text_2'),
+#        (6, 3, '2020-03-03 3:3:3', 'ann_text_3');
 
 # DONE
 # Submits(assignment_id, student_id, submission, avg_score)
@@ -522,10 +522,10 @@ CREATE TABLE Submits
     FOREIGN KEY (student_id) REFERENCES Student (student_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO Submits (submission_id, assignment_id, student_id, submission, avg_score)
-VALUES (1, 1, 1, 'submission1', 1.1),
-       (2, 2, 2, 'submission2', 2.2),
-       (3, 3, 3, 'submission3', 3.3);
+# INSERT INTO Submits (submission_id, assignment_id, student_id, submission, avg_score)
+# VALUES (1, 1, 1, 'submission1', 1.1),
+#        (2, 2, 2, 'submission2', 2.2),
+#        (3, 3, 3, 'submission3', 3.3);
 
 
 # PeerGrades(assignment_id, student_id, score)
@@ -541,10 +541,10 @@ CREATE TABLE PeerGrades
     FOREIGN KEY (assignment_id) REFERENCES Project (assignment_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO PeerGrades(review_id, student_id, assignment_id, score, review_date)
-VALUES (1, 1, 1, 100, '2020-01-01 11:11:11'),
-       (2, 2, 2, 99, '2020-01-01 22:22:22'),
-       (3, 3, 3, 98, '2020-01-01 23:23:23');
+# INSERT INTO PeerGrades(review_id, student_id, assignment_id, score, review_date)
+# VALUES (1, 1, 1, 100, '2020-01-01 11:11:11'),
+#        (2, 2, 2, 99, '2020-01-01 22:22:22'),
+#        (3, 3, 3, 98, '2020-01-01 23:23:23');
 
 # DONE
 # CreatesNote(student_id, lecture_id, note_text, date)
@@ -560,10 +560,10 @@ CREATE TABLE CreatesNote
     FOREIGN KEY (lecture_id) REFERENCES Lecture (lecture_id)
 ) ENGINE = InnoDB;
 
-INSERT INTO CreatesNote(note_id, student_id, lecture_id, note_text, cdate)
-VALUES (1, 1, 1, 'text 1', '2020-01-01 11:11:11'),
-       (2, 2, 2, 'text 2', '2020-01-01 22:22:22'),
-       (3, 3, 3, 'text 3', '2020-01-01 23:23:23');
+# INSERT INTO CreatesNote(note_id, student_id, lecture_id, note_text, cdate)
+# VALUES (1, 1, 1, 'text 1', '2020-01-01 11:11:11'),
+#        (2, 2, 2, 'text 2', '2020-01-01 22:22:22'),
+#        (3, 3, 3, 'text 3', '2020-01-01 23:23:23');
 
 
 SELECT max(price) FROM course GROUP BY category;
@@ -582,7 +582,21 @@ FROM (SELECT count(lecture_id) AS lecture_count, course_id FROM lecture L  GROUP
 GROUP BY category
 ORDER BY Q.lecture_count DESC;
 
-
+CREATE TRIGGER calculate_score
+    BEFORE INSERT
+    ON answers
+    FOR EACH ROW
+BEGIN
+    DECLARE answer VARCHAR(512);
+    SET answer = (SELECT question_answer FROM quizquestion WHERE question_id = NEW.question_id);
+    IF (NEW.answer = answer) THEN
+        set new.score = 1;
+#         UPDATE answers SET NEW.score = 1 WHERE;
+    ELSE
+        set new.score = 0;
+#         UPDATE answers SET NEW.score = 0;
+    END IF;
+END;
 
 
 
