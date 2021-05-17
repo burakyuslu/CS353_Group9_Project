@@ -187,10 +187,10 @@ create table SiteAdmin
     admin_password VARCHAR(256) NOT NULL
 ) ENGINE = InnoDB;
 
-# INSERT INTO SiteAdmin(admin_id, admin_username, admin_password)
-# VALUES (1, 'admin_username_1', 'admin_password_1'),
-#        (2, 'admin_username_2', 'admin_password_2'),
-#        (3, 'admin_username_3', 'admin_password_3');
+INSERT INTO SiteAdmin(admin_id, admin_username, admin_password)
+VALUES (1, 'admin_username_1', 'admin_password_1'),
+       (2, 'admin_username_2', 'admin_password_2'),
+       (3, 'admin_username_3', 'admin_password_3');
 
 # Done
 # AssignmentMaterial(assignment_id, course_id, weight)
