@@ -40,7 +40,7 @@ import axios from '../../utils/config.js'
 export default {
   methods: {
     submit() {
-      axios.post('newCourses/courseId/lectures', {lectureName: this.lectureName, url:this.url})
+      axios.post('courses/${course_id}/lectures', {lectureName: this.lectureName, url:this.url})
       this.$router.go(-1)
     }
   },
