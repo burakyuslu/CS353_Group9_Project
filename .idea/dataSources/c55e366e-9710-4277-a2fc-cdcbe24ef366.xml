@@ -1759,7 +1759,6 @@ certificate_id</ColNames>
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
     </column>
     <column id="474" parent="350" name="instructor_id">
       <Position>2</Position>
