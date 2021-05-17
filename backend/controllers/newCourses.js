@@ -50,19 +50,18 @@ courseRouter.get("/", async (req, res, next) => {
 
     let query = GET_COURSE_LIST;
     var params;
-    console.log(`hey: ${ratingLow}, ${ratingHigh}, ${search}`)
 
     // const AVG_QUERY = `(SELECT avg(rating)
     //                    FROM Rates R
     //                    WHERE R.course_id = P.course_id) `
 
     if (search === undefined || search === "") {
-        // query += ` AND ( ${AVG_QUERY} ) >= ? AND ( ${AVG_QUERY} ) =< ?`
-        // query += `\nAND ${AVG_QUERY} BETWEEN ? AND ?`
+        query += `\nAND C.price BETWEEN ? AND ?`
         params = [ratingLow, ratingHigh];
     } else {
-        // query += ` AND ( ${AVG_QUERY} ) >= ? AND ( ${AVG_QUERY} ) =< ? AND course_name LIKE ?`
-        query += `\nAND (('%'C.course_name + '%' LIKE '${search}') OR  )`
+        query += `\nAND C.course_name LIKE '%${search}%'`
+        query += `\nAND C.price BETWEEN ? AND ?`
+        // query += `\nAND (('%'C.course_name + '%' LIKE '${search}') OR  )`
         // query += `\nAND ${AVG_QUERY} BETWEEN ? AND ?`
         // params = [search, ratingLow, ratingHigh];
         params = [ratingLow, ratingHigh];
@@ -101,11 +100,13 @@ courseRouter.post("/", [async (req, res, next) => {
 // get course details
 courseRouter.get("/:courseId", [async (req, res, next) => {
     const {studentId} = req
+    console.log(studentId)
     try {
         const {courseId} = req.params
         const [course,] = await db.query(GET_COURSE, [courseId])
         const ratings = await db.query(GET_COURSE_RATINGS, [courseId])
-        const [{avgRating, ratingCount},] = await db.query(GET_AVERAGE_RATING, [courseId])
+        const result = await db.query(GET_AVERAGE_RATING, [courseId])
+        const [{avgRating, ratingCount},] = res.length > 0 ? result : [{avgRating: 0, ratingCount: 0}]
         const lectures = await db.query(GET_LECTURES, [courseId])
         const [studentCount,] = await db.query(`SELECT count(c.course_id) as count
                                                 FROM course c
@@ -387,7 +388,7 @@ courseRouter.post("/:courseId/qna/:threadId", async (req, res, next) => {
     const {instructorId, studentId} = req
     try {
         const {courseId, threadId} = req.params
-        const { entryText} = req.body
+        const {entryText} = req.body
         const result = await db.query(POST_COURSE_QNA_THREAD_ENTRY, [entryText, threadId, studentId])
         res.json(result)
     } catch (exception) {

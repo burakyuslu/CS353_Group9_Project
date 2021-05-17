@@ -186,14 +186,6 @@
           </v-card>
         </v-col>
       </v-row>
-      <pre>
-      {{ courseDetails }}
-    </pre
-      >
-      <pre>
-      {{ courseDetails.studentCourses }}
-    </pre
-      >
     </v-container>
   </div>
 </template>

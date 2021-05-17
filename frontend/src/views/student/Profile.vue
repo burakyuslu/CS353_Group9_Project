@@ -34,11 +34,14 @@
             <v-card-title>
               <span class="headline">User Profile</span>
             </v-card-title>
-              <v-container>
-                  <v-text-field label="Please specify your reason" v-model="reasonText">
-                  </v-text-field>
-                <small>*indicates required field</small>
-              </v-container>
+            <v-container>
+              <v-text-field
+                label="Please specify your reason"
+                v-model="reasonText"
+              >
+              </v-text-field>
+              <small>*indicates required field</small>
+            </v-container>
 
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -78,12 +81,8 @@
                   outlined
                   rounded
                   small
-
                 >
                   request refund
-                </v-btn>
-                <v-btn v-if="true" class="ml-2 mt-5" outlined rounded small>
-                  view certificate
                 </v-btn>
                 <v-btn
                   :to="goToCourse(item)"
@@ -192,11 +191,14 @@ export default {
       await this.unwish({ courseId })
       await this.fetchUserProfile()
     },
-    async postRefundRequest(){
-      await axios.post("users/requestRefund", {courseId: this.dialogItem.course_id,  reason: this.reasonText})
+    async postRefundRequest() {
+      await axios.post('users/requestRefund', {
+        courseId: this.dialogItem.course_id,
+        reason: this.reasonText,
+      })
       this.dialog = false
       this.reasonText = ''
-    }
+    },
   },
   computed: {
     ...mapGetters({

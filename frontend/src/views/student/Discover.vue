@@ -67,19 +67,19 @@
                 Filter Results
               </v-card-title>
               <v-container>
-                <!-- <v-text-field
-                  v-model="search.priceGreaterThan"
+                <v-text-field
+                  v-model="search.ratingRange[0]"
                   type="number"
                   label="Price Greater Than"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="search.priceLessThan"
+                  v-model="search.ratingRange[1]"
                   type="number"
                   label="Price Less Than"
                 ></v-text-field>
 
-                <v-select
+                <!-- <v-select
                   v-model="search.selectedCategories"
                   :items="categoryItems"
                   chips
@@ -105,7 +105,7 @@
                   outlined
                 ></v-select> -->
 
-                <v-subheader>Ratings</v-subheader>
+                <!-- <v-subheader>Ratings</v-subheader>
 
                 <v-range-slider
                   :tick-labels="[0, 1, 2, 3, 4, 5]"
@@ -115,7 +115,7 @@
                   ticks="always"
                   tick-size="4"
                 >
-                </v-range-slider>
+                </v-range-slider> -->
                 <!-- <v-btn>Clear Filters</v-btn> -->
               </v-container>
             </v-card>
@@ -176,7 +176,7 @@ export default {
         searchText: '',
         priceLessThan: 20,
         priceGreaterThan: 10,
-        ratingRange: [0, 5],
+        ratingRange: [0, 150],
         selectedCategories: [],
         selectedCourses: [],
         sort: 'Alphetical A-Z',
