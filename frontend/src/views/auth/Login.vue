@@ -4,7 +4,7 @@
       <v-container>
         <v-switch :label="text" v-model="value"></v-switch>
         <v-text-field label="E-mail" v-model="email"></v-text-field>
-        <v-text-field type="password" v-model="password"> </v-text-field>
+        <v-text-field type="password" label="Password" v-model="password"> </v-text-field>
       </v-container>
       <v-alert v-model="messageModel" type="error" dismissible>
         {{ errorMessage }}</v-alert

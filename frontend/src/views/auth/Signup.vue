@@ -6,7 +6,7 @@
         <v-text-field label="Name" v-model="name"></v-text-field>
         <v-text-field label="Surname" v-model="surname"> </v-text-field>
         <v-text-field label="E-mail" v-model="email"></v-text-field>
-        <v-text-field label="Password" v-model="password"> </v-text-field>
+        <v-text-field type="password" label="Password" v-model="password"> </v-text-field>
       </v-container>
       <v-alert v-model="messageModel" type="error" dismissible>
         {{ errorMessage }}
@@ -58,6 +58,7 @@ export default {
     },
     signup(){
       axios.post(`auth/signup`, {isInstructor: this.value, name: this.name, surname: this.surname, password: this.password, email: this.email})
+      this.$router.push({name: 'auth.login'})
     }
   },
   computed: {
