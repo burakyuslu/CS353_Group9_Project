@@ -27,27 +27,40 @@
                   </v-card-title>
 
                   <v-dialog v-model="dialog" width="666">
-                    <v-card class="elevation-16 mx-auto">
+                    <div v-if="ratings.length > 0">
+                      <v-card
+                        v-for="rating in ratings"
+                        :key="`${rating.studentName}_${rating.comment}`"
+                      >
+                        <v-rating
+                          color="primary"
+                          hover
+                          length="5"
+                          readonly
+                          size="32"
+                          :value="rating.rating"
+                        ></v-rating>
+                        <v-card-subtitle>
+                          {{ rating.studentName }}
+                        </v-card-subtitle>
+                        <v-card-text v-if="rating.comment">
+                          {{ rating.comment }}
+                        </v-card-text>
+                      </v-card>
+                    </div>
+                    <v-card class="elevation-16 mx-auto" v-else>
                       <v-card-title class="headline">
                         Comment & Rate
                       </v-card-title>
-                      <v-card-text v-if="ratings.length == 0">
-                        Rate the Course
-
-                        <div class="text-center mt-12">
-                          <v-rating
-                            v-model="commentRate.rate"
-                            color="yellow darken-3"
-                            background-color="grey darken-1"
-                            empty-icon="$ratingFull"
-                            hover
-                            large
-                          ></v-rating>
-                        </div>
-                      </v-card-text>
-
+                      <v-rating
+                        color="primary"
+                        hover
+                        length="5"
+                        readonly
+                        size="32"
+                        :value="rating.rating"
+                      ></v-rating>
                       <v-text-field
-                        v-if="ratings.length == 0"
                         label="Comment Here"
                         v-model="commentRate.comment"
                       >
@@ -313,7 +326,6 @@ export default {
   async created() {
     this.lectureLoading = true
     const { data } = await axios.get(`courses/${this.courseId}/ratings`)
-    console.log(data)
     this.ratings = data
     const error = await this.fetchLectureContent({
       courseId: this.courseId,
@@ -340,7 +352,7 @@ export default {
       if (newValue) {
         const { data } = await axios.get(`courses/${this.courseId}/ratings`)
         console.log(data)
-        this.ratings = data
+        this.ratings = data.ratings || []
       }
     },
     async lectureId() {
