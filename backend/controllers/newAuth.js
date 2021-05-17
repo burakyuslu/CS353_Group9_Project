@@ -116,7 +116,7 @@ authRouter.post('/signup', async (request, response) => {
         })
     }*/
 
-    response.status(200)
+    response.status(200).json({message: "Succesfull"})
 
 })
 module.exports = authRouter

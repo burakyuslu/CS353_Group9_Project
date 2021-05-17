@@ -9,11 +9,12 @@
         <v-text-field label="Name" v-model="name"></v-text-field>
         <v-text-field label="Surname" v-model="surname"> </v-text-field>
         <v-text-field label="E-mail" v-model="email"></v-text-field>
-        <v-text-field type="password" label="Password" v-model="password"> </v-text-field>
+        <v-text-field type="password" label="Password" v-model="password">
+        </v-text-field>
       </v-container>
       <v-card-actions>
         <v-btn @click="signup"> Sign Up </v-btn>
-        <v-btn :to="{name: 'auth.login'}" >Go to Sign In</v-btn>
+        <v-btn :to="{ name: 'auth.login' }">Go to Sign In</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -33,45 +34,29 @@ export default {
       name: '',
       surname: '',
       messageModel: false,
-      errorOccured: false
+      errorOccured: false,
     }
   },
   methods: {
     ...mapActions({ signIn: actions.SIGN_IN }),
     ...mapMutations({ setUserType: mutations.SET_USER_TYPE }),
-    async login() {
-      // console.log('this.userTpye')
-      // this.setUserType({ type: this.userType })
 
-      try {
-        await this.signIn({
-          userType: this.userType,
-          email: this.email,
-          password: this.password,
-        })
-      } catch (error) {
-        this.messageModel = true
-        this.errorMessage = error.message
-      }
-
-      this.$router.push({ name: `${this.userType}.home` })
-    },
-    async signup(){
+    async signup() {
       try {
         await axios.post(`auth/signup`, {
           isInstructor: this.value,
           name: this.name,
           surname: this.surname,
           password: this.password,
-          email: this.email
+          email: this.email,
         })
         this.errorOccured = false
-        await this.$router.push({name: 'auth.login'})
-      }catch (exception){
+        await this.$router.push({ name: 'auth.login' })
+      } catch (exception) {
+        console.log(exception)
         this.errorOccured = true
       }
-
-    }
+    },
   },
   computed: {
     userType() {
